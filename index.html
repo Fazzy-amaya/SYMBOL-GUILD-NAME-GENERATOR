@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ｓｙｍｂｏｌ — Name Generator</title>
+
+<!-- Font -->
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg-main: #0a0a0a;
+  --bg-panel: #141414;
+  --bg-tag: #1c1c1c;
+  --text-primary: #e8e3d8;
+  --text-muted: #9a9a9a;
+  --accent-red: #7a0f14;
+  --accent-steel: #6e6e6e;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Teko', sans-serif;
+  background: var(--bg-main);
+  color: var(--text-primary);
+  display: flex;
+  justify-content: center;
+  padding-top: 40px;
+  min-height: 100vh;
+}
+
+.container {
+  width: 360px;
+  background: var(--bg-panel);
+  border-radius: 18px;
+  padding: 22px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(122,15,20,0.25);
+}
+
+.brand {
+  font-size: 22px;
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background: #0f0f0f;
+  color: var(--text-primary);
+  font-family: 'Teko', sans-serif;
+  font-size: 18px;
+  letter-spacing: 1px;
+  margin-bottom: 18px;
+}
+
+.results {
+  margin-top: 10px;
+}
+
+.tag {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-tag);
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255,255,255,0.04);
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.tag:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 12px rgba(122,15,20,0.6);
+}
+
+button {
+  font-family: 'Teko', sans-serif;
+  letter-spacing: 1px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.copy-btn {
+  background: var(--accent-red);
+  color: var(--text-primary);
+  padding: 6px 10px;
+  font-size: 14px;
+}
+
+.copy-btn:hover {
+  box-shadow: 0 0 10px var(--accent-red);
+}
+
+#generateMore {
+  margin-top: 16px;
+  background: var(--accent-steel);
+  color: #000;
+  padding: 10px 14px;
+  font-size: 16px;
+}
+
+#generateMore:hover {
+  background: var(--text-primary);
+}
+
+.done-section {
+  margin-top: 14px;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+}
+
+.done-section span {
+  letter-spacing: 2px;
+  color: var(--text-muted);
+}
+
+.done-section button {
+  margin-top: 6px;
+  background: var(--text-primary);
+  color: #000;
+  padding: 6px 14px;
+}
+
+.message {
+  margin-top: 10px;
+  color: var(--accent-red);
+  display: none;
+  letter-spacing: 1px;
+  white-space: pre-line;
+}
+
+footer {
+  margin-top: 20px;
+  font-size: 12px;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+  <!-- NEW HEADLINE as requested -->
+  <div class="brand">WELCOME Ｓｙｍｂｏｌ<br>GUILD NAME GENRATOR</div>
+  <div class="subtitle">ENTER YOUR NAME</div>
+
+  <input id="inputName" placeholder="YOUR NAME">
+
+  <div class="results" id="results"></div>
+
+  <div class="done-section" id="doneSection">
+    <span>D O N E ?</span>
+    <button id="doneBtn">YES</button>
+  </div>
+
+  <div class="message" id="doneMessage"></div>
+
+  <button id="generateMore">GENERATE MORE</button>
+
+  <footer>© Ｓｙｍｂｏｌ</footer>
+</div>
+
+<script>
+/* --- ANTI-INSPECT --- */
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+  return false;
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'F12' || 
+      (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+      (e.ctrlKey && e.key === 'u')) {
+    e.preventDefault();
+    return false;
+  }
+});
+
+/* --- INVISIBLE SPACER & SMALL CAPS --- */
+const spacer = "\u3164";
+
+const smallCapsMap = {
+  'A': 'ᴀ', 'B': 'ʙ', 'C': 'ᴄ', 'D': 'ᴅ', 'E': 'ᴇ', 'F': 'ꜰ', 'G': 'ɢ', 'H': 'ʜ', 'I': 'ɪ',
+  'J': 'ᴊ', 'K': 'ᴋ', 'L': 'ʟ', 'M': 'ᴍ', 'N': 'ɴ', 'O': 'ᴏ', 'P': 'ᴘ', 'Q': 'ǫ',
+  'R': 'ʀ', 'S': 'ꜱ', 'T': 'ᴛ', 'U': 'ᴜ', 'V': 'ᴠ', 'W': 'ᴡ', 'X': 'x', 'Y': 'ʏ', 'Z': 'ᴢ'
+};
+
+function toSmallCaps(str) {
+  return str.toUpperCase().split('').map(ch => smallCapsMap[ch] || ch).join('');
+}
+
+const resultsContainer = document.getElementById('results');
+const input = document.getElementById('inputName');
+const doneSection = document.getElementById('doneSection');
+const doneBtn = document.getElementById('doneBtn');
+const doneMessage = document.getElementById('doneMessage');
+
+function generateTags() {
+  resultsContainer.innerHTML = '';
+  doneSection.style.display = 'none';
+  doneMessage.style.display = 'none';
+  doneMessage.innerHTML = ''; // clear
+
+  const name = input.value.trim();
+  if (!name) {
+    resultsContainer.innerHTML = '<div class="tag">ENTER A NAME FIRST</div>';
+    return;
+  }
+
+  const smallCapsName = toSmallCaps(name);
+  const symbol = "あ";
+  const tagText = `${smallCapsName}${spacer}${symbol}`;
+
+  const tagDiv = document.createElement('div');
+  tagDiv.className = 'tag';
+
+  const span = document.createElement('span');
+  span.textContent = tagText;
+
+  const copyBtn = document.createElement('button');
+  copyBtn.textContent = 'COPY';
+  copyBtn.className = 'copy-btn';
+
+  copyBtn.onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(tagText);
+      copyBtn.textContent = 'COPIED';
+      doneSection.style.display = 'flex';
+      setTimeout(() => copyBtn.textContent = 'COPY', 900);
+    } catch (err) {
+      const textarea = document.createElement('textarea');
+      textarea.value = tagText;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      copyBtn.textContent = 'COPIED';
+      doneSection.style.display = 'flex';
+      setTimeout(() => copyBtn.textContent = 'COPY', 900);
+    }
+  };
+
+  tagDiv.appendChild(span);
+  tagDiv.appendChild(copyBtn);
+  resultsContainer.appendChild(tagDiv);
+}
+
+// DONE BUTTON: show "ENJOY UR STAY" then "Go meet Frank or Loner"
+doneBtn.addEventListener('click', () => {
+  doneMessage.style.display = 'block';
+  doneMessage.innerHTML = `ENJOY UR STAY<br>Go meet Frank or Loner`;
+});
+
+input.addEventListener('input', generateTags);
+document.getElementById('generateMore').addEventListener('click', generateTags);
+
+generateTags();
+</script>
+</body>
+</html>
