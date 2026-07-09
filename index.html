@@ -155,12 +155,12 @@
             background: rgba(0, 0, 0, 0.4);
             border-radius: 30px;
             border: 1px solid rgba(150, 100, 220, 0.25);
-            padding: 25px 20px;
-            margin-bottom: 30px;
+            padding: 25px 20px 15px 20px;
+            margin-bottom: 15px;
             transition: 0.3s;
             cursor: pointer;
             position: relative;
-            -webkit-tap-highlight-color: transparent; /* Remove mobile tap flash */
+            -webkit-tap-highlight-color: transparent;
         }
 
         .result-wrapper:hover {
@@ -184,7 +184,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            user-select: none; /* Prevent text selection on double tap */
+            user-select: none;
         }
 
         #result.placeholder {
@@ -201,11 +201,40 @@
             letter-spacing: 2px;
             margin-top: 8px;
             transition: 0.3s;
-            pointer-events: none; /* Allow clicks to pass to wrapper */
+            pointer-events: none;
         }
 
         .result-wrapper:hover .copy-hint {
             color: #b396d9;
+        }
+
+        /* --- COPY BUTTON (manual) --- */
+        .copy-btn-container {
+            margin: 10px 0 20px 0;
+        }
+
+        .copy-btn {
+            background: rgba(100, 40, 180, 0.3);
+            border: 1px solid rgba(150, 100, 220, 0.3);
+            color: #c4a8f0;
+            padding: 10px 30px;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            letter-spacing: 2px;
+            display: inline-block;
+            backdrop-filter: blur(4px);
+        }
+
+        .copy-btn:hover {
+            background: rgba(100, 40, 180, 0.5);
+            border-color: #9b6dff;
+            box-shadow: 0 0 20px rgba(100, 40, 200, 0.2);
+        }
+
+        .copy-btn:active {
+            transform: scale(0.95);
         }
 
         /* --- INPUT SECTION --- */
@@ -292,6 +321,10 @@
             .result-wrapper {
                 padding: 15px 10px;
             }
+            .copy-btn {
+                padding: 8px 20px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -309,10 +342,14 @@
             <h1 class="guild-title">ᴘʜᴀɴᴛᴏᴍ・〆</h1>
             <div class="sub-title">Name Generator</div>
 
-            <!-- RESULT DISPLAY -->
+            <!-- RESULT DISPLAY + COPY BUTTON -->
             <div class="result-wrapper" id="resultWrapper">
                 <div id="result" class="placeholder">✦ Type your name below ✦</div>
-                <div class="copy-hint">⬇ Tap this name to copy it ⬇</div>
+                <div class="copy-hint">⬇ Tap the name or button below to copy ⬇</div>
+            </div>
+
+            <div class="copy-btn-container">
+                <button class="copy-btn" id="manualCopyBtn">📋 Copy Name</button>
             </div>
 
             <!-- INPUT -->
@@ -333,7 +370,6 @@
     </div>
 
     <!-- ====== HIDDEN AUDIO ELEMENT ====== -->
-    <!-- Try both relative and absolute paths -->
     <audio id="bg-music" loop>
         <source src="./music.mp3" type="audio/mpeg">
         <source src="/SYMBOL-GUILD-NAME-GENERATOR/music.mp3" type="audio/mpeg">
@@ -433,7 +469,7 @@
         }
 
         // =============================================
-        // 3. COPY TO CLIPBOARD - FIXED FOR MOBILE
+        // 3. COPY TO CLIPBOARD - MOBILE FRIENDLY
         // =============================================
         function copyResult() {
             const resultDisplay = document.getElementById('result');
@@ -455,7 +491,7 @@
                 return;
             }
 
-            // Try modern Clipboard API
+            // Try modern Clipboard API first
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(textToCopy)
                     .then(() => showCopiedFeedback(resultDisplay))
@@ -465,7 +501,7 @@
             }
         }
 
-        // Fallback using hidden textarea (works on all devices)
+        // Fallback using hidden textarea (works on all devices, no alert)
         function fallbackCopyText(text, resultDisplay) {
             const textarea = document.createElement('textarea');
             textarea.value = text;
@@ -480,10 +516,30 @@
                 if (success) {
                     showCopiedFeedback(resultDisplay);
                 } else {
-                    alert('Press Ctrl+C to copy: ' + text);
+                    // Silent fail – the user will see no feedback, but we can show a toast?
+                    // We'll just show a "Copy failed" briefly.
+                    resultDisplay.textContent = '❌ Copy failed, try the button again';
+                    resultDisplay.style.color = '#ff8888';
+                    resultDisplay.style.textShadow = '0 0 30px #ff2222';
+                    setTimeout(() => {
+                        if (currentGeneratedName) {
+                            resultDisplay.textContent = currentGeneratedName;
+                            resultDisplay.style.color = '#f2e9ff';
+                            resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
+                        }
+                    }, 1500);
                 }
             } catch (e) {
-                alert('Press Ctrl+C to copy: ' + text);
+                // Silent fail – no alert
+                resultDisplay.textContent = '❌ Copy failed';
+                resultDisplay.style.color = '#ff8888';
+                setTimeout(() => {
+                    if (currentGeneratedName) {
+                        resultDisplay.textContent = currentGeneratedName;
+                        resultDisplay.style.color = '#f2e9ff';
+                        resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
+                    }
+                }, 1500);
             }
             document.body.removeChild(textarea);
         }
@@ -501,10 +557,14 @@
             }, 1500);
         }
 
-        // ----- Attach copy to both click and touch events on the result wrapper -----
+        // ----- Attach copy to both the result wrapper and the manual button -----
         const resultWrapper = document.getElementById('resultWrapper');
         resultWrapper.addEventListener('click', copyResult);
         resultWrapper.addEventListener('touchstart', copyResult, { passive: true });
+
+        const manualCopyBtn = document.getElementById('manualCopyBtn');
+        manualCopyBtn.addEventListener('click', copyResult);
+        manualCopyBtn.addEventListener('touchstart', copyResult, { passive: true });
 
         // ----- Enter key support for input -----
         document.getElementById('userName').addEventListener('keypress', function(event) {
@@ -522,14 +582,12 @@
         // Force max volume
         audio.volume = 1.0;
 
-        // Log loading status
         audio.addEventListener('canplaythrough', function() {
             console.log('✅ Music loaded successfully!');
         });
 
         audio.addEventListener('error', function(e) {
-            console.error('❌ Music failed to load. Check file path.');
-            console.error('Tried: ./music.mp3 and /SYMBOL-GUILD-NAME-GENERATOR/music.mp3');
+            console.error('❌ Music failed to load. Check file path and name.');
         });
 
         function playMusic() {
@@ -544,18 +602,13 @@
                 });
         }
 
-        // Try autoplay after short delay
         setTimeout(playMusic, 500);
 
-        // Start on any user interaction (click, touch, key)
         document.addEventListener('click', playMusic);
         document.addEventListener('touchstart', playMusic);
         document.addEventListener('keydown', playMusic);
-
-        // Also on input focus
         document.getElementById('userName').addEventListener('focus', playMusic);
 
-        // Loop forever
         audio.addEventListener('ended', function() {
             audio.play().catch(() => {});
         });
