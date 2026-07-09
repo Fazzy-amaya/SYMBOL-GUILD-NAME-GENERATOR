@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ᴘʜᴀɴᴛᴏᴍ・〆 — Name Generator</title>
     <style>
+        /* ----- RESET & BASE ----- */
         * {
             margin: 0;
             padding: 0;
@@ -19,55 +20,112 @@
             background: radial-gradient(circle at center, #12081a, #07020a);
             font-family: 'Segoe UI', 'Arial', sans-serif;
             padding: 20px;
-            position: relative;
             overflow: hidden;
         }
 
-        /* ---------- CANVAS (particles) ---------- */
-        #particleCanvas {
+        /* ----- INTRO SCREEN (OVERLAY) ----- */
+        #intro-screen {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, #12081a, #07020a);
+            padding: 30px;
+            transition: opacity 1.2s ease, visibility 1.2s ease;
+            opacity: 1;
+            visibility: visible;
         }
 
-        /* ---------- MAIN CARD ---------- */
+        #intro-screen.fade-out {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        #intro-text {
+            max-width: 750px;
+            width: 100%;
+            text-align: left;
+            font-size: clamp(1.4rem, 4vw, 2.4rem);
+            font-weight: 300;
+            color: #e4d5ff;
+            text-shadow: 0 0 20px #6a2faf;
+            line-height: 1.8;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+
+        #intro-text .line {
+            opacity: 0;
+            transform: translateY(8px);
+            animation: lineFadeIn 0.3s forwards;
+        }
+
+        @keyframes lineFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 3px;
+            height: 1.2em;
+            background: #9b6dff;
+            margin-left: 4px;
+            vertical-align: text-bottom;
+            animation: blink 0.7s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .intro-credit {
+            margin-top: 30px;
+            font-size: 1rem;
+            color: #6a4a8a;
+            letter-spacing: 3px;
+            font-family: 'Segoe UI', sans-serif;
+            opacity: 0;
+            animation: fadeInCredit 1s 0.5s forwards;
+        }
+
+        @keyframes fadeInCredit {
+            to { opacity: 1; }
+        }
+
+        /* ----- MAIN APP (HIDDEN INITIALLY) ----- */
+        #main-app {
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            width: 100%;
+            max-width: 700px;
+            pointer-events: none;
+        }
+
+        #main-app.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
         .container {
-            position: relative;
-            z-index: 1;
             background: rgba(20, 10, 30, 0.7);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(180, 130, 255, 0.2);
             border-radius: 40px;
             padding: 50px 40px;
-            max-width: 650px;
             width: 100%;
             text-align: center;
             box-shadow: 0 0 60px rgba(100, 40, 180, 0.3);
             transition: all 0.3s ease;
-            /* ---------- PULSING GLOW ANIMATION ---------- */
-            animation: pulseGlow 3.5s ease-in-out infinite;
         }
 
-        @keyframes pulseGlow {
-            0% {
-                box-shadow: 0 0 40px rgba(100, 40, 180, 0.3), 0 0 80px rgba(80, 30, 160, 0.1);
-                border-color: rgba(180, 130, 255, 0.2);
-            }
-            50% {
-                box-shadow: 0 0 80px rgba(140, 70, 255, 0.6), 0 0 150px rgba(100, 40, 220, 0.3);
-                border-color: rgba(200, 160, 255, 0.6);
-            }
-            100% {
-                box-shadow: 0 0 40px rgba(100, 40, 180, 0.3), 0 0 80px rgba(80, 30, 160, 0.1);
-                border-color: rgba(180, 130, 255, 0.2);
-            }
-        }
-
-        /* Also pulse the title text-shadow for extra effect */
         .guild-title {
             font-size: clamp(2.8rem, 10vw, 4.5rem);
             font-weight: 400;
@@ -76,19 +134,6 @@
             text-shadow: 0 0 30px #8a4bff, 0 0 60px #4a1a7a;
             margin-bottom: 5px;
             word-break: break-word;
-            animation: textPulse 3.5s ease-in-out infinite;
-        }
-
-        @keyframes textPulse {
-            0% {
-                text-shadow: 0 0 30px #8a4bff, 0 0 60px #4a1a7a;
-            }
-            50% {
-                text-shadow: 0 0 50px #b07aff, 0 0 100px #7a3ad9, 0 0 150px #4a1a7a;
-            }
-            100% {
-                text-shadow: 0 0 30px #8a4bff, 0 0 60px #4a1a7a;
-            }
         }
 
         .sub-title {
@@ -96,7 +141,7 @@
             color: #b396d9;
             letter-spacing: 8px;
             text-transform: uppercase;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             border-top: 1px solid rgba(150, 100, 220, 0.2);
             border-bottom: 1px solid rgba(150, 100, 220, 0.2);
             display: inline-block;
@@ -105,18 +150,66 @@
             border-radius: 30px;
         }
 
-        .input-area {
-            margin: 30px 0 20px;
+        /* --- RESULT AREA --- */
+        .result-wrapper {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 30px;
+            border: 1px solid rgba(150, 100, 220, 0.25);
+            padding: 25px 20px;
+            margin-bottom: 30px;
+            transition: 0.3s;
+            cursor: pointer;
+            position: relative;
         }
 
+        .result-wrapper:hover {
+            border-color: #9b6dff;
+            box-shadow: 0 0 30px rgba(100, 40, 200, 0.2);
+        }
+
+        #result {
+            font-size: clamp(2.2rem, 7vw, 4rem);
+            font-weight: 400;
+            color: #f2e9ff;
+            text-shadow: 0 0 40px #9b6dff, 0 0 80px #4a1a7a;
+            letter-spacing: 2px;
+            word-break: break-word;
+            transition: 0.3s;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #result.placeholder {
+            font-size: 1.1rem;
+            color: #6a4a8a;
+            text-shadow: none;
+            letter-spacing: 4px;
+            font-weight: 300;
+        }
+
+        .copy-hint {
+            font-size: 0.75rem;
+            color: #7a5a9a;
+            letter-spacing: 2px;
+            margin-top: 8px;
+            transition: 0.3s;
+        }
+
+        .result-wrapper:hover .copy-hint {
+            color: #b396d9;
+        }
+
+        /* --- INPUT SECTION --- */
         .input-area label {
             display: block;
             font-size: 0.9rem;
-            color: #b396d9;
+            color: #c4a8f0;
             letter-spacing: 3px;
             margin-bottom: 12px;
             text-transform: uppercase;
-            opacity: 0.8;
+            font-weight: 600;
         }
 
         .input-area input {
@@ -147,7 +240,7 @@
         }
 
         .btn {
-            margin-top: 25px;
+            margin-top: 15px;
             padding: 16px 55px;
             background: linear-gradient(135deg, #6c2bb3, #3b1470);
             border: none;
@@ -172,43 +265,8 @@
             transform: scale(0.95);
         }
 
-        .result-area {
-            margin-top: 40px;
-            min-height: 80px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 30px;
-            border: 1px dashed rgba(150, 100, 220, 0.2);
-            padding: 20px;
-            transition: border-color 0.3s;
-        }
-
-        .result-area:hover {
-            border-color: rgba(180, 130, 255, 0.5);
-        }
-
-        #result {
-            font-size: clamp(1.8rem, 6vw, 3.5rem);
-            font-weight: 400;
-            color: #f2e9ff;
-            text-shadow: 0 0 40px #9b6dff, 0 0 80px #4a1a7a;
-            letter-spacing: 2px;
-            word-break: break-word;
-            transition: 0.3s;
-            font-family: 'Segoe UI', 'Arial', sans-serif;
-        }
-
-        #result.placeholder {
-            font-size: 1rem;
-            color: #6a4a8a;
-            text-shadow: none;
-            letter-spacing: 4px;
-        }
-
         .footer-note {
-            margin-top: 25px;
+            margin-top: 30px;
             font-size: 0.7rem;
             color: #3f2a5a;
             letter-spacing: 2px;
@@ -224,33 +282,115 @@
                 font-size: 1rem;
                 letter-spacing: 4px;
             }
+            .result-wrapper {
+                padding: 15px 10px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Canvas for floating ember particles -->
-    <canvas id="particleCanvas"></canvas>
+    <!-- ====== INTRO SCREEN ====== -->
+    <div id="intro-screen">
+        <div id="intro-text"></div>
+        <div class="intro-credit">✦ FR4NX ✦</div>
+    </div>
 
-    <div class="container">
-        <h1 class="guild-title">ᴘʜᴀɴᴛᴏᴍ・〆</h1>
-        <div class="sub-title">Name Generator</div>
+    <!-- ====== MAIN APP ====== -->
+    <div id="main-app">
+        <div class="container">
+            <h1 class="guild-title">ᴘʜᴀɴᴛᴏᴍ・〆</h1>
+            <div class="sub-title">Name Generator</div>
 
-        <div class="input-area">
-            <label for="userName">Enter your name</label>
-            <input type="text" id="userName" placeholder="e.g. Raven" autofocus />
+            <!-- RESULT DISPLAY -->
+            <div class="result-wrapper" id="resultWrapper" onclick="copyResult()">
+                <div id="result" class="placeholder">✦ Type your name below ✦</div>
+                <div class="copy-hint">⬇ Tap this name to copy it ⬇</div>
+            </div>
+
+            <!-- INPUT -->
+            <div class="input-area">
+                <label for="userName">INPUT YOUR REQUIRED NAME HERE</label>
+                <input 
+                    type="text" 
+                    id="userName" 
+                    placeholder="e.g. Shadow" 
+                    oninput="updatePreview()"
+                    autofocus
+                >
+            </div>
+
+            <button class="btn" onclick="updatePreview()">D O N E ?</button>
+            <div class="footer-note">ᴄʜᴀɴɴᴇʟ ᴛʜᴇ ᴠᴏɪᴅ</div>
         </div>
-
-        <button class="btn" onclick="generateName()">D O N E ?</button>
-
-        <div class="result-area">
-            <div id="result" class="placeholder">✦ Your phantom identity awaits ✦</div>
-        </div>
-        <div class="footer-note">ᴄʜᴀɴɴᴇʟ ᴛʜᴇ ᴠᴏɪᴅ</div>
     </div>
 
     <script>
-        // ---------- SMALL CAPS MAP ----------
+        // =============================================
+        // 1. TYPING INTRO
+        // =============================================
+        const introLines = [
+            "Welcome to the Phantom Guild.",
+            "Here, you get your official Phantom name.",
+            "Just type your name below and see it transform.",
+            "Tap the result to copy it.",
+            "Created by FR4NX."
+        ];
+
+        const introContainer = document.getElementById('intro-text');
+        const introScreen = document.getElementById('intro-screen');
+        const mainApp = document.getElementById('main-app');
+
+        let lineIndex = 0;
+        let charIndex = 0;
+        let isTypingComplete = false;
+
+        function typeLine() {
+            if (lineIndex >= introLines.length) {
+                // All lines are done
+                isTypingComplete = true;
+                // Wait 1.5 seconds, then fade out intro and show main app
+                setTimeout(() => {
+                    introScreen.classList.add('fade-out');
+                    mainApp.classList.add('visible');
+                }, 1500);
+                return;
+            }
+
+            const currentLine = introLines[lineIndex];
+            const lineElement = document.createElement('div');
+            lineElement.className = 'line';
+            introContainer.appendChild(lineElement);
+
+            let currentChar = 0;
+
+            function typeChar() {
+                if (currentChar < currentLine.length) {
+                    // Add next character
+                    lineElement.textContent += currentLine[currentChar];
+                    currentChar++;
+                    setTimeout(typeChar, 45); // typing speed
+                } else {
+                    // Line finished, add cursor blink, move to next line
+                    const cursor = document.createElement('span');
+                    cursor.className = 'cursor-blink';
+                    lineElement.appendChild(cursor);
+
+                    // Move to next line after a short pause
+                    lineIndex++;
+                    setTimeout(typeLine, 300);
+                }
+            }
+
+            typeChar();
+        }
+
+        // Start the typing effect when page loads
+        window.addEventListener('load', typeLine);
+
+        // =============================================
+        // 2. NAME GENERATOR LOGIC
+        // =============================================
         const smallCapsMap = {
             'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ',
             'f': 'ꜰ', 'g': 'ɢ', 'h': 'ʜ', 'i': 'ɪ', 'j': 'ᴊ',
@@ -259,15 +399,17 @@
             'u': 'ᴜ', 'v': 'ᴠ', 'w': 'ᴡ', 'x': 'x', 'y': 'ʏ', 'z': 'ᴢ'
         };
 
-        function generateName() {
+        let currentGeneratedName = '';
+
+        function updatePreview() {
             const inputField = document.getElementById('userName');
             const resultDisplay = document.getElementById('result');
             let rawName = inputField.value.trim();
 
             if (rawName === '') {
-                resultDisplay.textContent = '⚠️ PLEASE ENTER A NAME FIRST';
-                resultDisplay.style.color = '#b396d9';
-                resultDisplay.style.textShadow = '0 0 20px #7b2fbe';
+                resultDisplay.textContent = '✦ Type your name below ✦';
+                resultDisplay.className = 'placeholder';
+                currentGeneratedName = '';
                 return;
             }
 
@@ -278,94 +420,63 @@
                 .join('');
 
             const phantomIdentity = smallName + '・〆';
+            currentGeneratedName = phantomIdentity;
 
             resultDisplay.textContent = phantomIdentity;
+            resultDisplay.className = '';
             resultDisplay.style.color = '#f2e9ff';
             resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
         }
 
+        // =============================================
+        // 3. COPY TO CLIPBOARD
+        // =============================================
+        function copyResult() {
+            const resultDisplay = document.getElementById('result');
+            const textToCopy = currentGeneratedName;
+
+            if (!textToCopy || resultDisplay.className === 'placeholder') {
+                const originalText = resultDisplay.textContent;
+                resultDisplay.textContent = '⚠️ TYPE A NAME FIRST!';
+                resultDisplay.style.color = '#ff8888';
+                resultDisplay.style.textShadow = '0 0 30px #ff2222';
+                setTimeout(() => {
+                    if (document.getElementById('userName').value.trim() === '') {
+                        resultDisplay.textContent = '✦ Type your name below ✦';
+                        resultDisplay.className = 'placeholder';
+                    } else {
+                        updatePreview();
+                    }
+                }, 1500);
+                return;
+            }
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalText = resultDisplay.textContent;
+                resultDisplay.textContent = '✅  COPIED!  ✅';
+                resultDisplay.style.color = '#b3ff9b';
+                resultDisplay.style.textShadow = '0 0 40px #66ff33';
+                setTimeout(() => {
+                    resultDisplay.textContent = currentGeneratedName;
+                    resultDisplay.style.color = '#f2e9ff';
+                    resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
+                }, 1500);
+            }).catch(() => {
+                alert('Press Ctrl+C to copy: ' + textToCopy);
+            });
+        }
+
+        // Enter key support
         document.getElementById('userName').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') generateName();
+            if (event.key === 'Enter') {
+                updatePreview();
+            }
         });
 
-        // ---------- PARTICLE SYSTEM (Embers) ----------
-        (function initParticles() {
-            const canvas = document.getElementById('particleCanvas');
-            const ctx = canvas.getContext('2d');
-            let width, height;
-            let particles = [];
-            const PARTICLE_COUNT = 80;
-
-            function resize() {
-                width = canvas.width = window.innerWidth;
-                height = canvas.height = window.innerHeight;
-            }
-            window.addEventListener('resize', resize);
-            resize();
-
-            class Particle {
-                constructor() {
-                    this.reset();
-                }
-                reset() {
-                    this.x = Math.random() * width;
-                    this.y = Math.random() * height;
-                    this.size = Math.random() * 3.5 + 1.5;
-                    this.speedX = (Math.random() - 0.5) * 0.25;
-                    this.speedY = (Math.random() - 0.5) * 0.25 - 0.08; // slight upward drift
-                    this.opacity = Math.random() * 0.6 + 0.2;
-                    this.pulse = Math.random() * Math.PI * 2;
-                }
-                update() {
-                    this.x += this.speedX;
-                    this.y += this.speedY;
-                    this.pulse += 0.02;
-
-                    // fade in/out slightly
-                    this.currentOpacity = this.opacity * (0.7 + 0.3 * Math.sin(this.pulse));
-
-                    // wrap around edges
-                    if (this.x < -10) this.x = width + 10;
-                    if (this.x > width + 10) this.x = -10;
-                    if (this.y < -10) this.y = height + 10;
-                    if (this.y > height + 10) this.y = -10;
-                }
-                draw() {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    // purple/white glow
-                    const gradient = ctx.createRadialGradient(
-                        this.x, this.y, 0,
-                        this.x, this.y, this.size * 2
-                    );
-                    gradient.addColorStop(0, `rgba(210, 180, 255, ${this.currentOpacity})`);
-                    gradient.addColorStop(1, `rgba(120, 60, 220, 0)`);
-                    ctx.fillStyle = gradient;
-                    ctx.fill();
-
-                    // tiny bright core
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size * 0.3, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255, 240, 255, ${this.currentOpacity * 0.9})`;
-                    ctx.fill();
-                }
-            }
-
-            // create particles
-            for (let i = 0; i < PARTICLE_COUNT; i++) {
-                particles.push(new Particle());
-            }
-
-            function animate() {
-                ctx.clearRect(0, 0, width, height);
-                particles.forEach(p => {
-                    p.update();
-                    p.draw();
-                });
-                requestAnimationFrame(animate);
-            }
-            animate();
-        })();
+        // Ensure main app stays hidden until intro finishes
+        document.addEventListener('DOMContentLoaded', function() {
+            // Just a safety net — main app is hidden by default via CSS
+        });
     </script>
 </body>
 </html>
