@@ -19,11 +19,20 @@
             background: radial-gradient(circle at center, #12081a, #07020a);
             font-family: 'Segoe UI', 'Arial', sans-serif;
             padding: 20px;
-            /* allow scrolling if needed */
             overflow-y: auto;
+            position: relative;
         }
 
-        /* ----- INTRO SCREEN (OVERLAY) ----- */
+        #birdCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+        }
+
         #intro-screen {
             position: fixed;
             inset: 0;
@@ -59,6 +68,8 @@
             line-height: 1.8;
             font-family: 'Courier New', monospace;
             letter-spacing: 1px;
+            z-index: 2;
+            position: relative;
         }
 
         #intro-text .line {
@@ -94,6 +105,8 @@
             font-family: 'Segoe UI', sans-serif;
             opacity: 0;
             animation: fadeInCredit 1s 0.5s forwards;
+            z-index: 2;
+            position: relative;
         }
 
         @keyframes fadeInCredit {
@@ -108,6 +121,8 @@
             opacity: 0;
             display: none;
             font-family: 'Segoe UI', sans-serif;
+            z-index: 2;
+            position: relative;
         }
 
         #click-prompt.show {
@@ -124,7 +139,6 @@
             50% { text-shadow: 0 0 30px #9b6dff, 0 0 60px #4a1a7a; }
         }
 
-        /* ----- MAIN APP (GLASSMORPHIC + SCROLLABLE) ----- */
         #main-app {
             opacity: 0;
             transition: opacity 1.5s ease;
@@ -134,6 +148,8 @@
             max-height: 90vh;
             overflow-y: auto;
             padding: 5px;
+            position: relative;
+            z-index: 2;
         }
 
         #main-app.visible {
@@ -151,8 +167,6 @@
             width: 100%;
             text-align: center;
             box-shadow: 0 0 60px rgba(100, 40, 180, 0.2), inset 0 0 30px rgba(150, 100, 220, 0.05);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
         }
 
         .guild-title {
@@ -163,6 +177,20 @@
             text-shadow: 0 0 30px #8a4bff, 0 0 60px #4a1a7a;
             margin-bottom: 5px;
             word-break: break-word;
+            display: inline-block;
+            animation: heartbeat 1.8s ease-in-out infinite;
+            transform-origin: center;
+            position: relative;
+            z-index: 3;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); text-shadow: 0 0 30px #8a4bff, 0 0 60px #4a1a7a; }
+            14% { transform: scale(1.04); text-shadow: 0 0 50px #9b6dff, 0 0 100px #6a2faf; }
+            28% { transform: scale(1); text-shadow: 0 0 30px #8a4bff, 0 0 60px #4a1a7a; }
+            42% { transform: scale(1.03); text-shadow: 0 0 40px #9b6dff, 0 0 80px #6a2faf; }
+            70% { transform: scale(1); text-shadow: 0 0 30px #8a4bff, 0 0 60px #4a1a7a; }
+            100% { transform: scale(1); text-shadow: 0 0 30px #8a4bff, 0 0 60px #4a1a7a; }
         }
 
         .sub-title {
@@ -344,14 +372,14 @@
 </head>
 <body>
 
-    <!-- ====== INTRO SCREEN ====== -->
+    <canvas id="birdCanvas"></canvas>
+
     <div id="intro-screen">
         <div id="intro-text"></div>
         <div id="click-prompt">✦ Click anywhere to enter ✦</div>
         <div class="intro-credit">✦ FR4NX ✦</div>
     </div>
 
-    <!-- ====== MAIN APP ====== -->
     <div id="main-app">
         <div class="container">
             <h1 class="guild-title">ᴘʜᴀɴᴛᴏᴍ・〆</h1>
@@ -382,7 +410,6 @@
         </div>
     </div>
 
-    <!-- ====== AUDIO ====== -->
     <audio id="bg-music" loop preload="auto">
         <source src="./music.mp3" type="audio/mpeg">
         <source src="/SYMBOL-GUILD-NAME-GENERATOR/music.mp3" type="audio/mpeg">
@@ -390,7 +417,7 @@
 
     <script>
         // =============================================
-        // 1. TYPING INTRO – Updated text
+        // 1. TYPING INTRO
         // =============================================
         const introLines = [
             "Welcome to Phantom ・〆 Guild name generator.",
@@ -440,17 +467,13 @@
         window.addEventListener('load', typeLine);
 
         // =============================================
-        // 2. MUSIC – iOS‑friendly start on intro click
+        // 2. MUSIC
         // =============================================
         const audio = document.getElementById('bg-music');
         let musicStarted = false;
         audio.volume = 1.0;
 
-        let audioReady = false;
-        audio.addEventListener('canplaythrough', () => {
-            audioReady = true;
-            console.log('✅ Music ready');
-        });
+        audio.addEventListener('canplaythrough', () => console.log('✅ Music ready'));
         if (audio.readyState >= 3) audioReady = true;
 
         function playMusic() {
@@ -460,18 +483,16 @@
                 playPromise.then(() => {
                     musicStarted = true;
                     console.log('🔊 Horror at MAX VOLUME!');
-                }).catch(err => {
-                    console.log('⛔ Play blocked:', err.message);
-                });
+                }).catch(err => console.log('⛔ Play blocked:', err.message));
             }
         }
 
-        // Intro click: proceed and play music
         introScreen.addEventListener('click', function(e) {
             if (introComplete) {
                 introScreen.classList.add('fade-out');
                 mainApp.classList.add('visible');
                 playMusic();
+                setTimeout(() => startBirds(), 500);
             }
         });
         introScreen.addEventListener('touchstart', function(e) {
@@ -479,14 +500,12 @@
                 introScreen.classList.add('fade-out');
                 mainApp.classList.add('visible');
                 playMusic();
+                setTimeout(() => startBirds(), 500);
             }
         }, { passive: true });
 
-        // Backup: any click after intro starts music
         document.addEventListener('click', function() {
-            if (introComplete && !musicStarted) {
-                playMusic();
-            }
+            if (introComplete && !musicStarted) playMusic();
         });
 
         // =============================================
@@ -525,7 +544,7 @@
         }
 
         // =============================================
-        // 4. COPY – iOS‑RELIABLE (textarea + setTimeout trick)
+        // 4. COPY – iOS‑RELIABLE
         // =============================================
         function copyResult() {
             const resultDisplay = document.getElementById('result');
@@ -546,7 +565,6 @@
                 return;
             }
 
-            // Try modern Clipboard API first
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(textToCopy)
                     .then(() => showCopiedFeedback(resultDisplay))
@@ -556,23 +574,20 @@
             }
         }
 
-        // iOS-proven fallback: create a tiny visible textarea, select, copy
         function fallbackCopyText(text, resultDisplay) {
             const textarea = document.createElement('textarea');
             textarea.value = text;
-            // Must be visible and in the DOM for iOS to allow copy
             textarea.style.position = 'fixed';
             textarea.style.left = '0';
             textarea.style.top = '0';
             textarea.style.width = '1px';
             textarea.style.height = '1px';
-            textarea.style.opacity = '0.5';  // make it barely visible but not completely hidden
+            textarea.style.opacity = '0.5';
             textarea.style.zIndex = '9999';
             textarea.style.pointerEvents = 'none';
             textarea.setAttribute('readonly', '');
             document.body.appendChild(textarea);
 
-            // Focus and select after a tiny delay – iOS needs the element to be fully rendered
             setTimeout(() => {
                 textarea.focus();
                 textarea.select();
@@ -621,7 +636,6 @@
             }, 1500);
         }
 
-        // Attach copy events
         const resultWrapper = document.getElementById('resultWrapper');
         resultWrapper.addEventListener('click', copyResult);
         resultWrapper.addEventListener('touchstart', copyResult, { passive: true });
@@ -634,10 +648,282 @@
             if (e.key === 'Enter') updatePreview();
         });
 
-        // Loop audio forever
-        audio.addEventListener('ended', () => {
-            audio.play().catch(() => {});
+        audio.addEventListener('ended', () => audio.play().catch(() => {}));
+
+        // =============================================
+        // 5. BIRD ANIMATION – CINEMATIC RAVENS
+        // =============================================
+        const canvas = document.getElementById('birdCanvas');
+        const ctx = canvas.getContext('2d');
+        let birds = [];
+        let mistParticles = [];
+        let animationId = null;
+        let birdsActive = false;
+        let titleRect = { x: 0, y: 0, width: 0, height: 0 };
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Raven {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                const margin = 150;
+                const side = Math.floor(Math.random() * 4);
+                if (side === 0) { this.x = Math.random() * canvas.width; this.y = -margin; }
+                else if (side === 1) { this.x = canvas.width + margin; this.y = Math.random() * canvas.height; }
+                else if (side === 2) { this.x = Math.random() * canvas.width; this.y = canvas.height + margin; }
+                else { this.x = -margin; this.y = Math.random() * canvas.height; }
+
+                // Soaring target – large, slow arcs around the title
+                this.targetX = canvas.width / 2 + (Math.random() - 0.5) * 500;
+                this.targetY = canvas.height / 2 - 30 + (Math.random() - 0.5) * 350;
+
+                this.speed = 0.4 + Math.random() * 0.6; // slower, majestic
+                this.angle = 0;
+                this.size = 20 + Math.random() * 14; // larger
+                this.wingPhase = Math.random() * Math.PI * 2;
+                this.wingSpeed = 0.035 + Math.random() * 0.02; // slower flap
+                this.curveOffset = (Math.random() - 0.5) * 120;
+                this.curveSpeed = 0.003 + Math.random() * 0.008;
+                this.curvePhase = Math.random() * Math.PI * 2;
+                this.alive = true;
+                this.opacity = 1;
+                this.disappearing = false;
+                this.disappearTimer = 0;
+
+                // Body color variations
+                const hue = 260 + Math.random() * 30; // purple tint
+                this.bodyColor = `hsl(${hue}, 40%, 12%)`;
+                this.wingColor = `hsl(${hue + 10}, 50%, 18%)`;
+                this.glowColor = `hsla(${hue}, 80%, 60%, 0.15)`;
+            }
+
+            update() {
+                if (this.disappearing) {
+                    this.disappearTimer += 0.02;
+                    this.opacity = 1 - this.disappearTimer;
+                    // Spawn mist particles during vanish
+                    if (this.disappearTimer < 0.8 && Math.random() < 0.2) {
+                        spawnMist(this.x + (Math.random()-0.5)*20, this.y + (Math.random()-0.5)*20);
+                    }
+                    if (this.disappearTimer >= 1) { this.alive = false; }
+                    return;
+                }
+
+                const dx = this.targetX - this.x;
+                const dy = this.targetY - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist > 10) {
+                    const angle = Math.atan2(dy, dx);
+                    const curveAngle = Math.sin(this.curvePhase) * 0.2;
+                    const moveAngle = angle + curveAngle;
+                    this.x += Math.cos(moveAngle) * this.speed;
+                    this.y += Math.sin(moveAngle) * this.speed;
+                    this.curvePhase += this.curveSpeed;
+                    // Gentle altitude oscillation
+                    this.y += Math.sin(this.curvePhase * 1.5) * 0.3;
+                } else {
+                    this.targetX = canvas.width / 2 + (Math.random() - 0.5) * 500;
+                    this.targetY = canvas.height / 2 - 30 + (Math.random() - 0.5) * 350;
+                }
+
+                this.wingPhase += this.wingSpeed;
+                this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
+
+                // Collision with title
+                const titleEl = document.querySelector('.guild-title');
+                if (titleEl) {
+                    const rect = titleEl.getBoundingClientRect();
+                    titleRect = {
+                        x: rect.left + rect.width * 0.05,
+                        y: rect.top + rect.height * 0.05,
+                        width: rect.width * 0.9,
+                        height: rect.height * 0.9
+                    };
+                    if (this.x > titleRect.x && this.x < titleRect.x + titleRect.width &&
+                        this.y > titleRect.y && this.y < titleRect.y + titleRect.height) {
+                        this.triggerDisappear();
+                    }
+                }
+            }
+
+            triggerDisappear() {
+                if (this.disappearing) return;
+                this.disappearing = true;
+                this.disappearTimer = 0;
+                // Burst of mist particles
+                for (let i = 0; i < 15; i++) {
+                    spawnMist(this.x + (Math.random()-0.5)*30, this.y + (Math.random()-0.5)*30);
+                }
+            }
+
+            draw() {
+                if (!this.alive || this.opacity <= 0) return;
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+
+                const flap = Math.sin(this.wingPhase);
+                const size = this.size;
+
+                // Glow aura
+                ctx.shadowColor = '#9b6dff';
+                ctx.shadowBlur = 25;
+
+                // ---- Body ----
+                ctx.fillStyle = this.bodyColor;
+                ctx.beginPath();
+                ctx.ellipse(0, 0, size * 0.6, size * 0.35, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // ---- Head ----
+                ctx.fillStyle = this.bodyColor;
+                ctx.beginPath();
+                ctx.arc(size * 0.5, -size * 0.05, size * 0.28, 0, Math.PI * 2);
+                ctx.fill();
+
+                // ---- Beak ----
+                ctx.fillStyle = '#1a0a2a';
+                ctx.beginPath();
+                ctx.moveTo(size * 0.7, -size * 0.08);
+                ctx.lineTo(size * 1.0, -size * 0.02);
+                ctx.lineTo(size * 0.7, size * 0.06);
+                ctx.fill();
+
+                // ---- Eye (tiny red/purple glint) ----
+                ctx.fillStyle = '#8a4bff';
+                ctx.shadowBlur = 10;
+                ctx.beginPath();
+                ctx.arc(size * 0.6, -size * 0.1, size * 0.06, 0, Math.PI * 2);
+                ctx.fill();
+
+                // ---- Left Wing (pointed, dramatic) ----
+                ctx.shadowBlur = 20;
+                ctx.fillStyle = this.wingColor;
+                ctx.beginPath();
+                ctx.moveTo(-size * 0.2, -size * 0.1);
+                // Wing tip extends up and back
+                const wingTipX = -size * 0.8 - Math.abs(flap) * size * 0.5;
+                const wingTipY = -size * 0.7 + flap * size * 0.3;
+                ctx.quadraticCurveTo(-size * 0.6, -size * 0.5 + flap * size * 0.3, wingTipX, wingTipY);
+                ctx.quadraticCurveTo(-size * 0.4, -size * 0.2 + flap * size * 0.2, -size * 0.2, -size * 0.1);
+                ctx.fill();
+
+                // ---- Right Wing ----
+                ctx.fillStyle = this.wingColor;
+                ctx.beginPath();
+                ctx.moveTo(-size * 0.2, size * 0.1);
+                const wingTipX2 = -size * 0.8 - Math.abs(flap) * size * 0.5;
+                const wingTipY2 = size * 0.7 - flap * size * 0.3;
+                ctx.quadraticCurveTo(-size * 0.6, size * 0.5 - flap * size * 0.3, wingTipX2, wingTipY2);
+                ctx.quadraticCurveTo(-size * 0.4, size * 0.2 - flap * size * 0.2, -size * 0.2, size * 0.1);
+                ctx.fill();
+
+                // ---- Tail (long, forked) ----
+                ctx.fillStyle = this.bodyColor;
+                ctx.shadowBlur = 15;
+                ctx.beginPath();
+                ctx.moveTo(-size * 0.5, -size * 0.1);
+                ctx.lineTo(-size * 1.1, -size * 0.35 - flap * size * 0.1);
+                ctx.lineTo(-size * 1.1, size * 0.35 + flap * size * 0.1);
+                ctx.lineTo(-size * 0.5, size * 0.1);
+                ctx.fill();
+
+                ctx.restore();
+            }
+        }
+
+        // ---- Mist particles for vanish effect ----
+        function spawnMist(x, y) {
+            mistParticles.push({
+                x, y,
+                vx: (Math.random()-0.5) * 1.5,
+                vy: (Math.random()-0.5) * 1.5 - 0.3,
+                life: 1,
+                size: 5 + Math.random() * 15,
+                color: `hsla(260, 80%, 60%, ${0.1 + Math.random() * 0.2})`
+            });
+        }
+
+        function updateMist() {
+            for (let i = mistParticles.length - 1; i >= 0; i--) {
+                const p = mistParticles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.01;
+                p.life -= 0.01;
+                if (p.life <= 0) mistParticles.splice(i, 1);
+            }
+        }
+
+        function drawMist() {
+            for (const p of mistParticles) {
+                ctx.save();
+                ctx.globalAlpha = p.life * 0.6;
+                ctx.shadowColor = '#9b6dff';
+                ctx.shadowBlur = 40;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size * (1 - p.life * 0.5), 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // ---- Animation Loop ----
+        function animateBirds() {
+            if (!birdsActive) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (const bird of birds) {
+                bird.update();
+                bird.draw();
+            }
+            birds = birds.filter(b => b.alive);
+
+            updateMist();
+            drawMist();
+
+            // Keep between 20-30 ravens
+            while (birds.length < 20 + Math.floor(Math.random() * 10)) {
+                birds.push(new Raven());
+            }
+
+            animationId = requestAnimationFrame(animateBirds);
+        }
+
+        function startBirds() {
+            if (birdsActive) return;
+            birdsActive = true;
+            for (let i = 0; i < 30; i++) {
+                const bird = new Raven();
+                bird.x = Math.random() * canvas.width;
+                bird.y = Math.random() * canvas.height;
+                bird.targetX = canvas.width / 2 + (Math.random() - 0.5) * 500;
+                bird.targetY = canvas.height / 2 - 30 + (Math.random() - 0.5) * 350;
+                birds.push(bird);
+            }
+            animateBirds();
+        }
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && birdsActive) {
+                if (animationId) { cancelAnimationFrame(animationId); animationId = null; }
+            } else if (!document.hidden && birdsActive && !animationId) {
+                animateBirds();
+            }
         });
+
+        console.log('🐦‍⬛ Phantom Ravens released – cinematic horror mode.');
     </script>
 </body>
 </html>
