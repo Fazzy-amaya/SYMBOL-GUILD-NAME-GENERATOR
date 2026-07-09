@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ᴘʜᴀɴᴛᴏᴍ・〆 — Name Generator</title>
     <style>
-        /* ----- RESET & BASE ----- */
         * {
             margin: 0;
             padding: 0;
@@ -23,7 +22,6 @@
             overflow: hidden;
         }
 
-        /* ----- INTRO SCREEN (OVERLAY) ----- */
         #intro-screen {
             position: fixed;
             inset: 0;
@@ -37,6 +35,8 @@
             transition: opacity 1.2s ease, visibility 1.2s ease;
             opacity: 1;
             visibility: visible;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
 
         #intro-screen.fade-out {
@@ -65,10 +65,7 @@
         }
 
         @keyframes lineFadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .cursor-blink {
@@ -100,7 +97,30 @@
             to { opacity: 1; }
         }
 
-        /* ----- MAIN APP (HIDDEN INITIALLY) ----- */
+        #click-prompt {
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: #b396d9;
+            letter-spacing: 4px;
+            opacity: 0;
+            display: none;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        #click-prompt.show {
+            display: block;
+            animation: fadeInPrompt 0.8s forwards, pulseGlow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes fadeInPrompt {
+            to { opacity: 1; }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { text-shadow: 0 0 10px #6a2faf; }
+            50% { text-shadow: 0 0 30px #9b6dff, 0 0 60px #4a1a7a; }
+        }
+
         #main-app {
             opacity: 0;
             transition: opacity 1.5s ease;
@@ -117,13 +137,13 @@
         .container {
             background: rgba(20, 10, 30, 0.7);
             backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             border: 1px solid rgba(180, 130, 255, 0.2);
             border-radius: 40px;
             padding: 50px 40px;
             width: 100%;
             text-align: center;
             box-shadow: 0 0 60px rgba(100, 40, 180, 0.3);
-            transition: all 0.3s ease;
         }
 
         .guild-title {
@@ -150,7 +170,6 @@
             border-radius: 30px;
         }
 
-        /* --- RESULT AREA --- */
         .result-wrapper {
             background: rgba(0, 0, 0, 0.4);
             border-radius: 30px;
@@ -159,7 +178,6 @@
             margin-bottom: 15px;
             transition: 0.3s;
             cursor: pointer;
-            position: relative;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -179,7 +197,6 @@
             text-shadow: 0 0 40px #9b6dff, 0 0 80px #4a1a7a;
             letter-spacing: 2px;
             word-break: break-word;
-            transition: 0.3s;
             min-height: 70px;
             display: flex;
             align-items: center;
@@ -200,15 +217,9 @@
             color: #7a5a9a;
             letter-spacing: 2px;
             margin-top: 8px;
-            transition: 0.3s;
             pointer-events: none;
         }
 
-        .result-wrapper:hover .copy-hint {
-            color: #b396d9;
-        }
-
-        /* --- COPY BUTTON (manual) --- */
         .copy-btn-container {
             margin: 10px 0 20px 0;
         }
@@ -225,6 +236,8 @@
             letter-spacing: 2px;
             display: inline-block;
             backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            -webkit-tap-highlight-color: transparent;
         }
 
         .copy-btn:hover {
@@ -237,7 +250,6 @@
             transform: scale(0.95);
         }
 
-        /* --- INPUT SECTION --- */
         .input-area label {
             display: block;
             font-size: 0.9rem;
@@ -310,21 +322,10 @@
         }
 
         @media (max-width: 480px) {
-            .container {
-                padding: 30px 20px;
-            }
-            .btn {
-                padding: 14px 30px;
-                font-size: 1rem;
-                letter-spacing: 4px;
-            }
-            .result-wrapper {
-                padding: 15px 10px;
-            }
-            .copy-btn {
-                padding: 8px 20px;
-                font-size: 0.9rem;
-            }
+            .container { padding: 30px 20px; }
+            .btn { padding: 14px 30px; font-size: 1rem; letter-spacing: 4px; }
+            .result-wrapper { padding: 15px 10px; }
+            .copy-btn { padding: 8px 20px; font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -333,6 +334,7 @@
     <!-- ====== INTRO SCREEN ====== -->
     <div id="intro-screen">
         <div id="intro-text"></div>
+        <div id="click-prompt">✦ Click anywhere to enter ✦</div>
         <div class="intro-credit">✦ FR4NX ✦</div>
     </div>
 
@@ -342,7 +344,6 @@
             <h1 class="guild-title">ᴘʜᴀɴᴛᴏᴍ・〆</h1>
             <div class="sub-title">Name Generator</div>
 
-            <!-- RESULT DISPLAY + COPY BUTTON -->
             <div class="result-wrapper" id="resultWrapper">
                 <div id="result" class="placeholder">✦ Type your name below ✦</div>
                 <div class="copy-hint">⬇ Tap the name or button below to copy ⬇</div>
@@ -352,7 +353,6 @@
                 <button class="copy-btn" id="manualCopyBtn">📋 Copy Name</button>
             </div>
 
-            <!-- INPUT -->
             <div class="input-area">
                 <label for="userName">INPUT YOUR REQUIRED NAME HERE</label>
                 <input 
@@ -369,8 +369,8 @@
         </div>
     </div>
 
-    <!-- ====== HIDDEN AUDIO ELEMENT ====== -->
-    <audio id="bg-music" loop>
+    <!-- ====== AUDIO ====== -->
+    <audio id="bg-music" loop preload="auto">
         <source src="./music.mp3" type="audio/mpeg">
         <source src="/SYMBOL-GUILD-NAME-GENERATOR/music.mp3" type="audio/mpeg">
     </audio>
@@ -390,15 +390,15 @@
         const introContainer = document.getElementById('intro-text');
         const introScreen = document.getElementById('intro-screen');
         const mainApp = document.getElementById('main-app');
+        const clickPrompt = document.getElementById('click-prompt');
 
         let lineIndex = 0;
+        let introComplete = false;
 
         function typeLine() {
             if (lineIndex >= introLines.length) {
-                setTimeout(() => {
-                    introScreen.classList.add('fade-out');
-                    mainApp.classList.add('visible');
-                }, 1500);
+                introComplete = true;
+                clickPrompt.classList.add('show');
                 return;
             }
 
@@ -408,7 +408,6 @@
             introContainer.appendChild(lineElement);
 
             let currentChar = 0;
-
             function typeChar() {
                 if (currentChar < currentLine.length) {
                     lineElement.textContent += currentLine[currentChar];
@@ -422,21 +421,78 @@
                     setTimeout(typeLine, 300);
                 }
             }
-
             typeChar();
         }
 
         window.addEventListener('load', typeLine);
 
         // =============================================
-        // 2. NAME GENERATOR LOGIC
+        // 2. MUSIC – iOS‑friendly start on intro click
+        // =============================================
+        const audio = document.getElementById('bg-music');
+        let musicStarted = false;
+        audio.volume = 1.0;
+
+        // Wait until the audio is ready before attempting play
+        let audioReady = false;
+        audio.addEventListener('canplaythrough', () => {
+            audioReady = true;
+            console.log('✅ Music ready');
+        });
+
+        // If already ready, set flag
+        if (audio.readyState >= 3) audioReady = true;
+
+        function playMusic() {
+            if (musicStarted) return;
+            // For iOS, we must call play() directly inside the gesture handler
+            // without any async delay.
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    musicStarted = true;
+                    console.log('🔊 Horror at MAX VOLUME!');
+                }).catch(err => {
+                    console.log('⛔ Play blocked:', err.message);
+                });
+            }
+        }
+
+        // ----- Intro click: proceed and start music -----
+        introScreen.addEventListener('click', function(e) {
+            if (introComplete) {
+                introScreen.classList.add('fade-out');
+                mainApp.classList.add('visible');
+                // Call playMusic immediately – this is inside a user gesture
+                playMusic();
+            }
+        });
+
+        // Also add touchstart for iOS (slightly more responsive)
+        introScreen.addEventListener('touchstart', function(e) {
+            if (introComplete) {
+                introScreen.classList.add('fade-out');
+                mainApp.classList.add('visible');
+                playMusic();
+            }
+        }, { passive: true });
+
+        // Backup: if the user clicks anywhere else on the page after intro, start music
+        document.addEventListener('click', function() {
+            if (introComplete && !musicStarted) {
+                playMusic();
+            }
+        });
+
+        // =============================================
+        // 3. NAME GENERATOR
         // =============================================
         const smallCapsMap = {
-            'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ',
-            'f': 'ꜰ', 'g': 'ɢ', 'h': 'ʜ', 'i': 'ɪ', 'j': 'ᴊ',
-            'k': 'ᴋ', 'l': 'ʟ', 'm': 'ᴍ', 'n': 'ɴ', 'o': 'ᴏ',
-            'p': 'ᴘ', 'q': 'ǫ', 'r': 'ʀ', 's': 'ꜱ', 't': 'ᴛ',
-            'u': 'ᴜ', 'v': 'ᴠ', 'w': 'ᴡ', 'x': 'x', 'y': 'ʏ', 'z': 'ᴢ'
+            'a':'ᴀ','b':'ʙ','c':'ᴄ','d':'ᴅ','e':'ᴇ',
+            'f':'ꜰ','g':'ɢ','h':'ʜ','i':'ɪ','j':'ᴊ',
+            'k':'ᴋ','l':'ʟ','m':'ᴍ','n':'ɴ','o':'ᴏ',
+            'p':'ᴘ','q':'ǫ','r':'ʀ','s':'ꜱ','t':'ᴛ',
+            'u':'ᴜ','v':'ᴠ','w':'ᴡ','x':'x','y':'ʏ','z':'ᴢ'
         };
 
         let currentGeneratedName = '';
@@ -453,12 +509,7 @@
                 return;
             }
 
-            const smallName = rawName
-                .toLowerCase()
-                .split('')
-                .map(char => smallCapsMap[char] || char)
-                .join('');
-
+            const smallName = rawName.toLowerCase().split('').map(ch => smallCapsMap[ch] || ch).join('');
             const phantomIdentity = smallName + '・〆';
             currentGeneratedName = phantomIdentity;
 
@@ -469,13 +520,12 @@
         }
 
         // =============================================
-        // 3. COPY TO CLIPBOARD - MOBILE FRIENDLY
+        // 4. COPY – iOS‑proven fallback
         // =============================================
         function copyResult() {
             const resultDisplay = document.getElementById('result');
             const textToCopy = currentGeneratedName;
 
-            // If nothing to copy, show warning
             if (!textToCopy || resultDisplay.className === 'placeholder') {
                 resultDisplay.textContent = '⚠️ TYPE A NAME FIRST!';
                 resultDisplay.style.color = '#ff8888';
@@ -501,26 +551,31 @@
             }
         }
 
-        // Fallback using hidden textarea (works on all devices, no alert)
+        // iOS‑reliable fallback: create a visible (but tiny) input, select, copy
         function fallbackCopyText(text, resultDisplay) {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            textarea.style.left = '-9999px';
-            textarea.style.top = '-9999px';
-            document.body.appendChild(textarea);
-            textarea.select();
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = text;
+            input.style.position = 'fixed';
+            input.style.left = '0';
+            input.style.top = '0';
+            input.style.width = '1px';
+            input.style.height = '1px';
+            input.style.opacity = '0.01';
+            input.style.zIndex = '9999';
+            input.style.pointerEvents = 'none';
+            document.body.appendChild(input);
+            input.focus();
+            input.select();
+            input.setSelectionRange(0, text.length);
+
             try {
                 const success = document.execCommand('copy');
                 if (success) {
                     showCopiedFeedback(resultDisplay);
                 } else {
-                    // Silent fail – the user will see no feedback, but we can show a toast?
-                    // We'll just show a "Copy failed" briefly.
-                    resultDisplay.textContent = '❌ Copy failed, try the button again';
+                    resultDisplay.textContent = '❌ Copy failed, try again';
                     resultDisplay.style.color = '#ff8888';
-                    resultDisplay.style.textShadow = '0 0 30px #ff2222';
                     setTimeout(() => {
                         if (currentGeneratedName) {
                             resultDisplay.textContent = currentGeneratedName;
@@ -530,7 +585,6 @@
                     }, 1500);
                 }
             } catch (e) {
-                // Silent fail – no alert
                 resultDisplay.textContent = '❌ Copy failed';
                 resultDisplay.style.color = '#ff8888';
                 setTimeout(() => {
@@ -541,7 +595,7 @@
                     }
                 }, 1500);
             }
-            document.body.removeChild(textarea);
+            document.body.removeChild(input);
         }
 
         function showCopiedFeedback(resultDisplay) {
@@ -557,7 +611,7 @@
             }, 1500);
         }
 
-        // ----- Attach copy to both the result wrapper and the manual button -----
+        // Attach copy to both wrapper and manual button
         const resultWrapper = document.getElementById('resultWrapper');
         resultWrapper.addEventListener('click', copyResult);
         resultWrapper.addEventListener('touchstart', copyResult, { passive: true });
@@ -566,50 +620,12 @@
         manualCopyBtn.addEventListener('click', copyResult);
         manualCopyBtn.addEventListener('touchstart', copyResult, { passive: true });
 
-        // ----- Enter key support for input -----
-        document.getElementById('userName').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                updatePreview();
-            }
+        document.getElementById('userName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') updatePreview();
         });
 
-        // =============================================
-        // 4. MUSIC PLAYER - MAX VOLUME + AUTO-START
-        // =============================================
-        const audio = document.getElementById('bg-music');
-        let musicStarted = false;
-
-        // Force max volume
-        audio.volume = 1.0;
-
-        audio.addEventListener('canplaythrough', function() {
-            console.log('✅ Music loaded successfully!');
-        });
-
-        audio.addEventListener('error', function(e) {
-            console.error('❌ Music failed to load. Check file path and name.');
-        });
-
-        function playMusic() {
-            if (musicStarted) return;
-            audio.play()
-                .then(() => {
-                    musicStarted = true;
-                    console.log('🔊 Horror unleashed at MAX VOLUME!');
-                })
-                .catch((err) => {
-                    console.log('⛔ Autoplay blocked:', err.message);
-                });
-        }
-
-        setTimeout(playMusic, 500);
-
-        document.addEventListener('click', playMusic);
-        document.addEventListener('touchstart', playMusic);
-        document.addEventListener('keydown', playMusic);
-        document.getElementById('userName').addEventListener('focus', playMusic);
-
-        audio.addEventListener('ended', function() {
+        // Loop audio forever
+        audio.addEventListener('ended', () => {
             audio.play().catch(() => {});
         });
     </script>
