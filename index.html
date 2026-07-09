@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ᴘʜᴀɴᴛᴏᴍ・〆 — Name Generator</title>
     <style>
         * {
@@ -19,9 +19,25 @@
             background: radial-gradient(circle at center, #12081a, #07020a);
             font-family: 'Segoe UI', 'Arial', sans-serif;
             padding: 20px;
+            position: relative;
+            overflow: hidden;
         }
 
+        /* ---------- CANVAS (particles) ---------- */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ---------- MAIN CARD ---------- */
         .container {
+            position: relative;
+            z-index: 1;
             background: rgba(20, 10, 30, 0.7);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(180, 130, 255, 0.2);
@@ -32,8 +48,26 @@
             text-align: center;
             box-shadow: 0 0 60px rgba(100, 40, 180, 0.3);
             transition: all 0.3s ease;
+            /* ---------- PULSING GLOW ANIMATION ---------- */
+            animation: pulseGlow 3.5s ease-in-out infinite;
         }
 
+        @keyframes pulseGlow {
+            0% {
+                box-shadow: 0 0 40px rgba(100, 40, 180, 0.3), 0 0 80px rgba(80, 30, 160, 0.1);
+                border-color: rgba(180, 130, 255, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 80px rgba(140, 70, 255, 0.6), 0 0 150px rgba(100, 40, 220, 0.3);
+                border-color: rgba(200, 160, 255, 0.6);
+            }
+            100% {
+                box-shadow: 0 0 40px rgba(100, 40, 180, 0.3), 0 0 80px rgba(80, 30, 160, 0.1);
+                border-color: rgba(180, 130, 255, 0.2);
+            }
+        }
+
+        /* Also pulse the title text-shadow for extra effect */
         .guild-title {
             font-size: clamp(2.8rem, 10vw, 4.5rem);
             font-weight: 400;
@@ -42,6 +76,19 @@
             text-shadow: 0 0 30px #8a4bff, 0 0 60px #4a1a7a;
             margin-bottom: 5px;
             word-break: break-word;
+            animation: textPulse 3.5s ease-in-out infinite;
+        }
+
+        @keyframes textPulse {
+            0% {
+                text-shadow: 0 0 30px #8a4bff, 0 0 60px #4a1a7a;
+            }
+            50% {
+                text-shadow: 0 0 50px #b07aff, 0 0 100px #7a3ad9, 0 0 150px #4a1a7a;
+            }
+            100% {
+                text-shadow: 0 0 30px #8a4bff, 0 0 60px #4a1a7a;
+            }
         }
 
         .sub-title {
@@ -135,6 +182,11 @@
             border-radius: 30px;
             border: 1px dashed rgba(150, 100, 220, 0.2);
             padding: 20px;
+            transition: border-color 0.3s;
+        }
+
+        .result-area:hover {
+            border-color: rgba(180, 130, 255, 0.5);
         }
 
         #result {
@@ -163,11 +215,6 @@
             text-transform: uppercase;
         }
 
-        /* small caps fallback */
-        .small-caps {
-            font-variant: small-caps;
-        }
-
         @media (max-width: 480px) {
             .container {
                 padding: 30px 20px;
@@ -181,14 +228,17 @@
     </style>
 </head>
 <body>
+
+    <!-- Canvas for floating ember particles -->
+    <canvas id="particleCanvas"></canvas>
+
     <div class="container">
-        <!-- Guild Title in your exact format -->
         <h1 class="guild-title">ᴘʜᴀɴᴛᴏᴍ・〆</h1>
         <div class="sub-title">Name Generator</div>
 
         <div class="input-area">
             <label for="userName">Enter your name</label>
-            <input type="text" id="userName" placeholder="e.g. Raven" autofocus>
+            <input type="text" id="userName" placeholder="e.g. Raven" autofocus />
         </div>
 
         <button class="btn" onclick="generateName()">D O N E ?</button>
@@ -200,12 +250,12 @@
     </div>
 
     <script>
-        // Complete small-caps Unicode mapping (A-Z)
+        // ---------- SMALL CAPS MAP ----------
         const smallCapsMap = {
-            'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ', 
-            'f': 'ꜰ', 'g': 'ɢ', 'h': 'ʜ', 'i': 'ɪ', 'j': 'ᴊ', 
-            'k': 'ᴋ', 'l': 'ʟ', 'm': 'ᴍ', 'n': 'ɴ', 'o': 'ᴏ', 
-            'p': 'ᴘ', 'q': 'ǫ', 'r': 'ʀ', 's': 'ꜱ', 't': 'ᴛ', 
+            'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ',
+            'f': 'ꜰ', 'g': 'ɢ', 'h': 'ʜ', 'i': 'ɪ', 'j': 'ᴊ',
+            'k': 'ᴋ', 'l': 'ʟ', 'm': 'ᴍ', 'n': 'ɴ', 'o': 'ᴏ',
+            'p': 'ᴘ', 'q': 'ǫ', 'r': 'ʀ', 's': 'ꜱ', 't': 'ᴛ',
             'u': 'ᴜ', 'v': 'ᴠ', 'w': 'ᴡ', 'x': 'x', 'y': 'ʏ', 'z': 'ᴢ'
         };
 
@@ -214,7 +264,6 @@
             const resultDisplay = document.getElementById('result');
             let rawName = inputField.value.trim();
 
-            // If input is empty, show a warning and reset styling
             if (rawName === '') {
                 resultDisplay.textContent = '⚠️ PLEASE ENTER A NAME FIRST';
                 resultDisplay.style.color = '#b396d9';
@@ -222,28 +271,101 @@
                 return;
             }
 
-            // Convert to lowercase, then map each character to small-caps
             const smallName = rawName
                 .toLowerCase()
                 .split('')
-                .map(char => smallCapsMap[char] || char) // keep non-letters as-is
+                .map(char => smallCapsMap[char] || char)
                 .join('');
 
-            // Append the guild suffix
             const phantomIdentity = smallName + '・〆';
 
-            // Display the result with full Phantom styling
             resultDisplay.textContent = phantomIdentity;
             resultDisplay.style.color = '#f2e9ff';
             resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
         }
 
-        // Allow pressing "Enter" in the input field to trigger generation
         document.getElementById('userName').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                generateName();
-            }
+            if (event.key === 'Enter') generateName();
         });
+
+        // ---------- PARTICLE SYSTEM (Embers) ----------
+        (function initParticles() {
+            const canvas = document.getElementById('particleCanvas');
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let particles = [];
+            const PARTICLE_COUNT = 80;
+
+            function resize() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            class Particle {
+                constructor() {
+                    this.reset();
+                }
+                reset() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.size = Math.random() * 3.5 + 1.5;
+                    this.speedX = (Math.random() - 0.5) * 0.25;
+                    this.speedY = (Math.random() - 0.5) * 0.25 - 0.08; // slight upward drift
+                    this.opacity = Math.random() * 0.6 + 0.2;
+                    this.pulse = Math.random() * Math.PI * 2;
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    this.pulse += 0.02;
+
+                    // fade in/out slightly
+                    this.currentOpacity = this.opacity * (0.7 + 0.3 * Math.sin(this.pulse));
+
+                    // wrap around edges
+                    if (this.x < -10) this.x = width + 10;
+                    if (this.x > width + 10) this.x = -10;
+                    if (this.y < -10) this.y = height + 10;
+                    if (this.y > height + 10) this.y = -10;
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    // purple/white glow
+                    const gradient = ctx.createRadialGradient(
+                        this.x, this.y, 0,
+                        this.x, this.y, this.size * 2
+                    );
+                    gradient.addColorStop(0, `rgba(210, 180, 255, ${this.currentOpacity})`);
+                    gradient.addColorStop(1, `rgba(120, 60, 220, 0)`);
+                    ctx.fillStyle = gradient;
+                    ctx.fill();
+
+                    // tiny bright core
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size * 0.3, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 240, 255, ${this.currentOpacity * 0.9})`;
+                    ctx.fill();
+                }
+            }
+
+            // create particles
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                particles.push(new Particle());
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        })();
     </script>
 </body>
 </html>
