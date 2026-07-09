@@ -326,7 +326,7 @@
     </div>
 
     <!-- ====== HIDDEN AUDIO ELEMENT ====== -->
-    <!-- CHANGE "music.mp3" TO YOUR ACTUAL MP3 FILENAME -->
+    <!-- The path is absolute to your repo root. -->
     <audio id="bg-music" loop src="/SYMBOL-GUILD-NAME-GENERATOR/music.mp3"></audio>
 
     <script>
@@ -346,12 +346,9 @@
         const mainApp = document.getElementById('main-app');
 
         let lineIndex = 0;
-        let charIndex = 0;
-        let isTypingComplete = false;
 
         function typeLine() {
             if (lineIndex >= introLines.length) {
-                isTypingComplete = true;
                 setTimeout(() => {
                     introScreen.classList.add('fade-out');
                     mainApp.classList.add('visible');
@@ -426,14 +423,14 @@
         }
 
         // =============================================
-        // 3. COPY TO CLIPBOARD
+        // 3. COPY TO CLIPBOARD - FIXED FOR MOBILE
         // =============================================
         function copyResult() {
             const resultDisplay = document.getElementById('result');
             const textToCopy = currentGeneratedName;
 
+            // If nothing to copy, show warning
             if (!textToCopy || resultDisplay.className === 'placeholder') {
-                const originalText = resultDisplay.textContent;
                 resultDisplay.textContent = '⚠️ TYPE A NAME FIRST!';
                 resultDisplay.style.color = '#ff8888';
                 resultDisplay.style.textShadow = '0 0 30px #ff2222';
@@ -448,19 +445,51 @@
                 return;
             }
 
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                const originalText = resultDisplay.textContent;
-                resultDisplay.textContent = '✅  COPIED!  ✅';
-                resultDisplay.style.color = '#b3ff9b';
-                resultDisplay.style.textShadow = '0 0 40px #66ff33';
-                setTimeout(() => {
+            // Try the modern Clipboard API first
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(textToCopy)
+                    .then(() => showCopiedFeedback(resultDisplay))
+                    .catch(() => fallbackCopyText(textToCopy, resultDisplay));
+            } else {
+                // Fallback for older browsers / mobile
+                fallbackCopyText(textToCopy, resultDisplay);
+            }
+        }
+
+        // Fallback copy using a hidden textarea (works on all devices)
+        function fallbackCopyText(text, resultDisplay) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            textarea.style.left = '-9999px';
+            textarea.style.top = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                const success = document.execCommand('copy');
+                if (success) {
+                    showCopiedFeedback(resultDisplay);
+                } else {
+                    alert('Press Ctrl+C to copy: ' + text);
+                }
+            } catch (e) {
+                alert('Press Ctrl+C to copy: ' + text);
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showCopiedFeedback(resultDisplay) {
+            resultDisplay.textContent = '✅  COPIED!  ✅';
+            resultDisplay.style.color = '#b3ff9b';
+            resultDisplay.style.textShadow = '0 0 40px #66ff33';
+            setTimeout(() => {
+                if (currentGeneratedName) {
                     resultDisplay.textContent = currentGeneratedName;
                     resultDisplay.style.color = '#f2e9ff';
                     resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
-                }, 1500);
-            }).catch(() => {
-                alert('Press Ctrl+C to copy: ' + textToCopy);
-            });
+                }
+            }, 1500);
         }
 
         // Enter key support
@@ -471,45 +500,49 @@
         });
 
         // =============================================
-        // 4. MUSIC PLAYER - MAX VOLUME, NO CONTROLS
+        // 4. MUSIC PLAYER - MAX VOLUME + AUTO-START ON USER INTERACTION
         // =============================================
         const audio = document.getElementById('bg-music');
         let musicStarted = false;
 
-        // 🔥 FORCE MAXIMUM VOLUME (100%)
+        // 🔥 FORCE MAXIMUM VOLUME
         audio.volume = 1.0;
+
+        // 📢 Log errors to help debug
+        audio.addEventListener('error', function(e) {
+            console.error('❌ Music failed to load. Check the file path and name.');
+            console.error('Expected location: /SYMBOL-GUILD-NAME-GENERATOR/music.mp3');
+        });
+
+        audio.addEventListener('canplaythrough', function() {
+            console.log('✅ Music loaded successfully!');
+        });
 
         function playMusic() {
             if (musicStarted) return;
-            audio.play().then(() => {
-                musicStarted = true;
-                console.log('👻 Horror unleashed at MAX VOLUME!');
-            }).catch(() => {
-                console.log('⛔ Waiting for user gesture...');
-            });
+            audio.play()
+                .then(() => {
+                    musicStarted = true;
+                    console.log('🔊 Horror unleashed at MAX VOLUME!');
+                })
+                .catch((err) => {
+                    // If blocked, we'll try again on next click (handled below)
+                    console.log('⛔ Autoplay blocked. Waiting for user click...');
+                });
         }
 
-        // Try to autoplay when the page loads (usually blocked)
-        window.addEventListener('load', function() {
-            setTimeout(playMusic, 300);
-        });
+        // Try to autoplay after a short delay (usually blocked)
+        setTimeout(playMusic, 500);
 
-        // Attach to the FIRST user interaction (click, tap, keypress)
-        document.addEventListener('click', playMusic, { once: true });
-        document.addEventListener('touchstart', playMusic, { once: true });
-        document.addEventListener('keydown', playMusic, { once: true });
+        // Attach to ANY user interaction (click, touch, keypress)
+        document.addEventListener('click', playMusic);
+        document.addEventListener('touchstart', playMusic);
+        document.addEventListener('keydown', playMusic);
 
-        // Also try to play when the user focuses on the input
-        document.getElementById('userName').addEventListener('focus', function() {
-            if (!musicStarted) {
-                audio.play().then(() => {
-                    musicStarted = true;
-                    console.log('👻 Music started on input focus!');
-                }).catch(() => {});
-            }
-        }, { once: true });
+        // Also try when the user focuses on the input
+        document.getElementById('userName').addEventListener('focus', playMusic);
 
-        // Ensure it loops forever
+        // Loop forever
         audio.addEventListener('ended', function() {
             audio.play().catch(() => {});
         });
