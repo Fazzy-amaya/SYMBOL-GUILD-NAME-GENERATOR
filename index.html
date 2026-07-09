@@ -160,11 +160,16 @@
             transition: 0.3s;
             cursor: pointer;
             position: relative;
+            -webkit-tap-highlight-color: transparent; /* Remove mobile tap flash */
         }
 
         .result-wrapper:hover {
             border-color: #9b6dff;
             box-shadow: 0 0 30px rgba(100, 40, 200, 0.2);
+        }
+
+        .result-wrapper:active {
+            transform: scale(0.98);
         }
 
         #result {
@@ -179,6 +184,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            user-select: none; /* Prevent text selection on double tap */
         }
 
         #result.placeholder {
@@ -195,6 +201,7 @@
             letter-spacing: 2px;
             margin-top: 8px;
             transition: 0.3s;
+            pointer-events: none; /* Allow clicks to pass to wrapper */
         }
 
         .result-wrapper:hover .copy-hint {
@@ -303,7 +310,7 @@
             <div class="sub-title">Name Generator</div>
 
             <!-- RESULT DISPLAY -->
-            <div class="result-wrapper" id="resultWrapper" onclick="copyResult()">
+            <div class="result-wrapper" id="resultWrapper">
                 <div id="result" class="placeholder">✦ Type your name below ✦</div>
                 <div class="copy-hint">⬇ Tap this name to copy it ⬇</div>
             </div>
@@ -326,8 +333,11 @@
     </div>
 
     <!-- ====== HIDDEN AUDIO ELEMENT ====== -->
-    <!-- The path is absolute to your repo root. -->
-    <audio id="bg-music" loop src="/SYMBOL-GUILD-NAME-GENERATOR/music.mp3"></audio>
+    <!-- Try both relative and absolute paths -->
+    <audio id="bg-music" loop>
+        <source src="./music.mp3" type="audio/mpeg">
+        <source src="/SYMBOL-GUILD-NAME-GENERATOR/music.mp3" type="audio/mpeg">
+    </audio>
 
     <script>
         // =============================================
@@ -445,18 +455,17 @@
                 return;
             }
 
-            // Try the modern Clipboard API first
+            // Try modern Clipboard API
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(textToCopy)
                     .then(() => showCopiedFeedback(resultDisplay))
                     .catch(() => fallbackCopyText(textToCopy, resultDisplay));
             } else {
-                // Fallback for older browsers / mobile
                 fallbackCopyText(textToCopy, resultDisplay);
             }
         }
 
-        // Fallback copy using a hidden textarea (works on all devices)
+        // Fallback using hidden textarea (works on all devices)
         function fallbackCopyText(text, resultDisplay) {
             const textarea = document.createElement('textarea');
             textarea.value = text;
@@ -492,7 +501,12 @@
             }, 1500);
         }
 
-        // Enter key support
+        // ----- Attach copy to both click and touch events on the result wrapper -----
+        const resultWrapper = document.getElementById('resultWrapper');
+        resultWrapper.addEventListener('click', copyResult);
+        resultWrapper.addEventListener('touchstart', copyResult, { passive: true });
+
+        // ----- Enter key support for input -----
         document.getElementById('userName').addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
                 updatePreview();
@@ -500,22 +514,22 @@
         });
 
         // =============================================
-        // 4. MUSIC PLAYER - MAX VOLUME + AUTO-START ON USER INTERACTION
+        // 4. MUSIC PLAYER - MAX VOLUME + AUTO-START
         // =============================================
         const audio = document.getElementById('bg-music');
         let musicStarted = false;
 
-        // 🔥 FORCE MAXIMUM VOLUME
+        // Force max volume
         audio.volume = 1.0;
 
-        // 📢 Log errors to help debug
-        audio.addEventListener('error', function(e) {
-            console.error('❌ Music failed to load. Check the file path and name.');
-            console.error('Expected location: /SYMBOL-GUILD-NAME-GENERATOR/music.mp3');
-        });
-
+        // Log loading status
         audio.addEventListener('canplaythrough', function() {
             console.log('✅ Music loaded successfully!');
+        });
+
+        audio.addEventListener('error', function(e) {
+            console.error('❌ Music failed to load. Check file path.');
+            console.error('Tried: ./music.mp3 and /SYMBOL-GUILD-NAME-GENERATOR/music.mp3');
         });
 
         function playMusic() {
@@ -526,20 +540,19 @@
                     console.log('🔊 Horror unleashed at MAX VOLUME!');
                 })
                 .catch((err) => {
-                    // If blocked, we'll try again on next click (handled below)
-                    console.log('⛔ Autoplay blocked. Waiting for user click...');
+                    console.log('⛔ Autoplay blocked:', err.message);
                 });
         }
 
-        // Try to autoplay after a short delay (usually blocked)
+        // Try autoplay after short delay
         setTimeout(playMusic, 500);
 
-        // Attach to ANY user interaction (click, touch, keypress)
+        // Start on any user interaction (click, touch, key)
         document.addEventListener('click', playMusic);
         document.addEventListener('touchstart', playMusic);
         document.addEventListener('keydown', playMusic);
 
-        // Also try when the user focuses on the input
+        // Also on input focus
         document.getElementById('userName').addEventListener('focus', playMusic);
 
         // Loop forever
