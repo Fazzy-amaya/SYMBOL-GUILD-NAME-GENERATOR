@@ -325,6 +325,10 @@
         </div>
     </div>
 
+    <!-- ====== HIDDEN AUDIO ELEMENT ====== -->
+    <!-- CHANGE "music.mp3" TO YOUR ACTUAL MP3 FILENAME -->
+    <audio id="bg-music" loop src="music.mp3"></audio>
+
     <script>
         // =============================================
         // 1. TYPING INTRO
@@ -347,9 +351,7 @@
 
         function typeLine() {
             if (lineIndex >= introLines.length) {
-                // All lines are done
                 isTypingComplete = true;
-                // Wait 1.5 seconds, then fade out intro and show main app
                 setTimeout(() => {
                     introScreen.classList.add('fade-out');
                     mainApp.classList.add('visible');
@@ -366,17 +368,13 @@
 
             function typeChar() {
                 if (currentChar < currentLine.length) {
-                    // Add next character
                     lineElement.textContent += currentLine[currentChar];
                     currentChar++;
-                    setTimeout(typeChar, 45); // typing speed
+                    setTimeout(typeChar, 45);
                 } else {
-                    // Line finished, add cursor blink, move to next line
                     const cursor = document.createElement('span');
                     cursor.className = 'cursor-blink';
                     lineElement.appendChild(cursor);
-
-                    // Move to next line after a short pause
                     lineIndex++;
                     setTimeout(typeLine, 300);
                 }
@@ -385,7 +383,6 @@
             typeChar();
         }
 
-        // Start the typing effect when page loads
         window.addEventListener('load', typeLine);
 
         // =============================================
@@ -473,9 +470,48 @@
             }
         });
 
-        // Ensure main app stays hidden until intro finishes
-        document.addEventListener('DOMContentLoaded', function() {
-            // Just a safety net — main app is hidden by default via CSS
+        // =============================================
+        // 4. MUSIC PLAYER - MAX VOLUME, NO CONTROLS
+        // =============================================
+        const audio = document.getElementById('bg-music');
+        let musicStarted = false;
+
+        // 🔥 FORCE MAXIMUM VOLUME (100%)
+        audio.volume = 1.0;
+
+        function playMusic() {
+            if (musicStarted) return;
+            audio.play().then(() => {
+                musicStarted = true;
+                console.log('👻 Horror unleashed at MAX VOLUME!');
+            }).catch(() => {
+                console.log('⛔ Waiting for user gesture...');
+            });
+        }
+
+        // Try to autoplay when the page loads (usually blocked)
+        window.addEventListener('load', function() {
+            setTimeout(playMusic, 300);
+        });
+
+        // Attach to the FIRST user interaction (click, tap, keypress)
+        document.addEventListener('click', playMusic, { once: true });
+        document.addEventListener('touchstart', playMusic, { once: true });
+        document.addEventListener('keydown', playMusic, { once: true });
+
+        // Also try to play when the user focuses on the input
+        document.getElementById('userName').addEventListener('focus', function() {
+            if (!musicStarted) {
+                audio.play().then(() => {
+                    musicStarted = true;
+                    console.log('👻 Music started on input focus!');
+                }).catch(() => {});
+            }
+        }, { once: true });
+
+        // Ensure it loops forever
+        audio.addEventListener('ended', function() {
+            audio.play().catch(() => {});
         });
     </script>
 </body>
