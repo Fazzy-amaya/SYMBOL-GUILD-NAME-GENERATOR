@@ -29,8 +29,8 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 1;
-            pointer-events: none;
+            z-index: 10; /* ABOVE everything */
+            pointer-events: none; /* clicks pass through */
         }
 
         #intro-screen {
@@ -149,7 +149,7 @@
             overflow-y: auto;
             padding: 5px;
             position: relative;
-            z-index: 2;
+            z-index: 2; /* lower than canvas, but canvas is pointer-events: none */
         }
 
         #main-app.visible {
@@ -651,7 +651,7 @@
         audio.addEventListener('ended', () => audio.play().catch(() => {}));
 
         // =============================================
-        // 5. BIRD ANIMATION – CINEMATIC RAVENS
+        // 5. BIRD ANIMATION – IMPROVED FLIGHT & VISIBILITY
         // =============================================
         const canvas = document.getElementById('birdCanvas');
         const ctx = canvas.getContext('2d');
@@ -681,55 +681,63 @@
                 else if (side === 2) { this.x = Math.random() * canvas.width; this.y = canvas.height + margin; }
                 else { this.x = -margin; this.y = Math.random() * canvas.height; }
 
-                // Soaring target – large, slow arcs around the title
                 this.targetX = canvas.width / 2 + (Math.random() - 0.5) * 500;
                 this.targetY = canvas.height / 2 - 30 + (Math.random() - 0.5) * 350;
 
-                this.speed = 0.4 + Math.random() * 0.6; // slower, majestic
+                // Speed and motion
+                this.speed = 0.5 + Math.random() * 0.7;
                 this.angle = 0;
-                this.size = 20 + Math.random() * 14; // larger
+                this.size = 22 + Math.random() * 14; // large
+
+                // Wing flapping – smoother
                 this.wingPhase = Math.random() * Math.PI * 2;
-                this.wingSpeed = 0.035 + Math.random() * 0.02; // slower flap
-                this.curveOffset = (Math.random() - 0.5) * 120;
-                this.curveSpeed = 0.003 + Math.random() * 0.008;
+                this.wingSpeed = 0.04 + Math.random() * 0.025;
+
+                // Curved path with banking
                 this.curvePhase = Math.random() * Math.PI * 2;
+                this.curveSpeed = 0.004 + Math.random() * 0.01;
+                this.bankAngle = 0;
+
                 this.alive = true;
                 this.opacity = 1;
                 this.disappearing = false;
                 this.disappearTimer = 0;
 
-                // Body color variations
-                const hue = 260 + Math.random() * 30; // purple tint
-                this.bodyColor = `hsl(${hue}, 40%, 12%)`;
-                this.wingColor = `hsl(${hue + 10}, 50%, 18%)`;
-                this.glowColor = `hsla(${hue}, 80%, 60%, 0.15)`;
+                // Colors – deeper, more realistic
+                const hue = 260 + Math.random() * 20;
+                this.bodyColor = `hsl(${hue}, 40%, 10%)`;
+                this.wingColor = `hsl(${hue + 10}, 50%, 15%)`;
+                this.glowColor = `hsla(${hue}, 80%, 60%, 0.1)`;
             }
 
             update() {
                 if (this.disappearing) {
                     this.disappearTimer += 0.02;
                     this.opacity = 1 - this.disappearTimer;
-                    // Spawn mist particles during vanish
-                    if (this.disappearTimer < 0.8 && Math.random() < 0.2) {
-                        spawnMist(this.x + (Math.random()-0.5)*20, this.y + (Math.random()-0.5)*20);
+                    if (this.disappearTimer < 0.8 && Math.random() < 0.25) {
+                        spawnMist(this.x + (Math.random()-0.5)*25, this.y + (Math.random()-0.5)*25);
                     }
                     if (this.disappearTimer >= 1) { this.alive = false; }
                     return;
                 }
 
+                // Move toward target with banking
                 const dx = this.targetX - this.x;
                 const dy = this.targetY - this.y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
 
                 if (dist > 10) {
                     const angle = Math.atan2(dy, dx);
-                    const curveAngle = Math.sin(this.curvePhase) * 0.2;
-                    const moveAngle = angle + curveAngle;
+                    // Curved flight
+                    const curve = Math.sin(this.curvePhase) * 0.25;
+                    const moveAngle = angle + curve;
                     this.x += Math.cos(moveAngle) * this.speed;
                     this.y += Math.sin(moveAngle) * this.speed;
                     this.curvePhase += this.curveSpeed;
-                    // Gentle altitude oscillation
-                    this.y += Math.sin(this.curvePhase * 1.5) * 0.3;
+                    // Body bob
+                    this.y += Math.sin(this.curvePhase * 1.8) * 0.4;
+                    // Banking angle for visual flair
+                    this.bankAngle = curve * 0.3;
                 } else {
                     this.targetX = canvas.width / 2 + (Math.random() - 0.5) * 500;
                     this.targetY = canvas.height / 2 - 30 + (Math.random() - 0.5) * 350;
@@ -759,9 +767,8 @@
                 if (this.disappearing) return;
                 this.disappearing = true;
                 this.disappearTimer = 0;
-                // Burst of mist particles
-                for (let i = 0; i < 15; i++) {
-                    spawnMist(this.x + (Math.random()-0.5)*30, this.y + (Math.random()-0.5)*30);
+                for (let i = 0; i < 20; i++) {
+                    spawnMist(this.x + (Math.random()-0.5)*40, this.y + (Math.random()-0.5)*40);
                 }
             }
 
@@ -771,85 +778,102 @@
                 ctx.globalAlpha = this.opacity;
                 ctx.translate(this.x, this.y);
                 ctx.rotate(this.angle);
+                // Add banking tilt
+                ctx.rotate(this.bankAngle);
 
                 const flap = Math.sin(this.wingPhase);
                 const size = this.size;
 
-                // Glow aura
+                // Glow aura behind
                 ctx.shadowColor = '#9b6dff';
-                ctx.shadowBlur = 25;
+                ctx.shadowBlur = 30;
 
                 // ---- Body ----
                 ctx.fillStyle = this.bodyColor;
                 ctx.beginPath();
-                ctx.ellipse(0, 0, size * 0.6, size * 0.35, 0, 0, Math.PI * 2);
+                ctx.ellipse(0, 0, size * 0.55, size * 0.3, 0, 0, Math.PI * 2);
                 ctx.fill();
 
                 // ---- Head ----
                 ctx.fillStyle = this.bodyColor;
                 ctx.beginPath();
-                ctx.arc(size * 0.5, -size * 0.05, size * 0.28, 0, Math.PI * 2);
+                ctx.arc(size * 0.45, -size * 0.05, size * 0.25, 0, Math.PI * 2);
                 ctx.fill();
 
                 // ---- Beak ----
                 ctx.fillStyle = '#1a0a2a';
                 ctx.beginPath();
-                ctx.moveTo(size * 0.7, -size * 0.08);
-                ctx.lineTo(size * 1.0, -size * 0.02);
-                ctx.lineTo(size * 0.7, size * 0.06);
+                ctx.moveTo(size * 0.65, -size * 0.07);
+                ctx.lineTo(size * 0.95, -size * 0.02);
+                ctx.lineTo(size * 0.65, size * 0.05);
                 ctx.fill();
 
-                // ---- Eye (tiny red/purple glint) ----
-                ctx.fillStyle = '#8a4bff';
-                ctx.shadowBlur = 10;
+                // ---- Eye ----
+                ctx.shadowBlur = 15;
+                ctx.fillStyle = '#b36bff';
                 ctx.beginPath();
-                ctx.arc(size * 0.6, -size * 0.1, size * 0.06, 0, Math.PI * 2);
+                ctx.arc(size * 0.55, -size * 0.1, size * 0.06, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.arc(size * 0.56, -size * 0.12, size * 0.02, 0, Math.PI * 2);
                 ctx.fill();
 
-                // ---- Left Wing (pointed, dramatic) ----
+                // ---- Left Wing (more detailed) ----
                 ctx.shadowBlur = 20;
                 ctx.fillStyle = this.wingColor;
                 ctx.beginPath();
-                ctx.moveTo(-size * 0.2, -size * 0.1);
-                // Wing tip extends up and back
-                const wingTipX = -size * 0.8 - Math.abs(flap) * size * 0.5;
-                const wingTipY = -size * 0.7 + flap * size * 0.3;
-                ctx.quadraticCurveTo(-size * 0.6, -size * 0.5 + flap * size * 0.3, wingTipX, wingTipY);
-                ctx.quadraticCurveTo(-size * 0.4, -size * 0.2 + flap * size * 0.2, -size * 0.2, -size * 0.1);
+                ctx.moveTo(-size * 0.15, -size * 0.08);
+                // Wing curves up and back with feather-like shape
+                const wingUp = -size * 0.7 - Math.abs(flap) * size * 0.4;
+                const wingOut = -size * 0.4 - flap * size * 0.3;
+                ctx.quadraticCurveTo(-size * 0.4, -size * 0.5 + flap * size * 0.3, wingOut, wingUp);
+                ctx.quadraticCurveTo(-size * 0.5, -size * 0.25 + flap * size * 0.2, -size * 0.15, -size * 0.08);
                 ctx.fill();
+
+                // Wing feather lines (subtle)
+                ctx.strokeStyle = 'rgba(180,130,255,0.1)';
+                ctx.lineWidth = 1;
+                for (let i = 0; i < 3; i++) {
+                    const t = i / 3;
+                    ctx.beginPath();
+                    ctx.moveTo(-size * 0.2 - t * size * 0.3, -size * 0.1 + t * size * 0.1);
+                    ctx.lineTo(-size * 0.5 - t * size * 0.4, -size * 0.3 + t * size * 0.3 + flap * size * 0.2);
+                    ctx.stroke();
+                }
 
                 // ---- Right Wing ----
                 ctx.fillStyle = this.wingColor;
                 ctx.beginPath();
-                ctx.moveTo(-size * 0.2, size * 0.1);
-                const wingTipX2 = -size * 0.8 - Math.abs(flap) * size * 0.5;
-                const wingTipY2 = size * 0.7 - flap * size * 0.3;
-                ctx.quadraticCurveTo(-size * 0.6, size * 0.5 - flap * size * 0.3, wingTipX2, wingTipY2);
-                ctx.quadraticCurveTo(-size * 0.4, size * 0.2 - flap * size * 0.2, -size * 0.2, size * 0.1);
+                ctx.moveTo(-size * 0.15, size * 0.08);
+                const wingDown = -size * 0.7 - Math.abs(flap) * size * 0.4;
+                const wingOut2 = -size * 0.4 + flap * size * 0.3;
+                ctx.quadraticCurveTo(-size * 0.4, size * 0.5 - flap * size * 0.3, wingOut2, wingDown);
+                ctx.quadraticCurveTo(-size * 0.5, size * 0.25 - flap * size * 0.2, -size * 0.15, size * 0.08);
                 ctx.fill();
 
-                // ---- Tail (long, forked) ----
+                // ---- Tail ----
                 ctx.fillStyle = this.bodyColor;
                 ctx.shadowBlur = 15;
                 ctx.beginPath();
-                ctx.moveTo(-size * 0.5, -size * 0.1);
-                ctx.lineTo(-size * 1.1, -size * 0.35 - flap * size * 0.1);
-                ctx.lineTo(-size * 1.1, size * 0.35 + flap * size * 0.1);
-                ctx.lineTo(-size * 0.5, size * 0.1);
+                ctx.moveTo(-size * 0.45, -size * 0.1);
+                ctx.lineTo(-size * 1.0, -size * 0.3 - flap * size * 0.1);
+                ctx.lineTo(-size * 1.0, size * 0.3 + flap * size * 0.1);
+                ctx.lineTo(-size * 0.45, size * 0.1);
                 ctx.fill();
 
                 ctx.restore();
             }
         }
 
-        // ---- Mist particles for vanish effect ----
+        // ---- Mist particles ----
         function spawnMist(x, y) {
             mistParticles.push({
                 x, y,
-                vx: (Math.random()-0.5) * 1.5,
-                vy: (Math.random()-0.5) * 1.5 - 0.3,
+                vx: (Math.random()-0.5) * 2,
+                vy: (Math.random()-0.5) * 2 - 0.5,
                 life: 1,
-                size: 5 + Math.random() * 15,
+                size: 8 + Math.random() * 20,
                 color: `hsla(260, 80%, 60%, ${0.1 + Math.random() * 0.2})`
             });
         }
@@ -859,7 +883,7 @@
                 const p = mistParticles[i];
                 p.x += p.vx;
                 p.y += p.vy;
-                p.vy += 0.01;
+                p.vy += 0.02;
                 p.life -= 0.01;
                 if (p.life <= 0) mistParticles.splice(i, 1);
             }
@@ -868,18 +892,18 @@
         function drawMist() {
             for (const p of mistParticles) {
                 ctx.save();
-                ctx.globalAlpha = p.life * 0.6;
+                ctx.globalAlpha = p.life * 0.5;
                 ctx.shadowColor = '#9b6dff';
-                ctx.shadowBlur = 40;
+                ctx.shadowBlur = 50;
                 ctx.fillStyle = p.color;
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size * (1 - p.life * 0.5), 0, Math.PI * 2);
+                ctx.arc(p.x, p.y, p.size * (1 - p.life * 0.4), 0, Math.PI * 2);
                 ctx.fill();
                 ctx.restore();
             }
         }
 
-        // ---- Animation Loop ----
+        // ---- Main animation ----
         function animateBirds() {
             if (!birdsActive) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -893,7 +917,7 @@
             updateMist();
             drawMist();
 
-            // Keep between 20-30 ravens
+            // Keep 20-30 ravens
             while (birds.length < 20 + Math.floor(Math.random() * 10)) {
                 birds.push(new Raven());
             }
@@ -923,7 +947,7 @@
             }
         });
 
-        console.log('🐦‍⬛ Phantom Ravens released – cinematic horror mode.');
+        console.log('🐦‍⬛ Ravens now flying ABOVE the UI – with improved animation!');
     </script>
 </body>
 </html>
