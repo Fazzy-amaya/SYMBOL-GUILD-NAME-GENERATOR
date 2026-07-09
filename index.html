@@ -19,9 +19,11 @@
             background: radial-gradient(circle at center, #12081a, #07020a);
             font-family: 'Segoe UI', 'Arial', sans-serif;
             padding: 20px;
-            overflow: hidden;
+            /* allow scrolling if needed */
+            overflow-y: auto;
         }
 
+        /* ----- INTRO SCREEN (OVERLAY) ----- */
         #intro-screen {
             position: fixed;
             inset: 0;
@@ -37,6 +39,7 @@
             visibility: visible;
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
+            overflow-y: auto;
         }
 
         #intro-screen.fade-out {
@@ -121,12 +124,16 @@
             50% { text-shadow: 0 0 30px #9b6dff, 0 0 60px #4a1a7a; }
         }
 
+        /* ----- MAIN APP (GLASSMORPHIC + SCROLLABLE) ----- */
         #main-app {
             opacity: 0;
             transition: opacity 1.5s ease;
             width: 100%;
             max-width: 700px;
             pointer-events: none;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 5px;
         }
 
         #main-app.visible {
@@ -135,15 +142,17 @@
         }
 
         .container {
-            background: rgba(20, 10, 30, 0.7);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(180, 130, 255, 0.2);
+            background: rgba(20, 10, 30, 0.5);
+            backdrop-filter: blur(12px) saturate(1.2);
+            -webkit-backdrop-filter: blur(12px) saturate(1.2);
+            border: 1px solid rgba(180, 130, 255, 0.25);
             border-radius: 40px;
             padding: 50px 40px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 0 60px rgba(100, 40, 180, 0.3);
+            box-shadow: 0 0 60px rgba(100, 40, 180, 0.2), inset 0 0 30px rgba(150, 100, 220, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .guild-title {
@@ -171,9 +180,11 @@
         }
 
         .result-wrapper {
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
             border-radius: 30px;
-            border: 1px solid rgba(150, 100, 220, 0.25);
+            border: 1px solid rgba(150, 100, 220, 0.2);
             padding: 25px 20px 15px 20px;
             margin-bottom: 15px;
             transition: 0.3s;
@@ -225,7 +236,9 @@
         }
 
         .copy-btn {
-            background: rgba(100, 40, 180, 0.3);
+            background: rgba(100, 40, 180, 0.25);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
             border: 1px solid rgba(150, 100, 220, 0.3);
             color: #c4a8f0;
             padding: 10px 30px;
@@ -235,13 +248,11 @@
             transition: 0.3s;
             letter-spacing: 2px;
             display: inline-block;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
             -webkit-tap-highlight-color: transparent;
         }
 
         .copy-btn:hover {
-            background: rgba(100, 40, 180, 0.5);
+            background: rgba(100, 40, 180, 0.4);
             border-color: #9b6dff;
             box-shadow: 0 0 20px rgba(100, 40, 200, 0.2);
         }
@@ -263,7 +274,9 @@
         .input-area input {
             width: 100%;
             padding: 18px 25px;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
             border: 1px solid rgba(150, 100, 220, 0.3);
             border-radius: 60px;
             font-size: 1.2rem;
@@ -284,7 +297,7 @@
         .input-area input:focus {
             border-color: #9b6dff;
             box-shadow: 0 0 25px rgba(120, 60, 220, 0.3);
-            background: rgba(10, 5, 20, 0.7);
+            background: rgba(10, 5, 20, 0.6);
         }
 
         .btn {
@@ -377,11 +390,11 @@
 
     <script>
         // =============================================
-        // 1. TYPING INTRO
+        // 1. TYPING INTRO – Updated text
         // =============================================
         const introLines = [
-            "Welcome to the Phantom Guild.",
-            "Here, you get your official Phantom name.",
+            "Welcome to Phantom ・〆 Guild name generator.",
+            "Here, you get your official Phantom name signature and text style.",
             "Just type your name below and see it transform.",
             "Tap the result to copy it.",
             "Created by FR4NX."
@@ -433,20 +446,15 @@
         let musicStarted = false;
         audio.volume = 1.0;
 
-        // Wait until the audio is ready before attempting play
         let audioReady = false;
         audio.addEventListener('canplaythrough', () => {
             audioReady = true;
             console.log('✅ Music ready');
         });
-
-        // If already ready, set flag
         if (audio.readyState >= 3) audioReady = true;
 
         function playMusic() {
             if (musicStarted) return;
-            // For iOS, we must call play() directly inside the gesture handler
-            // without any async delay.
             const playPromise = audio.play();
             if (playPromise !== undefined) {
                 playPromise.then(() => {
@@ -458,17 +466,14 @@
             }
         }
 
-        // ----- Intro click: proceed and start music -----
+        // Intro click: proceed and play music
         introScreen.addEventListener('click', function(e) {
             if (introComplete) {
                 introScreen.classList.add('fade-out');
                 mainApp.classList.add('visible');
-                // Call playMusic immediately – this is inside a user gesture
                 playMusic();
             }
         });
-
-        // Also add touchstart for iOS (slightly more responsive)
         introScreen.addEventListener('touchstart', function(e) {
             if (introComplete) {
                 introScreen.classList.add('fade-out');
@@ -477,7 +482,7 @@
             }
         }, { passive: true });
 
-        // Backup: if the user clicks anywhere else on the page after intro, start music
+        // Backup: any click after intro starts music
         document.addEventListener('click', function() {
             if (introComplete && !musicStarted) {
                 playMusic();
@@ -520,7 +525,7 @@
         }
 
         // =============================================
-        // 4. COPY – iOS‑proven fallback
+        // 4. COPY – iOS‑RELIABLE (textarea + setTimeout trick)
         // =============================================
         function copyResult() {
             const resultDisplay = document.getElementById('result');
@@ -551,30 +556,45 @@
             }
         }
 
-        // iOS‑reliable fallback: create a visible (but tiny) input, select, copy
+        // iOS-proven fallback: create a tiny visible textarea, select, copy
         function fallbackCopyText(text, resultDisplay) {
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.value = text;
-            input.style.position = 'fixed';
-            input.style.left = '0';
-            input.style.top = '0';
-            input.style.width = '1px';
-            input.style.height = '1px';
-            input.style.opacity = '0.01';
-            input.style.zIndex = '9999';
-            input.style.pointerEvents = 'none';
-            document.body.appendChild(input);
-            input.focus();
-            input.select();
-            input.setSelectionRange(0, text.length);
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            // Must be visible and in the DOM for iOS to allow copy
+            textarea.style.position = 'fixed';
+            textarea.style.left = '0';
+            textarea.style.top = '0';
+            textarea.style.width = '1px';
+            textarea.style.height = '1px';
+            textarea.style.opacity = '0.5';  // make it barely visible but not completely hidden
+            textarea.style.zIndex = '9999';
+            textarea.style.pointerEvents = 'none';
+            textarea.setAttribute('readonly', '');
+            document.body.appendChild(textarea);
 
-            try {
-                const success = document.execCommand('copy');
-                if (success) {
-                    showCopiedFeedback(resultDisplay);
-                } else {
-                    resultDisplay.textContent = '❌ Copy failed, try again';
+            // Focus and select after a tiny delay – iOS needs the element to be fully rendered
+            setTimeout(() => {
+                textarea.focus();
+                textarea.select();
+                textarea.setSelectionRange(0, text.length);
+
+                try {
+                    const success = document.execCommand('copy');
+                    if (success) {
+                        showCopiedFeedback(resultDisplay);
+                    } else {
+                        resultDisplay.textContent = '❌ Copy failed, try again';
+                        resultDisplay.style.color = '#ff8888';
+                        setTimeout(() => {
+                            if (currentGeneratedName) {
+                                resultDisplay.textContent = currentGeneratedName;
+                                resultDisplay.style.color = '#f2e9ff';
+                                resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
+                            }
+                        }, 1500);
+                    }
+                } catch (e) {
+                    resultDisplay.textContent = '❌ Copy failed';
                     resultDisplay.style.color = '#ff8888';
                     setTimeout(() => {
                         if (currentGeneratedName) {
@@ -584,18 +604,8 @@
                         }
                     }, 1500);
                 }
-            } catch (e) {
-                resultDisplay.textContent = '❌ Copy failed';
-                resultDisplay.style.color = '#ff8888';
-                setTimeout(() => {
-                    if (currentGeneratedName) {
-                        resultDisplay.textContent = currentGeneratedName;
-                        resultDisplay.style.color = '#f2e9ff';
-                        resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
-                    }
-                }, 1500);
-            }
-            document.body.removeChild(input);
+                document.body.removeChild(textarea);
+            }, 50);
         }
 
         function showCopiedFeedback(resultDisplay) {
@@ -611,7 +621,7 @@
             }, 1500);
         }
 
-        // Attach copy to both wrapper and manual button
+        // Attach copy events
         const resultWrapper = document.getElementById('resultWrapper');
         resultWrapper.addEventListener('click', copyResult);
         resultWrapper.addEventListener('touchstart', copyResult, { passive: true });
