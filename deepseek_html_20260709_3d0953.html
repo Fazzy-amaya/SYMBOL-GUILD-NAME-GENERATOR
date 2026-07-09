@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ᴘʜᴀɴᴛᴏᴍ・〆 — Name Generator</title>
+    <style>
+        /* ----- RESET & BASE ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, #12081a, #07020a);
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        /* ----- INTRO SCREEN (OVERLAY) ----- */
+        #intro-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, #12081a, #07020a);
+            padding: 30px;
+            transition: opacity 1.2s ease, visibility 1.2s ease;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #intro-screen.fade-out {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        #intro-text {
+            max-width: 750px;
+            width: 100%;
+            text-align: left;
+            font-size: clamp(1.4rem, 4vw, 2.4rem);
+            font-weight: 300;
+            color: #e4d5ff;
+            text-shadow: 0 0 20px #6a2faf;
+            line-height: 1.8;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+
+        #intro-text .line {
+            opacity: 0;
+            transform: translateY(8px);
+            animation: lineFadeIn 0.3s forwards;
+        }
+
+        @keyframes lineFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 3px;
+            height: 1.2em;
+            background: #9b6dff;
+            margin-left: 4px;
+            vertical-align: text-bottom;
+            animation: blink 0.7s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .intro-credit {
+            margin-top: 30px;
+            font-size: 1rem;
+            color: #6a4a8a;
+            letter-spacing: 3px;
+            font-family: 'Segoe UI', sans-serif;
+            opacity: 0;
+            animation: fadeInCredit 1s 0.5s forwards;
+        }
+
+        @keyframes fadeInCredit {
+            to { opacity: 1; }
+        }
+
+        /* ----- MAIN APP (HIDDEN INITIALLY) ----- */
+        #main-app {
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            width: 100%;
+            max-width: 700px;
+            pointer-events: none;
+        }
+
+        #main-app.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .container {
+            background: rgba(20, 10, 30, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(180, 130, 255, 0.2);
+            border-radius: 40px;
+            padding: 50px 40px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 60px rgba(100, 40, 180, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .guild-title {
+            font-size: clamp(2.8rem, 10vw, 4.5rem);
+            font-weight: 400;
+            letter-spacing: 4px;
+            color: #e4d5ff;
+            text-shadow: 0 0 30px #8a4bff, 0 0 60px #4a1a7a;
+            margin-bottom: 5px;
+            word-break: break-word;
+        }
+
+        .sub-title {
+            font-size: 1rem;
+            color: #b396d9;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            border-top: 1px solid rgba(150, 100, 220, 0.2);
+            border-bottom: 1px solid rgba(150, 100, 220, 0.2);
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 30px;
+        }
+
+        /* --- RESULT AREA --- */
+        .result-wrapper {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 30px;
+            border: 1px solid rgba(150, 100, 220, 0.25);
+            padding: 25px 20px;
+            margin-bottom: 30px;
+            transition: 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .result-wrapper:hover {
+            border-color: #9b6dff;
+            box-shadow: 0 0 30px rgba(100, 40, 200, 0.2);
+        }
+
+        #result {
+            font-size: clamp(2.2rem, 7vw, 4rem);
+            font-weight: 400;
+            color: #f2e9ff;
+            text-shadow: 0 0 40px #9b6dff, 0 0 80px #4a1a7a;
+            letter-spacing: 2px;
+            word-break: break-word;
+            transition: 0.3s;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #result.placeholder {
+            font-size: 1.1rem;
+            color: #6a4a8a;
+            text-shadow: none;
+            letter-spacing: 4px;
+            font-weight: 300;
+        }
+
+        .copy-hint {
+            font-size: 0.75rem;
+            color: #7a5a9a;
+            letter-spacing: 2px;
+            margin-top: 8px;
+            transition: 0.3s;
+        }
+
+        .result-wrapper:hover .copy-hint {
+            color: #b396d9;
+        }
+
+        /* --- INPUT SECTION --- */
+        .input-area label {
+            display: block;
+            font-size: 0.9rem;
+            color: #c4a8f0;
+            letter-spacing: 3px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .input-area input {
+            width: 100%;
+            padding: 18px 25px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(150, 100, 220, 0.3);
+            border-radius: 60px;
+            font-size: 1.2rem;
+            color: #f0eaff;
+            text-align: center;
+            letter-spacing: 2px;
+            outline: none;
+            transition: 0.3s;
+            font-weight: 300;
+        }
+
+        .input-area input::placeholder {
+            color: #6a4a8a;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+        }
+
+        .input-area input:focus {
+            border-color: #9b6dff;
+            box-shadow: 0 0 25px rgba(120, 60, 220, 0.3);
+            background: rgba(10, 5, 20, 0.7);
+        }
+
+        .btn {
+            margin-top: 15px;
+            padding: 16px 55px;
+            background: linear-gradient(135deg, #6c2bb3, #3b1470);
+            border: none;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 6px;
+            color: #f5ecff;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 30px rgba(100, 40, 200, 0.3);
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #8235d9, #4f1d8a);
+            box-shadow: 0 0 50px rgba(130, 50, 220, 0.6);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .footer-note {
+            margin-top: 30px;
+            font-size: 0.7rem;
+            color: #3f2a5a;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            .btn {
+                padding: 14px 30px;
+                font-size: 1rem;
+                letter-spacing: 4px;
+            }
+            .result-wrapper {
+                padding: 15px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====== INTRO SCREEN ====== -->
+    <div id="intro-screen">
+        <div id="intro-text"></div>
+        <div class="intro-credit">✦ FR4NX ✦</div>
+    </div>
+
+    <!-- ====== MAIN APP ====== -->
+    <div id="main-app">
+        <div class="container">
+            <h1 class="guild-title">ᴘʜᴀɴᴛᴏᴍ・〆</h1>
+            <div class="sub-title">Name Generator</div>
+
+            <!-- RESULT DISPLAY -->
+            <div class="result-wrapper" id="resultWrapper" onclick="copyResult()">
+                <div id="result" class="placeholder">✦ Type your name below ✦</div>
+                <div class="copy-hint">⬇ Tap this name to copy it ⬇</div>
+            </div>
+
+            <!-- INPUT -->
+            <div class="input-area">
+                <label for="userName">INPUT YOUR REQUIRED NAME HERE</label>
+                <input 
+                    type="text" 
+                    id="userName" 
+                    placeholder="e.g. Shadow" 
+                    oninput="updatePreview()"
+                    autofocus
+                >
+            </div>
+
+            <button class="btn" onclick="updatePreview()">D O N E ?</button>
+            <div class="footer-note">ᴄʜᴀɴɴᴇʟ ᴛʜᴇ ᴠᴏɪᴅ</div>
+        </div>
+    </div>
+
+    <script>
+        // =============================================
+        // 1. TYPING INTRO
+        // =============================================
+        const introLines = [
+            "Welcome to the Phantom Guild.",
+            "Here, you get your official Phantom name.",
+            "Just type your name below and see it transform.",
+            "Tap the result to copy it.",
+            "Created by FR4NX."
+        ];
+
+        const introContainer = document.getElementById('intro-text');
+        const introScreen = document.getElementById('intro-screen');
+        const mainApp = document.getElementById('main-app');
+
+        let lineIndex = 0;
+        let charIndex = 0;
+        let isTypingComplete = false;
+
+        function typeLine() {
+            if (lineIndex >= introLines.length) {
+                // All lines are done
+                isTypingComplete = true;
+                // Wait 1.5 seconds, then fade out intro and show main app
+                setTimeout(() => {
+                    introScreen.classList.add('fade-out');
+                    mainApp.classList.add('visible');
+                }, 1500);
+                return;
+            }
+
+            const currentLine = introLines[lineIndex];
+            const lineElement = document.createElement('div');
+            lineElement.className = 'line';
+            introContainer.appendChild(lineElement);
+
+            let currentChar = 0;
+
+            function typeChar() {
+                if (currentChar < currentLine.length) {
+                    // Add next character
+                    lineElement.textContent += currentLine[currentChar];
+                    currentChar++;
+                    setTimeout(typeChar, 45); // typing speed
+                } else {
+                    // Line finished, add cursor blink, move to next line
+                    const cursor = document.createElement('span');
+                    cursor.className = 'cursor-blink';
+                    lineElement.appendChild(cursor);
+
+                    // Move to next line after a short pause
+                    lineIndex++;
+                    setTimeout(typeLine, 300);
+                }
+            }
+
+            typeChar();
+        }
+
+        // Start the typing effect when page loads
+        window.addEventListener('load', typeLine);
+
+        // =============================================
+        // 2. NAME GENERATOR LOGIC
+        // =============================================
+        const smallCapsMap = {
+            'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ',
+            'f': 'ꜰ', 'g': 'ɢ', 'h': 'ʜ', 'i': 'ɪ', 'j': 'ᴊ',
+            'k': 'ᴋ', 'l': 'ʟ', 'm': 'ᴍ', 'n': 'ɴ', 'o': 'ᴏ',
+            'p': 'ᴘ', 'q': 'ǫ', 'r': 'ʀ', 's': 'ꜱ', 't': 'ᴛ',
+            'u': 'ᴜ', 'v': 'ᴠ', 'w': 'ᴡ', 'x': 'x', 'y': 'ʏ', 'z': 'ᴢ'
+        };
+
+        let currentGeneratedName = '';
+
+        function updatePreview() {
+            const inputField = document.getElementById('userName');
+            const resultDisplay = document.getElementById('result');
+            let rawName = inputField.value.trim();
+
+            if (rawName === '') {
+                resultDisplay.textContent = '✦ Type your name below ✦';
+                resultDisplay.className = 'placeholder';
+                currentGeneratedName = '';
+                return;
+            }
+
+            const smallName = rawName
+                .toLowerCase()
+                .split('')
+                .map(char => smallCapsMap[char] || char)
+                .join('');
+
+            const phantomIdentity = smallName + '・〆';
+            currentGeneratedName = phantomIdentity;
+
+            resultDisplay.textContent = phantomIdentity;
+            resultDisplay.className = '';
+            resultDisplay.style.color = '#f2e9ff';
+            resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
+        }
+
+        // =============================================
+        // 3. COPY TO CLIPBOARD
+        // =============================================
+        function copyResult() {
+            const resultDisplay = document.getElementById('result');
+            const textToCopy = currentGeneratedName;
+
+            if (!textToCopy || resultDisplay.className === 'placeholder') {
+                const originalText = resultDisplay.textContent;
+                resultDisplay.textContent = '⚠️ TYPE A NAME FIRST!';
+                resultDisplay.style.color = '#ff8888';
+                resultDisplay.style.textShadow = '0 0 30px #ff2222';
+                setTimeout(() => {
+                    if (document.getElementById('userName').value.trim() === '') {
+                        resultDisplay.textContent = '✦ Type your name below ✦';
+                        resultDisplay.className = 'placeholder';
+                    } else {
+                        updatePreview();
+                    }
+                }, 1500);
+                return;
+            }
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalText = resultDisplay.textContent;
+                resultDisplay.textContent = '✅  COPIED!  ✅';
+                resultDisplay.style.color = '#b3ff9b';
+                resultDisplay.style.textShadow = '0 0 40px #66ff33';
+                setTimeout(() => {
+                    resultDisplay.textContent = currentGeneratedName;
+                    resultDisplay.style.color = '#f2e9ff';
+                    resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
+                }, 1500);
+            }).catch(() => {
+                alert('Press Ctrl+C to copy: ' + textToCopy);
+            });
+        }
+
+        // Enter key support
+        document.getElementById('userName').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                updatePreview();
+            }
+        });
+
+        // Ensure main app stays hidden until intro finishes
+        document.addEventListener('DOMContentLoaded', function() {
+            // Just a safety net — main app is hidden by default via CSS
+        });
+    </script>
+</body>
+</html>
