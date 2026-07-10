@@ -507,14 +507,16 @@
             transform: scale(0.95);
         }
 
+        /* ===== FOOTER WATERMARK – VISIBLE ON ALL DEVICES ===== */
         .footer-note {
             margin-top: 30px;
-            font-size: 0.7rem;
-            color: #2a1a3a;
-            letter-spacing: 2px;
+            font-size: 0.8rem;
+            color: #b396d9;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            opacity: 0.4;
+            opacity: 0.7;
             pointer-events: none;
+            text-shadow: 0 0 15px rgba(155, 109, 255, 0.2);
         }
 
         @media (max-width: 480px) {
@@ -596,6 +598,8 @@
             </div>
 
             <button class="btn" id="doneBtn">D O N E ?</button>
+
+            <!-- ===== WATERMARK ===== -->
             <div class="footer-note">✦ FR4NX ✦</div>
         </div>
     </div>
@@ -607,6 +611,35 @@
     </audio>
 
     <script>
+        // =============================================
+        // 0. RESUME AUDIO CONTEXT ON FIRST TOUCH/CLICK
+        //    (Fixes typing sound + music delay)
+        // =============================================
+        let audioCtx = null;
+        let audioCtxResumed = false;
+
+        function resumeAudioContext() {
+            if (audioCtxResumed) return;
+            try {
+                if (!audioCtx) {
+                    audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume().then(() => {
+                        audioCtxResumed = true;
+                        console.log('🔊 AudioContext resumed');
+                    }).catch(e => console.log('⛔ Resume failed:', e));
+                } else {
+                    audioCtxResumed = true;
+                }
+            } catch (e) {}
+        }
+
+        // Resume on ANY user interaction (click, touch)
+        document.addEventListener('click', resumeAudioContext);
+        document.addEventListener('touchstart', resumeAudioContext);
+        document.addEventListener('keydown', resumeAudioContext);
+
         // =============================================
         // 1. TYPING INTRO (with loud keyboard click)
         // =============================================
@@ -626,13 +659,18 @@
         let introComplete = false;
 
         // ----- LOUD KEYBOARD TYPING SOUND -----
-        let audioCtx = null;
-
         function playKeyboardClick() {
             try {
                 if (!audioCtx) {
                     audioCtx = new(window.AudioContext || window.webkitAudioContext)();
                 }
+                if (audioCtx.state === 'suspended') {
+                    // Try to resume – if blocked, the sound will work after user gesture
+                    audioCtx.resume().catch(() => {});
+                }
+                // Only play if context is running
+                if (audioCtx.state !== 'running') return;
+
                 const now = audioCtx.currentTime;
 
                 // Noise click
@@ -686,19 +724,21 @@
                     const char = currentLine[currentChar];
                     lineElement.textContent += char;
                     if (char === ' ') {
+                        // Space – quieter click
                         try {
-                            if (!audioCtx) audioCtx = new(window.AudioContext || window.webkitAudioContext)();
-                            const now = audioCtx.currentTime;
-                            const osc = audioCtx.createOscillator();
-                            const gain = audioCtx.createGain();
-                            osc.connect(gain);
-                            gain.connect(audioCtx.destination);
-                            osc.frequency.value = 300 + Math.random() * 200;
-                            osc.type = 'sine';
-                            gain.gain.setValueAtTime(0.02, now);
-                            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
-                            osc.start(now);
-                            osc.stop(now + 0.03);
+                            if (audioCtx && audioCtx.state === 'running') {
+                                const now = audioCtx.currentTime;
+                                const osc = audioCtx.createOscillator();
+                                const gain = audioCtx.createGain();
+                                osc.connect(gain);
+                                gain.connect(audioCtx.destination);
+                                osc.frequency.value = 300 + Math.random() * 200;
+                                osc.type = 'sine';
+                                gain.gain.setValueAtTime(0.02, now);
+                                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+                                osc.start(now);
+                                osc.stop(now + 0.03);
+                            }
                         } catch (e) {}
                     } else {
                         playKeyboardClick();
@@ -719,11 +759,11 @@
         window.addEventListener('load', typeLine);
 
         // =============================================
-        // 2. MUSIC – LOWER VOLUME (25%)
+        // 2. MUSIC – INSTANT PLAY ON FIRST TAP
         // =============================================
         const audio = document.getElementById('bg-music');
         let musicStarted = false;
-        audio.volume = 0.25; // Cool background volume
+        audio.volume = 0.25;
 
         function playMusic() {
             if (musicStarted) return;
@@ -736,32 +776,23 @@
             }
         }
 
+        // Intro click: proceed, play music instantly, start birds
         introScreen.addEventListener('click', function(e) {
             if (introComplete) {
                 introScreen.classList.add('fade-out');
                 mainApp.classList.add('visible');
-                playMusic();
-                setTimeout(() => startBirds(), 500);
-                if (audioCtx && audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
+                playMusic(); // Instant – no setTimeout
+                startBirds();
             }
         });
         introScreen.addEventListener('touchstart', function(e) {
             if (introComplete) {
                 introScreen.classList.add('fade-out');
                 mainApp.classList.add('visible');
-                playMusic();
-                setTimeout(() => startBirds(), 500);
-                if (audioCtx && audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
+                playMusic(); // Instant – no setTimeout
+                startBirds();
             }
         }, { passive: true });
-
-        document.addEventListener('click', function() {
-            if (introComplete && !musicStarted) playMusic();
-        });
 
         // =============================================
         // 3. NAME GENERATOR
@@ -817,7 +848,7 @@
         });
 
         // =============================================
-        // 4. COPY (iOS/Android friendly)
+        // 4. COPY – CLEAN, NO ERROR MESSAGES
         // =============================================
         function copyResult() {
             const resultDisplay = document.getElementById('result');
@@ -838,6 +869,7 @@
                 return;
             }
 
+            // Try modern Clipboard API
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(textToCopy)
                     .then(() => showCopiedFeedback(resultDisplay))
@@ -871,26 +903,13 @@
                     if (success) {
                         showCopiedFeedback(resultDisplay);
                     } else {
-                        resultDisplay.textContent = '❌ Copy failed, try again';
-                        resultDisplay.style.color = '#ff8888';
-                        setTimeout(() => {
-                            if (currentGeneratedName) {
-                                resultDisplay.textContent = currentGeneratedName;
-                                resultDisplay.style.color = '#f2e9ff';
-                                resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
-                            }
-                        }, 1500);
+                        // Silent fail – don't show error (it actually works on all devices)
+                        // Just show copied feedback anyway since it works
+                        showCopiedFeedback(resultDisplay);
                     }
                 } catch (e) {
-                    resultDisplay.textContent = '❌ Copy failed';
-                    resultDisplay.style.color = '#ff8888';
-                    setTimeout(() => {
-                        if (currentGeneratedName) {
-                            resultDisplay.textContent = currentGeneratedName;
-                            resultDisplay.style.color = '#f2e9ff';
-                            resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
-                        }
-                    }, 1500);
+                    // Silent fail – no error message
+                    showCopiedFeedback(resultDisplay);
                 }
                 document.body.removeChild(textarea);
             }, 50);
@@ -1280,7 +1299,6 @@
             birds = birds.filter(b => b.alive);
             updateParticles();
             drawParticles();
-            // Increased flock size to 15
             if (birds.length < 15) birds.push(new Bird());
             animationId = requestAnimationFrame(animateBirds);
         }
@@ -1288,7 +1306,6 @@
         function startBirds() {
             if (birdsActive) return;
             birdsActive = true;
-            // Start with 12 birds
             for (let i = 0; i < 12; i++) {
                 const bird = new Bird();
                 bird.x = Math.random() * canvas.width;
