@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ᴘʜᴀɴᴛᴏᴍ・〆 — Name Generator</title>
     <style>
         * {
@@ -16,26 +16,108 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: radial-gradient(circle at center, #12081a, #07020a);
             font-family: 'Segoe UI', 'Arial', sans-serif;
             padding: 20px;
             overflow-y: auto;
             position: relative;
+            background: radial-gradient(circle at center, #12081a, #07020a);
         }
 
-        /* ----- BIRD CANVAS (overlay) ----- */
+        /* ===== GUILD HALL BACKGROUND – CLEAR ON ALL DEVICES ===== */
+        #guild-hall {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: radial-gradient(ellipse at 30% 100%, #1a0a2a, #0a0512 70%, #000000);
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        /* Mist layers – visible on all devices */
+        .mist {
+            position: absolute;
+            bottom: 0;
+            left: -10%;
+            width: 120%;
+            height: 40%;
+            background: radial-gradient(ellipse at center bottom, rgba(80, 40, 120, 0.15) 0%, transparent 70%);
+            animation: mistDrift 20s ease-in-out infinite alternate;
+            filter: blur(30px);
+            pointer-events: none;
+            will-change: transform, opacity;
+        }
+        .mist:nth-child(2) {
+            bottom: 5%;
+            height: 30%;
+            animation-duration: 25s;
+            animation-delay: -5s;
+            background: radial-gradient(ellipse at 70% bottom, rgba(100, 50, 150, 0.1) 0%, transparent 60%);
+        }
+        .mist:nth-child(3) {
+            bottom: 10%;
+            height: 20%;
+            animation-duration: 30s;
+            animation-delay: -10s;
+            background: radial-gradient(ellipse at 20% bottom, rgba(60, 30, 100, 0.12) 0%, transparent 50%);
+        }
+
+        @keyframes mistDrift {
+            0% {
+                transform: translateX(0) scale(1);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateX(10%) scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        /* Castle silhouette – visible on all devices */
+        .castle {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 900px;
+            height: 60%;
+            pointer-events: none;
+            opacity: 0.08;
+        }
+        .castle::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            width: 60%;
+            height: 70%;
+            background: #0a0512;
+            clip-path: polygon(0% 100%, 15% 40%, 25% 40%, 25% 20%, 35% 20%, 35% 40%, 45% 40%, 45% 10%, 55% 10%, 55% 40%, 65% 40%, 65% 20%, 75% 20%, 75% 40%, 85% 40%, 100% 100%);
+        }
+        .castle::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 35%;
+            width: 30%;
+            height: 85%;
+            background: #0a0512;
+            clip-path: polygon(0% 100%, 10% 50%, 20% 50%, 20% 30%, 30% 30%, 30% 50%, 40% 50%, 40% 15%, 50% 15%, 50% 50%, 60% 50%, 60% 30%, 70% 30%, 70% 50%, 80% 50%, 90% 50%, 100% 100%);
+        }
+
+        /* ===== BIRD CANVAS ===== */
         #birdCanvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 1;
+            z-index: 9999;
             pointer-events: none;
-            /* allow clicks to pass through to the page */;
+            isolation: isolate;
         }
 
-        /* ----- INTRO SCREEN (OVERLAY) ----- */
+        /* ===== INTRO SCREEN ===== */
         #intro-screen {
             position: fixed;
             inset: 0;
@@ -53,7 +135,6 @@
             -webkit-tap-highlight-color: transparent;
             overflow-y: auto;
         }
-
         #intro-screen.fade-out {
             opacity: 0;
             visibility: hidden;
@@ -80,7 +161,6 @@
             transform: translateY(8px);
             animation: lineFadeIn 0.3s forwards;
         }
-
         @keyframes lineFadeIn {
             to {
                 opacity: 1;
@@ -97,7 +177,6 @@
             vertical-align: text-bottom;
             animation: blink 0.7s step-end infinite;
         }
-
         @keyframes blink {
             0%,
             100% {
@@ -105,24 +184,6 @@
             }
             50% {
                 opacity: 0;
-            }
-        }
-
-        .intro-credit {
-            margin-top: 30px;
-            font-size: 1rem;
-            color: #6a4a8a;
-            letter-spacing: 3px;
-            font-family: 'Segoe UI', sans-serif;
-            opacity: 0;
-            animation: fadeInCredit 1s 0.5s forwards;
-            z-index: 2;
-            position: relative;
-        }
-
-        @keyframes fadeInCredit {
-            to {
-                opacity: 1;
             }
         }
 
@@ -137,18 +198,15 @@
             z-index: 2;
             position: relative;
         }
-
         #click-prompt.show {
             display: block;
             animation: fadeInPrompt 0.8s forwards, pulseGlow 1.5s ease-in-out infinite;
         }
-
         @keyframes fadeInPrompt {
             to {
                 opacity: 1;
             }
         }
-
         @keyframes pulseGlow {
             0%,
             100% {
@@ -159,7 +217,7 @@
             }
         }
 
-        /* ----- MAIN APP (GLASSMORPHIC + SCROLLABLE) ----- */
+        /* ===== MAIN APP ===== */
         #main-app {
             opacity: 0;
             transition: opacity 1.5s ease;
@@ -172,7 +230,6 @@
             position: relative;
             z-index: 2;
         }
-
         #main-app.visible {
             opacity: 1;
             pointer-events: all;
@@ -190,7 +247,6 @@
             box-shadow: 0 0 60px rgba(100, 40, 180, 0.2), inset 0 0 30px rgba(150, 100, 220, 0.05);
         }
 
-        /* ----- PULSING TITLE (Heartbeat effect) ----- */
         .guild-title {
             font-size: clamp(2.8rem, 10vw, 4.5rem);
             font-weight: 400;
@@ -205,7 +261,6 @@
             position: relative;
             z-index: 3;
         }
-
         @keyframes heartbeat {
             0% {
                 transform: scale(1);
@@ -259,12 +314,10 @@
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
         }
-
         .result-wrapper:hover {
             border-color: #9b6dff;
             box-shadow: 0 0 30px rgba(100, 40, 200, 0.2);
         }
-
         .result-wrapper:active {
             transform: scale(0.98);
         }
@@ -281,14 +334,27 @@
             align-items: center;
             justify-content: center;
             user-select: none;
+            transition: 0.3s;
         }
-
         #result.placeholder {
             font-size: 1.1rem;
             color: #6a4a8a;
             text-shadow: none;
             letter-spacing: 4px;
             font-weight: 300;
+        }
+
+        .result-message {
+            font-size: 0.85rem;
+            color: #b396d9;
+            margin-top: 8px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            letter-spacing: 2px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .result-message.show {
+            opacity: 1;
         }
 
         .copy-hint {
@@ -302,7 +368,6 @@
         .copy-btn-container {
             margin: 10px 0 20px 0;
         }
-
         .copy-btn {
             background: rgba(100, 40, 180, 0.25);
             backdrop-filter: blur(4px);
@@ -318,17 +383,153 @@
             display: inline-block;
             -webkit-tap-highlight-color: transparent;
         }
-
         .copy-btn:hover {
             background: rgba(100, 40, 180, 0.4);
             border-color: #9b6dff;
             box-shadow: 0 0 20px rgba(100, 40, 200, 0.2);
         }
-
         .copy-btn:active {
             transform: scale(0.95);
         }
 
+        /* ===== RANDOM NAME SECTION – Gender Flow ===== */
+        .random-section {
+            margin: 20px 0 15px 0;
+        }
+
+        .random-btn {
+            background: rgba(100, 40, 180, 0.15);
+            border: 1px solid rgba(150, 100, 220, 0.2);
+            color: #c4a8f0;
+            padding: 8px 25px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.3s;
+            letter-spacing: 2px;
+            display: inline-block;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .random-btn:hover {
+            background: rgba(100, 40, 180, 0.3);
+            border-color: #9b6dff;
+            box-shadow: 0 0 20px rgba(100, 40, 200, 0.15);
+        }
+        .random-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Gender selection buttons (hidden initially) */
+        .gender-select {
+            display: none;
+            margin-top: 12px;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .gender-select.open {
+            display: flex;
+        }
+
+        .gender-btn {
+            background: rgba(100, 40, 180, 0.15);
+            border: 1px solid rgba(150, 100, 220, 0.25);
+            color: #c4a8f0;
+            padding: 10px 30px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.3s;
+            letter-spacing: 2px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .gender-btn:hover {
+            background: rgba(100, 40, 180, 0.3);
+            border-color: #9b6dff;
+            box-shadow: 0 0 20px rgba(100, 40, 200, 0.15);
+        }
+        .gender-btn:active {
+            transform: scale(0.95);
+        }
+        .gender-btn.male:hover {
+            border-color: #6a8aff;
+            box-shadow: 0 0 20px rgba(100, 140, 255, 0.2);
+        }
+        .gender-btn.female:hover {
+            border-color: #ff6a9a;
+            box-shadow: 0 0 20px rgba(255, 100, 150, 0.2);
+        }
+
+        .name-list-container {
+            margin-top: 12px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, opacity 0.5s ease;
+            opacity: 0;
+        }
+        .name-list-container.open {
+            max-height: 600px;
+            opacity: 1;
+        }
+
+        .name-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 8px;
+            padding: 10px 0;
+        }
+
+        .name-list-item {
+            background: rgba(100, 40, 180, 0.1);
+            border: 1px solid rgba(150, 100, 220, 0.15);
+            border-radius: 20px;
+            padding: 8px 12px;
+            color: #d4c4f0;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+            letter-spacing: 1px;
+            font-family: 'Courier New', monospace;
+        }
+        .name-list-item:hover {
+            background: rgba(100, 40, 180, 0.25);
+            border-color: #9b6dff;
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(100, 40, 200, 0.15);
+        }
+        .name-list-item:active {
+            transform: scale(0.95);
+        }
+
+        .generate-more-btn {
+            background: rgba(100, 40, 180, 0.1);
+            border: 1px dashed rgba(150, 100, 220, 0.25);
+            color: #8a7aaa;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.3s;
+            letter-spacing: 2px;
+            margin-top: 5px;
+            display: inline-block;
+        }
+        .generate-more-btn:hover {
+            background: rgba(100, 40, 180, 0.2);
+            border-color: #9b6dff;
+            color: #c4a8f0;
+        }
+
+        .no-more-names {
+            color: #6a4a8a;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            font-style: italic;
+            letter-spacing: 1px;
+        }
+
+        /* ===== INPUT ===== */
         .input-area label {
             display: block;
             font-size: 0.9rem;
@@ -338,7 +539,6 @@
             text-transform: uppercase;
             font-weight: 600;
         }
-
         .input-area input {
             width: 100%;
             padding: 18px 25px;
@@ -355,13 +555,11 @@
             transition: 0.3s;
             font-weight: 300;
         }
-
         .input-area input::placeholder {
             color: #6a4a8a;
             font-size: 0.9rem;
             letter-spacing: 2px;
         }
-
         .input-area input:focus {
             border-color: #9b6dff;
             box-shadow: 0 0 25px rgba(120, 60, 220, 0.3);
@@ -383,23 +581,24 @@
             box-shadow: 0 0 30px rgba(100, 40, 200, 0.3);
             text-transform: uppercase;
         }
-
         .btn:hover {
             transform: scale(1.05);
             background: linear-gradient(135deg, #8235d9, #4f1d8a);
             box-shadow: 0 0 50px rgba(130, 50, 220, 0.6);
         }
-
         .btn:active {
             transform: scale(0.95);
         }
 
+        /* ===== FOOTER WATERMARK ===== */
         .footer-note {
             margin-top: 30px;
             font-size: 0.7rem;
-            color: #3f2a5a;
+            color: #2a1a3a;
             letter-spacing: 2px;
             text-transform: uppercase;
+            opacity: 0.4;
+            pointer-events: none;
         }
 
         @media (max-width: 480px) {
@@ -418,19 +617,37 @@
                 padding: 8px 20px;
                 font-size: 0.9rem;
             }
+            .name-list {
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            }
+            .name-list-item {
+                font-size: 0.75rem;
+                padding: 6px 10px;
+            }
+            .gender-btn {
+                padding: 8px 20px;
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- ====== BIRD CANVAS (overlay) ====== -->
+    <!-- ====== GUILD HALL BACKGROUND ====== -->
+    <div id="guild-hall">
+        <div class="mist"></div>
+        <div class="mist"></div>
+        <div class="mist"></div>
+        <div class="castle"></div>
+    </div>
+
+    <!-- ====== BIRD CANVAS ====== -->
     <canvas id="birdCanvas"></canvas>
 
     <!-- ====== INTRO SCREEN ====== -->
     <div id="intro-screen">
         <div id="intro-text"></div>
         <div id="click-prompt">✦ Click anywhere to enter ✦</div>
-        <div class="intro-credit">✦ FR4NX ✦</div>
     </div>
 
     <!-- ====== MAIN APP ====== -->
@@ -441,6 +658,7 @@
 
             <div class="result-wrapper" id="resultWrapper">
                 <div id="result" class="placeholder">✦ Type your name below ✦</div>
+                <div class="result-message" id="resultMessage"></div>
                 <div class="copy-hint">⬇ Tap the name or button below to copy ⬇</div>
             </div>
 
@@ -448,38 +666,47 @@
                 <button class="copy-btn" id="manualCopyBtn">📋 Copy Name</button>
             </div>
 
-            <div class="input-area">
-                <label for="userName">INPUT YOUR REQUIRED NAME HERE</label>
-                <input 
-                    type="text" 
-                    id="userName" 
-                    placeholder="e.g. Shadow" 
-                    oninput="updatePreview()"
-                    autofocus
-                >
+            <!-- ===== RANDOM NAME SECTION ===== -->
+            <div class="random-section">
+                <button class="random-btn" id="randomToggleBtn">🎲 Random Name</button>
+
+                <div class="gender-select" id="genderSelect">
+                    <button class="gender-btn male" data-gender="male">♂ Male</button>
+                    <button class="gender-btn female" data-gender="female">♀ Female</button>
+                </div>
+
+                <div class="name-list-container" id="nameListContainer">
+                    <div class="name-list" id="nameList"></div>
+                    <button class="generate-more-btn" id="generateMoreBtn">↻ Generate More</button>
+                    <div class="no-more-names" id="noMoreNames" style="display:none;">✨ All names have been shown</div>
+                </div>
             </div>
 
-            <button class="btn" onclick="updatePreview()">D O N E ?</button>
-            <div class="footer-note">ᴄʜᴀɴɴᴇʟ ᴛʜᴇ ᴠᴏɪᴅ</div>
+            <div class="input-area">
+                <label for="userName">INPUT YOUR REQUIRED NAME HERE</label>
+                <input type="text" id="userName" placeholder="e.g. Shadow" oninput="updatePreview()" autofocus />
+            </div>
+
+            <button class="btn" id="doneBtn">D O N E ?</button>
+            <div class="footer-note">✦ FR4NX ✦</div>
         </div>
     </div>
 
     <!-- ====== AUDIO ====== -->
     <audio id="bg-music" loop preload="auto">
-        <source src="./music.mp3" type="audio/mpeg">
-        <source src="/SYMBOL-GUILD-NAME-GENERATOR/music.mp3" type="audio/mpeg">
+        <source src="./music.mp3" type="audio/mpeg" />
+        <source src="/SYMBOL-GUILD-NAME-GENERATOR/music.mp3" type="audio/mpeg" />
     </audio>
 
     <script>
         // =============================================
-        // 1. TYPING INTRO – Updated text
+        // 1. TYPING INTRO (with loud keyboard click)
         // =============================================
         const introLines = [
             "Welcome to Phantom ・〆 Guild name generator.",
             "Here, you get your official Phantom name signature and text style.",
             "Just type your name below and see it transform.",
-            "Tap the result to copy it.",
-            "Created by FR4NX."
+            "Tap the result to copy it."
         ];
 
         const introContainer = document.getElementById('intro-text');
@@ -489,6 +716,53 @@
 
         let lineIndex = 0;
         let introComplete = false;
+
+        // ----- LOUD KEYBOARD TYPING SOUND (Web Audio) -----
+        let audioCtx = null;
+
+        function playKeyboardClick() {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+                }
+                // Create a noise-like click using oscillator + noise
+                const now = audioCtx.currentTime;
+
+                // Main click – a short burst of noise
+                const bufferSize = audioCtx.sampleRate * 0.04;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.3));
+                }
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.15, now); // Louder than before
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+
+                noise.connect(gain);
+                gain.connect(audioCtx.destination);
+                noise.start(now);
+                noise.stop(now + 0.06);
+
+                // Add a sharp high-frequency "tick" overlay
+                const osc = audioCtx.createOscillator();
+                const gain2 = audioCtx.createGain();
+                osc.connect(gain2);
+                gain2.connect(audioCtx.destination);
+                osc.frequency.value = 1800 + Math.random() * 600;
+                osc.type = 'square';
+                gain2.gain.setValueAtTime(0.04, now);
+                gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+                osc.start(now);
+                osc.stop(now + 0.02);
+
+            } catch (e) {
+                // Silently fail if audio context not available
+            }
+        }
 
         function typeLine() {
             if (lineIndex >= introLines.length) {
@@ -506,7 +780,28 @@
 
             function typeChar() {
                 if (currentChar < currentLine.length) {
-                    lineElement.textContent += currentLine[currentChar];
+                    const char = currentLine[currentChar];
+                    lineElement.textContent += char;
+                    // Play keyboard click for every character (including spaces, but slightly softer)
+                    if (char === ' ') {
+                        // Space – quieter click
+                        try {
+                            if (!audioCtx) audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+                            const now = audioCtx.currentTime;
+                            const osc = audioCtx.createOscillator();
+                            const gain = audioCtx.createGain();
+                            osc.connect(gain);
+                            gain.connect(audioCtx.destination);
+                            osc.frequency.value = 300 + Math.random() * 200;
+                            osc.type = 'sine';
+                            gain.gain.setValueAtTime(0.02, now);
+                            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+                            osc.start(now);
+                            osc.stop(now + 0.03);
+                        } catch (e) {}
+                    } else {
+                        playKeyboardClick();
+                    }
                     currentChar++;
                     setTimeout(typeChar, 45);
                 } else {
@@ -523,18 +818,11 @@
         window.addEventListener('load', typeLine);
 
         // =============================================
-        // 2. MUSIC – iOS‑friendly start on intro click
+        // 2. MUSIC
         // =============================================
         const audio = document.getElementById('bg-music');
         let musicStarted = false;
         audio.volume = 1.0;
-
-        let audioReady = false;
-        audio.addEventListener('canplaythrough', () => {
-            audioReady = true;
-            console.log('✅ Music ready');
-        });
-        if (audio.readyState >= 3) audioReady = true;
 
         function playMusic() {
             if (musicStarted) return;
@@ -543,22 +831,19 @@
                 playPromise.then(() => {
                     musicStarted = true;
                     console.log('🔊 Horror at MAX VOLUME!');
-                }).catch(err => {
-                    console.log('⛔ Play blocked:', err.message);
-                });
+                }).catch(err => console.log('⛔ Play blocked:', err.message));
             }
         }
 
-        // Intro click: proceed and play music
         introScreen.addEventListener('click', function(e) {
             if (introComplete) {
                 introScreen.classList.add('fade-out');
                 mainApp.classList.add('visible');
                 playMusic();
-                // Start bird animation after intro fades
-                setTimeout(() => {
-                    startBirds();
-                }, 500);
+                setTimeout(() => startBirds(), 500);
+                if (audioCtx && audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
             }
         });
         introScreen.addEventListener('touchstart', function(e) {
@@ -566,17 +851,15 @@
                 introScreen.classList.add('fade-out');
                 mainApp.classList.add('visible');
                 playMusic();
-                setTimeout(() => {
-                    startBirds();
-                }, 500);
+                setTimeout(() => startBirds(), 500);
+                if (audioCtx && audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
             }
         }, { passive: true });
 
-        // Backup: any click after intro starts music
         document.addEventListener('click', function() {
-            if (introComplete && !musicStarted) {
-                playMusic();
-            }
+            if (introComplete && !musicStarted) playMusic();
         });
 
         // =============================================
@@ -616,12 +899,15 @@
         function updatePreview() {
             const inputField = document.getElementById('userName');
             const resultDisplay = document.getElementById('result');
+            const resultMessage = document.getElementById('resultMessage');
             let rawName = inputField.value.trim();
 
             if (rawName === '') {
                 resultDisplay.textContent = '✦ Type your name below ✦';
                 resultDisplay.className = 'placeholder';
                 currentGeneratedName = '';
+                resultMessage.textContent = '';
+                resultMessage.className = 'result-message';
                 return;
             }
 
@@ -633,10 +919,27 @@
             resultDisplay.className = '';
             resultDisplay.style.color = '#f2e9ff';
             resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
+
+            // Show the guild leader message (Huios – correct spelling)
+            resultMessage.textContent = 'Now go and meet Huios, the Guild Leader.';
+            resultMessage.className = 'result-message show';
         }
 
+        // ----- Done button with enhanced feedback -----
+        document.getElementById('doneBtn').addEventListener('click', function() {
+            updatePreview();
+            const resultDisplay = document.getElementById('result');
+            if (currentGeneratedName) {
+                resultDisplay.style.transition = '0.1s';
+                resultDisplay.style.textShadow = '0 0 80px #ff66ff, 0 0 160px #9b6dff';
+                setTimeout(() => {
+                    resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
+                }, 300);
+            }
+        });
+
         // =============================================
-        // 4. COPY – iOS‑RELIABLE
+        // 4. COPY (iOS/Android friendly)
         // =============================================
         function copyResult() {
             const resultDisplay = document.getElementById('result');
@@ -728,7 +1031,6 @@
             }, 1500);
         }
 
-        // Attach copy events
         const resultWrapper = document.getElementById('resultWrapper');
         resultWrapper.addEventListener('click', copyResult);
         resultWrapper.addEventListener('touchstart', copyResult, { passive: true });
@@ -738,16 +1040,180 @@
         manualCopyBtn.addEventListener('touchstart', copyResult, { passive: true });
 
         document.getElementById('userName').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') updatePreview();
+            if (e.key === 'Enter') {
+                document.getElementById('doneBtn').click();
+            }
         });
 
-        // Loop audio forever
-        audio.addEventListener('ended', () => {
-            audio.play().catch(() => {});
+        audio.addEventListener('ended', () => audio.play().catch(() => {}));
+
+        // =============================================
+        // 5. RANDOM NAME GENERATOR – 50 Male / 50 Female
+        // =============================================
+        const maleNames = [
+            'Zephyr', 'Morwen', 'Azrael', 'Thorne', 'Orion', 'Draven', 'Caius',
+            'Fenris', 'Hades', 'Jareth', 'Kael', 'Mordred', 'Oberon', 'Quintus',
+            'Balthazar', 'Darian', 'Gethin', 'Helios', 'Icarus', 'Juno', 'Keres',
+            'Lucian', 'Magnus', 'Nero', 'Onyx', 'Phelan', 'Riven', 'Sable',
+            'Taliesin', 'Ursa', 'Valerian', 'Wraith', 'Xerxes', 'Yorick', 'Zane',
+            'Aether', 'Bram', 'Corvus', 'Dante', 'Ephraim', 'Gideon', 'Hector',
+            'Ignis', 'Lysander', 'Marius', 'Orpheus', 'Percival', 'Raphael', 'Severin', 'Theron'
+        ];
+
+        const femaleNames = [
+            'Seraphine', 'Vesper', 'Nyx', 'Ravenna', 'Selene', 'Ember', 'Astrid',
+            'Drusilla', 'Elara', 'Gwendolyn', 'Isolde', 'Lilith', 'Nephthys',
+            'Persephone', 'Rhiannon', 'Umbra', 'Xandria', 'Yvaine', 'Zephyra',
+            'Amaris', 'Celestine', 'Elysia', 'Fane', 'Keres', 'Lirael', 'Maelis',
+            'Nerys', 'Orenda', 'Sable', 'Ursa', 'Valkyrie', 'Wren', 'Yara',
+            'Astra', 'Belladonna', 'Cassiopeia', 'Dahlia', 'Eudora', 'Freyja',
+            'Hecate', 'Iris', 'Jade', 'Luna', 'Mira', 'Nova', 'Onyx', 'Pandora',
+            'Raven', 'Stella', 'Tempest', 'Vega', 'Willow', 'Xena', 'Zara'
+        ];
+
+        let currentGender = null;
+        let displayedNames = [];
+        let usedIndices = [];
+        let currentNames = [];
+
+        function getRandomNamesFromArray(arr, count) {
+            // Get unique names not already used
+            const available = arr.filter((_, index) => !usedIndices.includes(index));
+            if (available.length === 0) return [];
+
+            const shuffled = [...available].sort(() => Math.random() - 0.5);
+            const selected = shuffled.slice(0, Math.min(count, shuffled.length));
+
+            // Mark used indices
+            selected.forEach(name => {
+                const idx = arr.indexOf(name);
+                if (idx !== -1 && !usedIndices.includes(idx)) {
+                    usedIndices.push(idx);
+                }
+            });
+
+            return selected;
+        }
+
+        function renderNameList(names) {
+            const listContainer = document.getElementById('nameList');
+            const noMoreMsg = document.getElementById('noMoreNames');
+            listContainer.innerHTML = '';
+
+            if (names.length === 0) {
+                noMoreMsg.style.display = 'block';
+                return;
+            }
+            noMoreMsg.style.display = 'none';
+
+            names.forEach(name => {
+                const item = document.createElement('div');
+                item.className = 'name-list-item';
+                item.textContent = name;
+                item.addEventListener('click', function() {
+                    document.getElementById('userName').value = name;
+                    updatePreview();
+                    document.getElementById('doneBtn').click();
+                    // Close the list
+                    document.getElementById('nameListContainer').classList.remove('open');
+                    document.getElementById('randomToggleBtn').textContent = '🎲 Random Name';
+                    document.getElementById('genderSelect').classList.remove('open');
+                });
+                listContainer.appendChild(item);
+            });
+        }
+
+        function loadMoreNames() {
+            if (!currentGender) return;
+
+            const nameArray = currentGender === 'male' ? maleNames : femaleNames;
+            const remaining = nameArray.filter((_, idx) => !usedIndices.includes(idx));
+
+            if (remaining.length === 0) {
+                document.getElementById('noMoreNames').style.display = 'block';
+                document.getElementById('generateMoreBtn').style.display = 'none';
+                return;
+            }
+
+            const newNames = getRandomNamesFromArray(nameArray, 7);
+            if (newNames.length === 0) {
+                document.getElementById('noMoreNames').style.display = 'block';
+                document.getElementById('generateMoreBtn').style.display = 'none';
+                return;
+            }
+            currentNames = newNames;
+            renderNameList(currentNames);
+
+            // Re-enable generate button if there are still names left
+            const remainingAfter = nameArray.filter((_, idx) => !usedIndices.includes(idx));
+            if (remainingAfter.length === 0) {
+                document.getElementById('noMoreNames').style.display = 'block';
+                document.getElementById('generateMoreBtn').style.display = 'none';
+            } else {
+                document.getElementById('noMoreNames').style.display = 'none';
+                document.getElementById('generateMoreBtn').style.display = 'inline-block';
+            }
+        }
+
+        // ----- Random button: show gender options -----
+        document.getElementById('randomToggleBtn').addEventListener('click', function() {
+            const genderSelect = document.getElementById('genderSelect');
+            const container = document.getElementById('nameListContainer');
+            const isOpen = genderSelect.classList.contains('open');
+
+            if (isOpen) {
+                genderSelect.classList.remove('open');
+                container.classList.remove('open');
+                this.textContent = '🎲 Random Name';
+                // Reset gender state
+                currentGender = null;
+                usedIndices = [];
+                currentNames = [];
+                document.getElementById('noMoreNames').style.display = 'none';
+                document.getElementById('generateMoreBtn').style.display = 'inline-block';
+                document.getElementById('nameList').innerHTML = '';
+            } else {
+                genderSelect.classList.add('open');
+                container.classList.remove('open');
+                this.textContent = '🎲 Random Name (select gender)';
+            }
+        });
+
+        // ----- Gender buttons -----
+        document.querySelectorAll('.gender-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const gender = this.dataset.gender;
+                currentGender = gender;
+                usedIndices = [];
+                currentNames = [];
+
+                // Open the name list container
+                const container = document.getElementById('nameListContainer');
+                container.classList.add('open');
+
+                // Load first 7 names
+                loadMoreNames();
+
+                // Update button text
+                document.getElementById('randomToggleBtn').textContent = `🎲 ${gender === 'male' ? '♂' : '♀'} Names`;
+
+                // Hide gender select after selection (optional)
+                // document.getElementById('genderSelect').classList.remove('open');
+            });
+        });
+
+        // ----- Generate More button -----
+        document.getElementById('generateMoreBtn').addEventListener('click', function() {
+            loadMoreNames();
+            // Flash feedback
+            this.textContent = '↻ Refreshed!';
+            setTimeout(() => {
+                this.textContent = '↻ Generate More';
+            }, 800);
         });
 
         // =============================================
-        // 5. BIRD ANIMATION SYSTEM
+        // 6. BIRD ANIMATION SYSTEM
         // =============================================
         const canvas = document.getElementById('birdCanvas');
         const ctx = canvas.getContext('2d');
@@ -756,9 +1222,6 @@
         let animationId = null;
         let birdsActive = false;
 
-        // Track title position for collision detection
-        let titleRect = { x: 0, y: 0, width: 0, height: 0 };
-
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -766,48 +1229,28 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        // --- Bird Class ---
         class Bird {
-            constructor() {
-                this.reset();
-            }
+            constructor() { this.reset(); }
 
             reset() {
                 const margin = 100;
                 const side = Math.floor(Math.random() * 4);
-                if (side === 0) { // top
-                    this.x = Math.random() * canvas.width;
-                    this.y = -margin;
-                } else if (side === 1) { // right
-                    this.x = canvas.width + margin;
-                    this.y = Math.random() * canvas.height;
-                } else if (side === 2) { // bottom
-                    this.x = Math.random() * canvas.width;
-                    this.y = canvas.height + margin;
-                } else { // left
-                    this.x = -margin;
-                    this.y = Math.random() * canvas.height;
-                }
+                if (side === 0) { this.x = Math.random() * canvas.width;
+                    this.y = -margin; } else if (side === 1) { this.x = canvas.width + margin;
+                    this.y = Math.random() * canvas.height; } else if (side === 2) { this.x = Math.random() * canvas.width;
+                    this.y = canvas.height + margin; } else { this.x = -margin;
+                    this.y = Math.random() * canvas.height; }
 
-                // Target is the title area (center of screen)
-                this.targetX = canvas.width / 2;
-                this.targetY = canvas.height / 2 - 50;
-
-                // Slight random offset for natural feel
-                this.targetX += (Math.random() - 0.5) * 300;
-                this.targetY += (Math.random() - 0.5) * 200;
-
+                this.targetX = canvas.width / 2 + (Math.random() - 0.5) * 300;
+                this.targetY = canvas.height / 2 - 50 + (Math.random() - 0.5) * 200;
                 this.speed = 0.6 + Math.random() * 0.6;
                 this.angle = 0;
                 this.size = 12 + Math.random() * 10;
                 this.wingPhase = Math.random() * Math.PI * 2;
                 this.wingSpeed = 0.08 + Math.random() * 0.04;
-
-                // Curved path parameters
                 this.curveOffset = (Math.random() - 0.5) * 60;
                 this.curveSpeed = 0.005 + Math.random() * 0.01;
                 this.curvePhase = Math.random() * Math.PI * 2;
-
                 this.alive = true;
                 this.opacity = 1;
                 this.disappearing = false;
@@ -818,58 +1261,41 @@
                 if (this.disappearing) {
                     this.disappearTimer += 0.02;
                     this.opacity = 1 - this.disappearTimer;
-                    if (this.disappearTimer >= 1) {
-                        this.alive = false;
-                    }
+                    if (this.disappearTimer >= 1) this.alive = false;
                     return;
                 }
 
-                // Move toward target with slight curve
                 const dx = this.targetX - this.x;
                 const dy = this.targetY - this.y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
 
                 if (dist > 5) {
-                    // Curved flight path
                     const angle = Math.atan2(dy, dx);
                     const curveAngle = Math.sin(this.curvePhase) * 0.15;
                     const moveAngle = angle + curveAngle;
-
                     this.x += Math.cos(moveAngle) * this.speed;
                     this.y += Math.sin(moveAngle) * this.speed;
-
-                    // Update curve phase
                     this.curvePhase += this.curveSpeed;
-
-                    // Slight altitude oscillation
                     this.y += Math.sin(this.curvePhase * 2) * 0.3;
                 } else {
-                    // Reached target – pick a new random target
                     this.targetX = canvas.width / 2 + (Math.random() - 0.5) * 400;
                     this.targetY = canvas.height / 2 - 50 + (Math.random() - 0.5) * 300;
                 }
 
-                // Wing flap
                 this.wingPhase += this.wingSpeed;
                 this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
 
-                // Check collision with title (only if title is visible)
                 const titleEl = document.querySelector('.guild-title');
                 if (titleEl) {
                     const rect = titleEl.getBoundingClientRect();
-                    titleRect = {
+                    const titleRect = {
                         x: rect.left + rect.width * 0.1,
                         y: rect.top + rect.height * 0.1,
                         width: rect.width * 0.8,
                         height: rect.height * 0.8
                     };
-
-                    // Check if bird is inside title area
-                    const birdX = this.x;
-                    const birdY = this.y;
-                    if (birdX > titleRect.x && birdX < titleRect.x + titleRect.width &&
-                        birdY > titleRect.y && birdY < titleRect.y + titleRect.height) {
-                        // Bird touches the title – trigger disappearance
+                    if (this.x > titleRect.x && this.x < titleRect.x + titleRect.width &&
+                        this.y > titleRect.y && this.y < titleRect.y + titleRect.height) {
                         this.triggerDisappear();
                     }
                 }
@@ -879,13 +1305,11 @@
                 if (this.disappearing) return;
                 this.disappearing = true;
                 this.disappearTimer = 0;
-                // Spawn particles at bird's position
                 spawnParticles(this.x, this.y);
             }
 
             draw() {
                 if (!this.alive || this.opacity <= 0) return;
-
                 ctx.save();
                 ctx.globalAlpha = this.opacity;
                 ctx.translate(this.x, this.y);
@@ -894,22 +1318,17 @@
                 const wingFlap = Math.sin(this.wingPhase);
                 const size = this.size;
 
-                // Bird body (silhouette)
                 ctx.fillStyle = '#6a4a8a';
                 ctx.shadowColor = '#9b6dff';
                 ctx.shadowBlur = 15;
-
-                // Body
                 ctx.beginPath();
                 ctx.ellipse(0, 0, size * 0.6, size * 0.4, 0, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Head
                 ctx.beginPath();
                 ctx.arc(size * 0.5, -size * 0.1, size * 0.25, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Beak
                 ctx.fillStyle = '#4a2a6a';
                 ctx.beginPath();
                 ctx.moveTo(size * 0.75, -size * 0.1);
@@ -917,18 +1336,16 @@
                 ctx.lineTo(size * 0.75, 0);
                 ctx.fill();
 
-                // Left wing
                 ctx.fillStyle = '#5a3a7a';
                 ctx.beginPath();
-                ctx.ellipse(-size * 0.3, -size * 0.2 + wingFlap * size * 0.15, size * 0.5, size * 0.3, -0.3 + wingFlap * 0.2, 0, Math.PI * 2);
+                ctx.ellipse(-size * 0.3, -size * 0.2 + wingFlap * size * 0.15, size * 0.5, size * 0.3, -0.3 + wingFlap * 0.2, 0,
+                    Math.PI * 2);
                 ctx.fill();
-
-                // Right wing
                 ctx.beginPath();
-                ctx.ellipse(-size * 0.3, size * 0.2 - wingFlap * size * 0.15, size * 0.5, size * 0.3, 0.3 - wingFlap * 0.2, 0, Math.PI * 2);
+                ctx.ellipse(-size * 0.3, size * 0.2 - wingFlap * size * 0.15, size * 0.5, size * 0.3, 0.3 - wingFlap * 0.2, 0,
+                    Math.PI * 2);
                 ctx.fill();
 
-                // Tail
                 ctx.fillStyle = '#4a2a6a';
                 ctx.beginPath();
                 ctx.moveTo(-size * 0.6, -size * 0.15);
@@ -938,7 +1355,6 @@
 
                 ctx.restore();
 
-                // Glow effect
                 ctx.save();
                 ctx.globalAlpha = this.opacity * 0.15;
                 ctx.shadowColor = '#9b6dff';
@@ -951,15 +1367,14 @@
             }
         }
 
-        // --- Particle System (for disappear effect) ---
         function spawnParticles(x, y) {
             const count = 20 + Math.floor(Math.random() * 15);
             for (let i = 0; i < count; i++) {
                 const angle = Math.random() * Math.PI * 2;
                 const speed = 0.5 + Math.random() * 3;
                 particles.push({
-                    x: x,
-                    y: y,
+                    x,
+                    y,
                     vx: Math.cos(angle) * speed,
                     vy: Math.sin(angle) * speed - 0.5,
                     life: 1,
@@ -976,9 +1391,7 @@
                 p.y += p.vy;
                 p.vy += 0.05;
                 p.life -= 0.015;
-                if (p.life <= 0) {
-                    particles.splice(i, 1);
-                }
+                if (p.life <= 0) particles.splice(i, 1);
             }
         }
 
@@ -996,64 +1409,40 @@
             }
         }
 
-        // --- Main Animation Loop ---
         function animateBirds() {
             if (!birdsActive) return;
-
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Update and draw birds
-            for (const bird of birds) {
-                bird.update();
-                bird.draw();
-            }
-
-            // Remove dead birds
+            for (const bird of birds) { bird.update();
+                bird.draw(); }
             birds = birds.filter(b => b.alive);
-
-            // Update and draw particles
             updateParticles();
             drawParticles();
-
-            // Spawn new birds if needed
-            if (birds.length < 7) {
-                birds.push(new Bird());
-            }
-
+            if (birds.length < 7) birds.push(new Bird());
             animationId = requestAnimationFrame(animateBirds);
         }
 
         function startBirds() {
             if (birdsActive) return;
             birdsActive = true;
-
-            // Create initial flock
             for (let i = 0; i < 5; i++) {
                 const bird = new Bird();
-                // Spread them out
                 bird.x = Math.random() * canvas.width;
                 bird.y = Math.random() * canvas.height;
                 bird.targetX = canvas.width / 2 + (Math.random() - 0.5) * 300;
                 bird.targetY = canvas.height / 2 - 50 + (Math.random() - 0.5) * 200;
                 birds.push(bird);
             }
-
             animateBirds();
         }
 
-        // Stop birds when page is hidden (performance)
         document.addEventListener('visibilitychange', () => {
             if (document.hidden && birdsActive) {
-                if (animationId) {
-                    cancelAnimationFrame(animationId);
-                    animationId = null;
-                }
+                if (animationId) { cancelAnimationFrame(animationId);
+                    animationId = null; }
             } else if (!document.hidden && birdsActive && !animationId) {
                 animateBirds();
             }
         });
-
-        console.log('🐦 Phantom birds ready to haunt!');
     </script>
 </body>
 </html>
