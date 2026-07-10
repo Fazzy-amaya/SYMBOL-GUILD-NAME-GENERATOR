@@ -23,89 +23,7 @@
             background: radial-gradient(circle at center, #12081a, #07020a);
         }
 
-        /* ===== GUILD HALL BACKGROUND – CLEAR ON ALL DEVICES ===== */
-        #guild-hall {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            background: radial-gradient(ellipse at 30% 100%, #1a0a2a, #0a0512 70%, #000000);
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        /* Mist layers – visible on all devices */
-        .mist {
-            position: absolute;
-            bottom: 0;
-            left: -10%;
-            width: 120%;
-            height: 40%;
-            background: radial-gradient(ellipse at center bottom, rgba(80, 40, 120, 0.15) 0%, transparent 70%);
-            animation: mistDrift 20s ease-in-out infinite alternate;
-            filter: blur(30px);
-            pointer-events: none;
-            will-change: transform, opacity;
-        }
-        .mist:nth-child(2) {
-            bottom: 5%;
-            height: 30%;
-            animation-duration: 25s;
-            animation-delay: -5s;
-            background: radial-gradient(ellipse at 70% bottom, rgba(100, 50, 150, 0.1) 0%, transparent 60%);
-        }
-        .mist:nth-child(3) {
-            bottom: 10%;
-            height: 20%;
-            animation-duration: 30s;
-            animation-delay: -10s;
-            background: radial-gradient(ellipse at 20% bottom, rgba(60, 30, 100, 0.12) 0%, transparent 50%);
-        }
-
-        @keyframes mistDrift {
-            0% {
-                transform: translateX(0) scale(1);
-                opacity: 0.6;
-            }
-            100% {
-                transform: translateX(10%) scale(1.1);
-                opacity: 1;
-            }
-        }
-
-        /* Castle silhouette – visible on all devices */
-        .castle {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            max-width: 900px;
-            height: 60%;
-            pointer-events: none;
-            opacity: 0.08;
-        }
-        .castle::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 20%;
-            width: 60%;
-            height: 70%;
-            background: #0a0512;
-            clip-path: polygon(0% 100%, 15% 40%, 25% 40%, 25% 20%, 35% 20%, 35% 40%, 45% 40%, 45% 10%, 55% 10%, 55% 40%, 65% 40%, 65% 20%, 75% 20%, 75% 40%, 85% 40%, 100% 100%);
-        }
-        .castle::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 35%;
-            width: 30%;
-            height: 85%;
-            background: #0a0512;
-            clip-path: polygon(0% 100%, 10% 50%, 20% 50%, 20% 30%, 30% 30%, 30% 50%, 40% 50%, 40% 15%, 50% 15%, 50% 50%, 60% 50%, 60% 30%, 70% 30%, 70% 50%, 80% 50%, 90% 50%, 100% 100%);
-        }
-
-        /* ===== BIRD CANVAS ===== */
+        /* ===== BIRD CANVAS – NOW MORE PLENTIFUL ===== */
         #birdCanvas {
             position: fixed;
             top: 0;
@@ -392,7 +310,7 @@
             transform: scale(0.95);
         }
 
-        /* ===== RANDOM NAME SECTION – Gender Flow ===== */
+        /* ===== RANDOM NAME SECTION ===== */
         .random-section {
             margin: 20px 0 15px 0;
         }
@@ -419,7 +337,6 @@
             transform: scale(0.95);
         }
 
-        /* Gender selection buttons (hidden initially) */
         .gender-select {
             display: none;
             margin-top: 12px;
@@ -590,7 +507,6 @@
             transform: scale(0.95);
         }
 
-        /* ===== FOOTER WATERMARK ===== */
         .footer-note {
             margin-top: 30px;
             font-size: 0.7rem;
@@ -632,14 +548,6 @@
     </style>
 </head>
 <body>
-
-    <!-- ====== GUILD HALL BACKGROUND ====== -->
-    <div id="guild-hall">
-        <div class="mist"></div>
-        <div class="mist"></div>
-        <div class="mist"></div>
-        <div class="castle"></div>
-    </div>
 
     <!-- ====== BIRD CANVAS ====== -->
     <canvas id="birdCanvas"></canvas>
@@ -692,7 +600,7 @@
         </div>
     </div>
 
-    <!-- ====== AUDIO ====== -->
+    <!-- ====== AUDIO – "Aurora - Runaway" – VOLUME LOWERED ====== -->
     <audio id="bg-music" loop preload="auto">
         <source src="./music.mp3" type="audio/mpeg" />
         <source src="/SYMBOL-GUILD-NAME-GENERATOR/music.mp3" type="audio/mpeg" />
@@ -717,7 +625,7 @@
         let lineIndex = 0;
         let introComplete = false;
 
-        // ----- LOUD KEYBOARD TYPING SOUND (Web Audio) -----
+        // ----- LOUD KEYBOARD TYPING SOUND -----
         let audioCtx = null;
 
         function playKeyboardClick() {
@@ -725,10 +633,9 @@
                 if (!audioCtx) {
                     audioCtx = new(window.AudioContext || window.webkitAudioContext)();
                 }
-                // Create a noise-like click using oscillator + noise
                 const now = audioCtx.currentTime;
 
-                // Main click – a short burst of noise
+                // Noise click
                 const bufferSize = audioCtx.sampleRate * 0.04;
                 const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
                 const data = buffer.getChannelData(0);
@@ -737,17 +644,15 @@
                 }
                 const noise = audioCtx.createBufferSource();
                 noise.buffer = buffer;
-
                 const gain = audioCtx.createGain();
-                gain.gain.setValueAtTime(0.15, now); // Louder than before
+                gain.gain.setValueAtTime(0.15, now);
                 gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
-
                 noise.connect(gain);
                 gain.connect(audioCtx.destination);
                 noise.start(now);
                 noise.stop(now + 0.06);
 
-                // Add a sharp high-frequency "tick" overlay
+                // Sharp high tick
                 const osc = audioCtx.createOscillator();
                 const gain2 = audioCtx.createGain();
                 osc.connect(gain2);
@@ -759,9 +664,7 @@
                 osc.start(now);
                 osc.stop(now + 0.02);
 
-            } catch (e) {
-                // Silently fail if audio context not available
-            }
+            } catch (e) {}
         }
 
         function typeLine() {
@@ -782,9 +685,7 @@
                 if (currentChar < currentLine.length) {
                     const char = currentLine[currentChar];
                     lineElement.textContent += char;
-                    // Play keyboard click for every character (including spaces, but slightly softer)
                     if (char === ' ') {
-                        // Space – quieter click
                         try {
                             if (!audioCtx) audioCtx = new(window.AudioContext || window.webkitAudioContext)();
                             const now = audioCtx.currentTime;
@@ -818,11 +719,11 @@
         window.addEventListener('load', typeLine);
 
         // =============================================
-        // 2. MUSIC
+        // 2. MUSIC – LOWER VOLUME (25%)
         // =============================================
         const audio = document.getElementById('bg-music');
         let musicStarted = false;
-        audio.volume = 1.0;
+        audio.volume = 0.25; // Cool background volume
 
         function playMusic() {
             if (musicStarted) return;
@@ -830,7 +731,7 @@
             if (playPromise !== undefined) {
                 playPromise.then(() => {
                     musicStarted = true;
-                    console.log('🔊 Horror at MAX VOLUME!');
+                    console.log('🔊 Aurora playing at 25% volume');
                 }).catch(err => console.log('⛔ Play blocked:', err.message));
             }
         }
@@ -866,32 +767,11 @@
         // 3. NAME GENERATOR
         // =============================================
         const smallCapsMap = {
-            'a': 'ᴀ',
-            'b': 'ʙ',
-            'c': 'ᴄ',
-            'd': 'ᴅ',
-            'e': 'ᴇ',
-            'f': 'ꜰ',
-            'g': 'ɢ',
-            'h': 'ʜ',
-            'i': 'ɪ',
-            'j': 'ᴊ',
-            'k': 'ᴋ',
-            'l': 'ʟ',
-            'm': 'ᴍ',
-            'n': 'ɴ',
-            'o': 'ᴏ',
-            'p': 'ᴘ',
-            'q': 'ǫ',
-            'r': 'ʀ',
-            's': 'ꜱ',
-            't': 'ᴛ',
-            'u': 'ᴜ',
-            'v': 'ᴠ',
-            'w': 'ᴡ',
-            'x': 'x',
-            'y': 'ʏ',
-            'z': 'ᴢ'
+            'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ',
+            'f': 'ꜰ', 'g': 'ɢ', 'h': 'ʜ', 'i': 'ɪ', 'j': 'ᴊ',
+            'k': 'ᴋ', 'l': 'ʟ', 'm': 'ᴍ', 'n': 'ɴ', 'o': 'ᴏ',
+            'p': 'ᴘ', 'q': 'ǫ', 'r': 'ʀ', 's': 'ꜱ', 't': 'ᴛ',
+            'u': 'ᴜ', 'v': 'ᴠ', 'w': 'ᴡ', 'x': 'x', 'y': 'ʏ', 'z': 'ᴢ'
         };
 
         let currentGeneratedName = '';
@@ -920,12 +800,10 @@
             resultDisplay.style.color = '#f2e9ff';
             resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
 
-            // Show the guild leader message (Huios – correct spelling)
             resultMessage.textContent = 'Now go and meet Huios, the Guild Leader.';
             resultMessage.className = 'result-message show';
         }
 
-        // ----- Done button with enhanced feedback -----
         document.getElementById('doneBtn').addEventListener('click', function() {
             updatePreview();
             const resultDisplay = document.getElementById('result');
@@ -1077,14 +955,12 @@
         let currentNames = [];
 
         function getRandomNamesFromArray(arr, count) {
-            // Get unique names not already used
             const available = arr.filter((_, index) => !usedIndices.includes(index));
             if (available.length === 0) return [];
 
             const shuffled = [...available].sort(() => Math.random() - 0.5);
             const selected = shuffled.slice(0, Math.min(count, shuffled.length));
 
-            // Mark used indices
             selected.forEach(name => {
                 const idx = arr.indexOf(name);
                 if (idx !== -1 && !usedIndices.includes(idx)) {
@@ -1114,7 +990,6 @@
                     document.getElementById('userName').value = name;
                     updatePreview();
                     document.getElementById('doneBtn').click();
-                    // Close the list
                     document.getElementById('nameListContainer').classList.remove('open');
                     document.getElementById('randomToggleBtn').textContent = '🎲 Random Name';
                     document.getElementById('genderSelect').classList.remove('open');
@@ -1144,7 +1019,6 @@
             currentNames = newNames;
             renderNameList(currentNames);
 
-            // Re-enable generate button if there are still names left
             const remainingAfter = nameArray.filter((_, idx) => !usedIndices.includes(idx));
             if (remainingAfter.length === 0) {
                 document.getElementById('noMoreNames').style.display = 'block';
@@ -1155,7 +1029,6 @@
             }
         }
 
-        // ----- Random button: show gender options -----
         document.getElementById('randomToggleBtn').addEventListener('click', function() {
             const genderSelect = document.getElementById('genderSelect');
             const container = document.getElementById('nameListContainer');
@@ -1165,7 +1038,6 @@
                 genderSelect.classList.remove('open');
                 container.classList.remove('open');
                 this.textContent = '🎲 Random Name';
-                // Reset gender state
                 currentGender = null;
                 usedIndices = [];
                 currentNames = [];
@@ -1179,7 +1051,6 @@
             }
         });
 
-        // ----- Gender buttons -----
         document.querySelectorAll('.gender-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const gender = this.dataset.gender;
@@ -1187,25 +1058,17 @@
                 usedIndices = [];
                 currentNames = [];
 
-                // Open the name list container
                 const container = document.getElementById('nameListContainer');
                 container.classList.add('open');
 
-                // Load first 7 names
                 loadMoreNames();
 
-                // Update button text
                 document.getElementById('randomToggleBtn').textContent = `🎲 ${gender === 'male' ? '♂' : '♀'} Names`;
-
-                // Hide gender select after selection (optional)
-                // document.getElementById('genderSelect').classList.remove('open');
             });
         });
 
-        // ----- Generate More button -----
         document.getElementById('generateMoreBtn').addEventListener('click', function() {
             loadMoreNames();
-            // Flash feedback
             this.textContent = '↻ Refreshed!';
             setTimeout(() => {
                 this.textContent = '↻ Generate More';
@@ -1213,7 +1076,7 @@
         });
 
         // =============================================
-        // 6. BIRD ANIMATION SYSTEM
+        // 6. BIRD ANIMATION – MORE PLENTIFUL (15 birds)
         // =============================================
         const canvas = document.getElementById('birdCanvas');
         const ctx = canvas.getContext('2d');
@@ -1417,14 +1280,16 @@
             birds = birds.filter(b => b.alive);
             updateParticles();
             drawParticles();
-            if (birds.length < 7) birds.push(new Bird());
+            // Increased flock size to 15
+            if (birds.length < 15) birds.push(new Bird());
             animationId = requestAnimationFrame(animateBirds);
         }
 
         function startBirds() {
             if (birdsActive) return;
             birdsActive = true;
-            for (let i = 0; i < 5; i++) {
+            // Start with 12 birds
+            for (let i = 0; i < 12; i++) {
                 const bird = new Bird();
                 bird.x = Math.random() * canvas.width;
                 bird.y = Math.random() * canvas.height;
