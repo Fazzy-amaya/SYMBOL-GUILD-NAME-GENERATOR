@@ -189,12 +189,11 @@
             overflow: hidden;
         }
 
-        /* ===== GUILD LOGO – WIDE RECTANGLE + PHANTOM PURPLE ===== */
+        /* ===== GUILD LOGO – WIDE RECTANGLE (STRETCHED) ===== */
         .logo-wrapper {
             position: relative;
-            display: inline-block;
+            display: block;
             width: 100%;
-            max-width: 100%;
             margin: 0 auto 15px auto;
             z-index: 2;
             padding: 0;
@@ -252,12 +251,12 @@
             }
         }
 
-        /* The actual image – wide rectangle */
+        /* The actual image – stretched wide */
         .guild-logo {
             display: block;
             width: 100%;
-            max-height: 200px;
-            object-fit: contain;
+            height: auto; /* Maintain aspect ratio, but fill width */
+            object-fit: contain; /* Or use 'fill' to stretch both dimensions, but we keep aspect */
             position: relative;
             z-index: 2;
             background: #32104F; /* MATCHES NEW PICTURE BACKGROUND */
@@ -623,10 +622,7 @@
                 bottom: 10px;
             }
             .guild-logo {
-                max-height: 120px;
-            }
-            .logo-wrapper {
-                max-width: 100%;
+                max-height: none; /* Remove height limit on mobile too */
             }
         }
     </style>
@@ -649,8 +645,8 @@
     <div id="main-app">
         <div class="container">
 
-            <!-- ===== GUILD LOGO – WIDE RECTANGLE ===== -->
-            <!-- CHANGE src TO YOUR FILE (Guild.jpg or Guild.png) -->
+            <!-- ===== GUILD LOGO – WIDE STRETCHED ===== -->
+            <!-- USING Guild.png AS REQUESTED -->
             <div class="logo-wrapper">
                 <img class="guild-logo" src="./Guild.png" alt="Phantom Guild" />
             </div>
