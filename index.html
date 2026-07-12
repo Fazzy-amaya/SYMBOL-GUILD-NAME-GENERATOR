@@ -167,7 +167,7 @@
             overflow: hidden;
         }
 
-        /* ===== GUILD LOGO – PLAIN RECTANGLE, NO EDGES ===== */
+        /* ===== GUILD LOGO – PLAIN RECTANGLE ===== */
         .logo-wrapper {
             position: relative;
             display: block;
@@ -176,10 +176,9 @@
             z-index: 2;
             padding: 0;
             background: transparent;
-            /* No clip-path, no border, no frame */
         }
 
-        /* Breathing glow (stays, gives life) */
+        /* Breathing glow */
         .logo-wrapper::after {
             content: '';
             position: absolute;
@@ -199,7 +198,6 @@
             100% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
         }
 
-        /* The image – clean rectangle, spans full width */
         .guild-logo {
             display: block;
             width: 100%;
@@ -207,9 +205,8 @@
             object-fit: contain;
             position: relative;
             z-index: 2;
-            background: #32104F; /* Matches your picture background */
+            background: #32104F;
             filter: drop-shadow(0 0 30px rgba(123,46,255,0.2));
-            /* No clip-path, no border-radius, no shape distortion */
         }
 
         .sub-title {
@@ -529,7 +526,7 @@
         </div>
     </div>
 
-    <!-- ====== AUDIO ====== -->
+    <!-- ====== AUDIO – PRELOADED FOR INSTANT PLAY ====== -->
     <audio id="bg-music" loop preload="auto">
         <source src="./music.mp3" type="audio/mpeg" />
         <source src="/SYMBOL-GUILD-NAME-GENERATOR/music.mp3" type="audio/mpeg" />
@@ -537,18 +534,33 @@
 
     <script>
         // =============================================
-        // 0. AUDIO CONTEXT
+        // 0. FORCE AUDIO PRELOAD
+        // =============================================
+        const audio = document.getElementById('bg-music');
+        audio.volume = 0.25;
+        audio.preload = 'auto';
+        // Start loading immediately
+        audio.load();
+
+        // =============================================
+        // 1. AUDIO CONTEXT (for typing sounds)
         // =============================================
         let audioCtx = null;
         let audioCtxResumed = false;
         function resumeAudioContext() {
             if (audioCtxResumed) return;
             try {
-                if (!audioCtx) { audioCtx = new(window.AudioContext || window.webkitAudioContext)(); }
+                if (!audioCtx) {
+                    audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+                }
                 if (audioCtx.state === 'suspended') {
-                    audioCtx.resume().then(() => { audioCtxResumed = true; console.log('🔊 AudioContext resumed'); })
-                           .catch(e => console.log('⛔ Resume failed:', e));
-                } else { audioCtxResumed = true; }
+                    audioCtx.resume().then(() => {
+                        audioCtxResumed = true;
+                        console.log('🔊 AudioContext resumed');
+                    }).catch(e => console.log('⛔ Resume failed:', e));
+                } else {
+                    audioCtxResumed = true;
+                }
             } catch (e) {}
         }
         document.addEventListener('click', resumeAudioContext);
@@ -556,7 +568,7 @@
         document.addEventListener('keydown', resumeAudioContext);
 
         // =============================================
-        // 1. TYPING INTRO
+        // 2. TYPING INTRO
         // =============================================
         const introLines = [
             "Welcome to Phantom ・〆 Guild name generator.",
@@ -573,8 +585,12 @@
 
         function playKeyboardClick() {
             try {
-                if (!audioCtx) { audioCtx = new(window.AudioContext || window.webkitAudioContext)(); }
-                if (audioCtx.state === 'suspended') { audioCtx.resume().catch(() => {}); }
+                if (!audioCtx) {
+                    audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume().catch(() => {});
+                }
                 if (audioCtx.state !== 'running') return;
                 const now = audioCtx.currentTime;
                 const bufferSize = audioCtx.sampleRate * 0.04;
@@ -654,24 +670,31 @@
         window.addEventListener('load', typeLine);
 
         // =============================================
-        // 2. MUSIC
+        // 3. MUSIC – INSTANT PLAY ON INTRO TAP
         // =============================================
-        const audio = document.getElementById('bg-music');
         let musicStarted = false;
-        audio.volume = 0.25;
+
         function playMusic() {
             if (musicStarted) return;
+            // Ensure the audio is ready – if not, play will still work once loaded
             const playPromise = audio.play();
             if (playPromise !== undefined) {
-                playPromise.then(() => { musicStarted = true; console.log('🔊 Aurora playing'); })
-                          .catch(err => console.log('⛔ Play blocked:', err.message));
+                playPromise.then(() => {
+                    musicStarted = true;
+                    console.log('🔊 Aurora playing at 25% volume');
+                }).catch(err => {
+                    console.log('⛔ Play blocked:', err.message);
+                    // If blocked, we'll try again on next user gesture
+                });
             }
         }
+
+        // When intro is complete and user taps, play music instantly
         introScreen.addEventListener('click', function(e) {
             if (introComplete) {
                 introScreen.classList.add('fade-out');
                 mainApp.classList.add('visible');
-                playMusic();
+                playMusic(); // Instant
                 setTimeout(() => startBirds(), 400);
             }
         });
@@ -679,13 +702,25 @@
             if (introComplete) {
                 introScreen.classList.add('fade-out');
                 mainApp.classList.add('visible');
-                playMusic();
+                playMusic(); // Instant
                 setTimeout(() => startBirds(), 400);
             }
         }, { passive: true });
 
+        // Also try to play on any click after intro (just in case)
+        document.addEventListener('click', function() {
+            if (introComplete && !musicStarted) {
+                playMusic();
+            }
+        });
+
+        // Ensure audio loops
+        audio.addEventListener('ended', () => {
+            audio.play().catch(() => {});
+        });
+
         // =============================================
-        // 3. NAME GENERATOR
+        // 4. NAME GENERATOR
         // =============================================
         const smallCapsMap = { 'a':'ᴀ','b':'ʙ','c':'ᴄ','d':'ᴅ','e':'ᴇ','f':'ꜰ','g':'ɢ','h':'ʜ','i':'ɪ','j':'ᴊ','k':'ᴋ','l':'ʟ','m':'ᴍ','n':'ɴ','o':'ᴏ','p':'ᴘ','q':'ǫ','r':'ʀ','s':'ꜱ','t':'ᴛ','u':'ᴜ','v':'ᴠ','w':'ᴡ','x':'x','y':'ʏ','z':'ᴢ' };
         let currentGeneratedName = '';
@@ -725,7 +760,7 @@
         });
 
         // =============================================
-        // 4. COPY
+        // 5. COPY (iOS/Android friendly)
         // =============================================
         function copyResult() {
             const resultDisplay = document.getElementById('result');
@@ -794,10 +829,9 @@
         document.getElementById('userName').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') { document.getElementById('doneBtn').click(); }
         });
-        audio.addEventListener('ended', () => audio.play().catch(() => {}));
 
         // =============================================
-        // 5. RANDOM NAMES
+        // 6. RANDOM NAME GENERATOR
         // =============================================
         const maleNames = ['Zephyr','Morwen','Azrael','Thorne','Orion','Draven','Caius','Fenris','Hades','Jareth','Kael','Mordred','Oberon','Quintus','Balthazar','Darian','Gethin','Helios','Icarus','Juno','Keres','Lucian','Magnus','Nero','Onyx','Phelan','Riven','Sable','Taliesin','Ursa','Valerian','Wraith','Xerxes','Yorick','Zane','Aether','Bram','Corvus','Dante','Ephraim','Gideon','Hector','Ignis','Lysander','Marius','Orpheus','Percival','Raphael','Severin','Theron'];
         const femaleNames = ['Seraphine','Vesper','Nyx','Ravenna','Selene','Ember','Astrid','Drusilla','Elara','Gwendolyn','Isolde','Lilith','Nephthys','Persephone','Rhiannon','Umbra','Xandria','Yvaine','Zephyra','Amaris','Celestine','Elysia','Fane','Keres','Lirael','Maelis','Nerys','Orenda','Sable','Ursa','Valkyrie','Wren','Yara','Astra','Belladonna','Cassiopeia','Dahlia','Eudora','Freyja','Hecate','Iris','Jade','Luna','Mira','Nova','Onyx','Pandora','Raven','Stella','Tempest','Vega','Willow','Xena','Zara'];
@@ -897,7 +931,7 @@
         });
 
         // =============================================
-        // 6. BIRDS
+        // 7. BIRDS
         // =============================================
         const canvas = document.getElementById('birdCanvas');
         const ctx = canvas.getContext('2d');
