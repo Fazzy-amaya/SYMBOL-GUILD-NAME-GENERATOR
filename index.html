@@ -46,15 +46,15 @@
             text-transform: uppercase;
             opacity: 0.7;
             pointer-events: none;
-            text-shadow: 0 0 15px rgba(155, 109, 255, 0.25);
+            text-shadow: 0 0 15px rgba(155,109,255,0.25);
             font-family: 'Segoe UI', sans-serif;
             white-space: nowrap;
-            background: rgba(10, 5, 20, 0.3);
+            background: rgba(10,5,20,0.3);
             padding: 4px 16px;
             border-radius: 30px;
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
-            border: 1px solid rgba(155, 109, 255, 0.08);
+            border: 1px solid rgba(155,109,255,0.08);
         }
 
         /* ===== INTRO SCREEN ===== */
@@ -102,10 +102,7 @@
             animation: lineFadeIn 0.3s forwards;
         }
         @keyframes lineFadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .cursor-blink {
@@ -118,13 +115,7 @@
             animation: blink 0.7s step-end infinite;
         }
         @keyframes blink {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0;
-            }
+            0%,100%{opacity:1;} 50%{opacity:0;}
         }
 
         #click-prompt {
@@ -142,19 +133,10 @@
             display: block;
             animation: fadeInPrompt 0.8s forwards, pulseGlow 1.5s ease-in-out infinite;
         }
-        @keyframes fadeInPrompt {
-            to {
-                opacity: 1;
-            }
-        }
+        @keyframes fadeInPrompt { to { opacity: 1; } }
         @keyframes pulseGlow {
-            0%,
-            100% {
-                text-shadow: 0 0 10px #6a2faf;
-            }
-            50% {
-                text-shadow: 0 0 30px #9b6dff, 0 0 60px #4a1a7a;
-            }
+            0%,100% { text-shadow: 0 0 10px #6a2faf; }
+            50% { text-shadow: 0 0 30px #9b6dff, 0 0 60px #4a1a7a; }
         }
 
         /* ===== MAIN APP ===== */
@@ -176,41 +158,77 @@
         }
 
         .container {
-            background: rgba(20, 10, 30, 0.5);
+            background: rgba(20,10,30,0.5);
             backdrop-filter: blur(12px) saturate(1.2);
             -webkit-backdrop-filter: blur(12px) saturate(1.2);
-            border: 1px solid rgba(180, 130, 255, 0.25);
+            border: 1px solid rgba(180,130,255,0.25);
             border-radius: 40px;
             padding: 50px 40px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 0 60px rgba(100, 40, 180, 0.2), inset 0 0 30px rgba(150, 100, 220, 0.05);
+            box-shadow: 0 0 60px rgba(100,40,180,0.2), inset 0 0 30px rgba(150,100,220,0.05);
             position: relative;
             overflow: hidden;
         }
 
-        /* ===== GUILD LOGO – CLEAR & CENTERED ===== */
-        .guild-logo {
-            display: block;
+        /* ===== GUILD LOGO WRAPPER – FOR OVERLAY EFFECTS ===== */
+        .logo-wrapper {
+            position: relative;
+            display: inline-block;
             max-width: 80%;
-            max-height: 180px;
             margin: 0 auto 15px auto;
-            object-fit: contain;
-            filter: drop-shadow(0 0 30px rgba(155, 109, 255, 0.3))
-                    drop-shadow(0 0 60px rgba(100, 40, 180, 0.15));
-            animation: logoGlow 2.8s ease-in-out infinite alternate;
+            z-index: 2;
         }
 
-        @keyframes logoGlow {
-            0% {
-                filter: drop-shadow(0 0 30px rgba(155, 109, 255, 0.3))
-                        drop-shadow(0 0 60px rgba(100, 40, 180, 0.15));
-            }
-            100% {
-                filter: drop-shadow(0 0 50px rgba(155, 109, 255, 0.5))
-                        drop-shadow(0 0 100px rgba(100, 40, 180, 0.25))
-                        drop-shadow(0 0 150px rgba(255, 0, 50, 0.1));
-            }
+        .guild-logo {
+            display: block;
+            width: 100%;
+            max-height: 180px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 30px rgba(155,109,255,0.3))
+                    drop-shadow(0 0 60px rgba(100,40,180,0.15));
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ===== LIVING EMBER OVERLAY (on top of image) ===== */
+        .ember-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+            border-radius: 20px;
+            overflow: hidden;
+            mix-blend-mode: screen;
+        }
+
+        .ember-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* ===== BREATHING GLOW BEHIND LOGO ===== */
+        .logo-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle at center, rgba(255,0,50,0.12), rgba(155,109,255,0.08) 40%, transparent 70%);
+            border-radius: 50%;
+            animation: breathGlow 3s ease-in-out infinite alternate;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes breathGlow {
+            0% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.9); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
         }
 
         .sub-title {
@@ -219,22 +237,22 @@
             letter-spacing: 8px;
             text-transform: uppercase;
             margin-bottom: 30px;
-            border-top: 1px solid rgba(150, 100, 220, 0.2);
-            border-bottom: 1px solid rgba(150, 100, 220, 0.2);
+            border-top: 1px solid rgba(150,100,220,0.2);
+            border-bottom: 1px solid rgba(150,100,220,0.2);
             display: inline-block;
             padding: 8px 20px;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0,0,0,0.2);
             border-radius: 30px;
             position: relative;
             z-index: 3;
         }
 
         .result-wrapper {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0,0,0,0.3);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
             border-radius: 30px;
-            border: 1px solid rgba(150, 100, 220, 0.2);
+            border: 1px solid rgba(150,100,220,0.2);
             padding: 25px 20px 15px 20px;
             margin-bottom: 15px;
             transition: 0.3s;
@@ -243,13 +261,8 @@
             position: relative;
             z-index: 3;
         }
-        .result-wrapper:hover {
-            border-color: #9b6dff;
-            box-shadow: 0 0 30px rgba(100, 40, 200, 0.2);
-        }
-        .result-wrapper:active {
-            transform: scale(0.98);
-        }
+        .result-wrapper:hover { border-color: #9b6dff; box-shadow: 0 0 30px rgba(100,40,200,0.2); }
+        .result-wrapper:active { transform: scale(0.98); }
 
         #result {
             font-size: clamp(2.2rem, 7vw, 4rem);
@@ -282,9 +295,7 @@
             letter-spacing: 2px;
             font-family: 'Segoe UI', sans-serif;
         }
-        .result-message.show {
-            opacity: 1;
-        }
+        .result-message.show { opacity: 1; }
 
         .copy-hint {
             font-size: 0.75rem;
@@ -300,10 +311,10 @@
             z-index: 3;
         }
         .copy-btn {
-            background: rgba(100, 40, 180, 0.25);
+            background: rgba(100,40,180,0.25);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
-            border: 1px solid rgba(150, 100, 220, 0.3);
+            border: 1px solid rgba(150,100,220,0.3);
             color: #c4a8f0;
             padding: 10px 30px;
             border-radius: 30px;
@@ -314,14 +325,8 @@
             display: inline-block;
             -webkit-tap-highlight-color: transparent;
         }
-        .copy-btn:hover {
-            background: rgba(100, 40, 180, 0.4);
-            border-color: #9b6dff;
-            box-shadow: 0 0 20px rgba(100, 40, 200, 0.2);
-        }
-        .copy-btn:active {
-            transform: scale(0.95);
-        }
+        .copy-btn:hover { background: rgba(100,40,180,0.4); border-color: #9b6dff; box-shadow: 0 0 20px rgba(100,40,200,0.2); }
+        .copy-btn:active { transform: scale(0.95); }
 
         .random-section {
             margin: 20px 0 15px 0;
@@ -329,8 +334,8 @@
             z-index: 3;
         }
         .random-btn {
-            background: rgba(100, 40, 180, 0.15);
-            border: 1px solid rgba(150, 100, 220, 0.2);
+            background: rgba(100,40,180,0.15);
+            border: 1px solid rgba(150,100,220,0.2);
             color: #c4a8f0;
             padding: 8px 25px;
             border-radius: 30px;
@@ -341,14 +346,8 @@
             display: inline-block;
             -webkit-tap-highlight-color: transparent;
         }
-        .random-btn:hover {
-            background: rgba(100, 40, 180, 0.3);
-            border-color: #9b6dff;
-            box-shadow: 0 0 20px rgba(100, 40, 200, 0.15);
-        }
-        .random-btn:active {
-            transform: scale(0.95);
-        }
+        .random-btn:hover { background: rgba(100,40,180,0.3); border-color: #9b6dff; box-shadow: 0 0 20px rgba(100,40,200,0.15); }
+        .random-btn:active { transform: scale(0.95); }
 
         .gender-select {
             display: none;
@@ -357,13 +356,11 @@
             justify-content: center;
             flex-wrap: wrap;
         }
-        .gender-select.open {
-            display: flex;
-        }
+        .gender-select.open { display: flex; }
 
         .gender-btn {
-            background: rgba(100, 40, 180, 0.15);
-            border: 1px solid rgba(150, 100, 220, 0.25);
+            background: rgba(100,40,180,0.15);
+            border: 1px solid rgba(150,100,220,0.25);
             color: #c4a8f0;
             padding: 10px 30px;
             border-radius: 30px;
@@ -373,22 +370,10 @@
             letter-spacing: 2px;
             -webkit-tap-highlight-color: transparent;
         }
-        .gender-btn:hover {
-            background: rgba(100, 40, 180, 0.3);
-            border-color: #9b6dff;
-            box-shadow: 0 0 20px rgba(100, 40, 200, 0.15);
-        }
-        .gender-btn:active {
-            transform: scale(0.95);
-        }
-        .gender-btn.male:hover {
-            border-color: #6a8aff;
-            box-shadow: 0 0 20px rgba(100, 140, 255, 0.2);
-        }
-        .gender-btn.female:hover {
-            border-color: #ff6a9a;
-            box-shadow: 0 0 20px rgba(255, 100, 150, 0.2);
-        }
+        .gender-btn:hover { background: rgba(100,40,180,0.3); border-color: #9b6dff; box-shadow: 0 0 20px rgba(100,40,200,0.15); }
+        .gender-btn:active { transform: scale(0.95); }
+        .gender-btn.male:hover { border-color: #6a8aff; box-shadow: 0 0 20px rgba(100,140,255,0.2); }
+        .gender-btn.female:hover { border-color: #ff6a9a; box-shadow: 0 0 20px rgba(255,100,150,0.2); }
 
         .name-list-container {
             margin-top: 12px;
@@ -397,10 +382,7 @@
             transition: max-height 0.5s ease, opacity 0.5s ease;
             opacity: 0;
         }
-        .name-list-container.open {
-            max-height: 600px;
-            opacity: 1;
-        }
+        .name-list-container.open { max-height: 600px; opacity: 1; }
 
         .name-list {
             display: grid;
@@ -410,8 +392,8 @@
         }
 
         .name-list-item {
-            background: rgba(100, 40, 180, 0.1);
-            border: 1px solid rgba(150, 100, 220, 0.15);
+            background: rgba(100,40,180,0.1);
+            border: 1px solid rgba(150,100,220,0.15);
             border-radius: 20px;
             padding: 8px 12px;
             color: #d4c4f0;
@@ -422,19 +404,12 @@
             letter-spacing: 1px;
             font-family: 'Courier New', monospace;
         }
-        .name-list-item:hover {
-            background: rgba(100, 40, 180, 0.25);
-            border-color: #9b6dff;
-            transform: scale(1.02);
-            box-shadow: 0 0 15px rgba(100, 40, 200, 0.15);
-        }
-        .name-list-item:active {
-            transform: scale(0.95);
-        }
+        .name-list-item:hover { background: rgba(100,40,180,0.25); border-color: #9b6dff; transform: scale(1.02); box-shadow: 0 0 15px rgba(100,40,200,0.15); }
+        .name-list-item:active { transform: scale(0.95); }
 
         .generate-more-btn {
-            background: rgba(100, 40, 180, 0.1);
-            border: 1px dashed rgba(150, 100, 220, 0.25);
+            background: rgba(100,40,180,0.1);
+            border: 1px dashed rgba(150,100,220,0.25);
             color: #8a7aaa;
             padding: 6px 18px;
             border-radius: 20px;
@@ -445,24 +420,11 @@
             margin-top: 5px;
             display: inline-block;
         }
-        .generate-more-btn:hover {
-            background: rgba(100, 40, 180, 0.2);
-            border-color: #9b6dff;
-            color: #c4a8f0;
-        }
+        .generate-more-btn:hover { background: rgba(100,40,180,0.2); border-color: #9b6dff; color: #c4a8f0; }
 
-        .no-more-names {
-            color: #6a4a8a;
-            font-size: 0.8rem;
-            margin-top: 5px;
-            font-style: italic;
-            letter-spacing: 1px;
-        }
+        .no-more-names { color: #6a4a8a; font-size: 0.8rem; margin-top: 5px; font-style: italic; letter-spacing: 1px; }
 
-        .input-area {
-            position: relative;
-            z-index: 3;
-        }
+        .input-area { position: relative; z-index: 3; }
         .input-area label {
             display: block;
             font-size: 0.9rem;
@@ -475,10 +437,10 @@
         .input-area input {
             width: 100%;
             padding: 18px 25px;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0,0,0,0.4);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
-            border: 1px solid rgba(150, 100, 220, 0.3);
+            border: 1px solid rgba(150,100,220,0.3);
             border-radius: 60px;
             font-size: 1.2rem;
             color: #f0eaff;
@@ -488,16 +450,8 @@
             transition: 0.3s;
             font-weight: 300;
         }
-        .input-area input::placeholder {
-            color: #6a4a8a;
-            font-size: 0.9rem;
-            letter-spacing: 2px;
-        }
-        .input-area input:focus {
-            border-color: #9b6dff;
-            box-shadow: 0 0 25px rgba(120, 60, 220, 0.3);
-            background: rgba(10, 5, 20, 0.6);
-        }
+        .input-area input::placeholder { color: #6a4a8a; font-size: 0.9rem; letter-spacing: 2px; }
+        .input-area input:focus { border-color: #9b6dff; box-shadow: 0 0 25px rgba(120,60,220,0.3); background: rgba(10,5,20,0.6); }
 
         .btn {
             margin-top: 15px;
@@ -511,59 +465,27 @@
             color: #f5ecff;
             cursor: pointer;
             transition: 0.3s;
-            box-shadow: 0 0 30px rgba(100, 40, 200, 0.3);
+            box-shadow: 0 0 30px rgba(100,40,200,0.3);
             text-transform: uppercase;
             position: relative;
             z-index: 3;
         }
-        .btn:hover {
-            transform: scale(1.05);
-            background: linear-gradient(135deg, #8235d9, #4f1d8a);
-            box-shadow: 0 0 50px rgba(130, 50, 220, 0.6);
-        }
-        .btn:active {
-            transform: scale(0.95);
-        }
+        .btn:hover { transform: scale(1.05); background: linear-gradient(135deg, #8235d9, #4f1d8a); box-shadow: 0 0 50px rgba(130,50,220,0.6); }
+        .btn:active { transform: scale(0.95); }
 
-        .footer-note {
-            display: none;
-        }
+        .footer-note { display: none; }
 
         @media (max-width: 480px) {
-            .container {
-                padding: 30px 20px;
-            }
-            .btn {
-                padding: 14px 30px;
-                font-size: 1rem;
-                letter-spacing: 4px;
-            }
-            .result-wrapper {
-                padding: 15px 10px;
-            }
-            .copy-btn {
-                padding: 8px 20px;
-                font-size: 0.9rem;
-            }
-            .name-list {
-                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            }
-            .name-list-item {
-                font-size: 0.75rem;
-                padding: 6px 10px;
-            }
-            .gender-btn {
-                padding: 8px 20px;
-                font-size: 0.8rem;
-            }
-            #watermark {
-                font-size: 0.65rem;
-                padding: 3px 12px;
-                bottom: 10px;
-            }
-            .guild-logo {
-                max-height: 120px;
-            }
+            .container { padding: 30px 20px; }
+            .btn { padding: 14px 30px; font-size: 1rem; letter-spacing: 4px; }
+            .result-wrapper { padding: 15px 10px; }
+            .copy-btn { padding: 8px 20px; font-size: 0.9rem; }
+            .name-list { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+            .name-list-item { font-size: 0.75rem; padding: 6px 10px; }
+            .gender-btn { padding: 8px 20px; font-size: 0.8rem; }
+            #watermark { font-size: 0.65rem; padding: 3px 12px; bottom: 10px; }
+            .guild-logo { max-height: 120px; }
+            .logo-wrapper { max-width: 90%; }
         }
     </style>
 </head>
@@ -585,9 +507,14 @@
     <div id="main-app">
         <div class="container">
 
-            <!-- ===== GUILD LOGO – CLEAR & REPLACES HEADLINE ===== -->
-            <!-- CHANGE THE src TO YOUR FILE (Guild.jpg or Guild.png) -->
-            <img class="guild-logo" src="./Guild.jpg" alt="Phantom Guild" />
+            <!-- ===== GUILD LOGO WITH LIVING OVERLAY ===== -->
+            <div class="logo-wrapper">
+                <div class="logo-glow"></div>
+                <img class="guild-logo" src="./Guild.jpg" alt="Phantom Guild" />
+                <div class="ember-overlay">
+                    <canvas class="ember-canvas" id="emberCanvas"></canvas>
+                </div>
+            </div>
 
             <div class="sub-title">Name Generator</div>
 
@@ -634,7 +561,7 @@
 
     <script>
         // =============================================
-        // ALL JAVASCRIPT – UNCHANGED
+        // 0. AUDIO CONTEXT & INTRO (unchanged)
         // =============================================
         let audioCtx = null;
         let audioCtxResumed = false;
@@ -764,6 +691,7 @@
                 mainApp.classList.add('visible');
                 playMusic();
                 setTimeout(() => startBirds(), 400);
+                setTimeout(() => startEmbers(), 500);
             }
         });
         introScreen.addEventListener('touchstart', function(e) {
@@ -772,9 +700,13 @@
                 mainApp.classList.add('visible');
                 playMusic();
                 setTimeout(() => startBirds(), 400);
+                setTimeout(() => startEmbers(), 500);
             }
         }, { passive: true });
 
+        // =============================================
+        // 1. NAME GENERATOR (unchanged)
+        // =============================================
         const smallCapsMap = { 'a':'ᴀ','b':'ʙ','c':'ᴄ','d':'ᴅ','e':'ᴇ','f':'ꜰ','g':'ɢ','h':'ʜ','i':'ɪ','j':'ᴊ','k':'ᴋ','l':'ʟ','m':'ᴍ','n':'ɴ','o':'ᴏ','p':'ᴘ','q':'ǫ','r':'ʀ','s':'ꜱ','t':'ᴛ','u':'ᴜ','v':'ᴠ','w':'ᴡ','x':'x','y':'ʏ','z':'ᴢ' };
         let currentGeneratedName = '';
         function updatePreview() {
@@ -812,6 +744,9 @@
             }
         });
 
+        // =============================================
+        // 2. COPY (unchanged)
+        // =============================================
         function copyResult() {
             const resultDisplay = document.getElementById('result');
             const textToCopy = currentGeneratedName;
@@ -881,7 +816,9 @@
         });
         audio.addEventListener('ended', () => audio.play().catch(() => {}));
 
-        // Random name generator
+        // =============================================
+        // 3. RANDOM NAME (unchanged)
+        // =============================================
         const maleNames = ['Zephyr','Morwen','Azrael','Thorne','Orion','Draven','Caius','Fenris','Hades','Jareth','Kael','Mordred','Oberon','Quintus','Balthazar','Darian','Gethin','Helios','Icarus','Juno','Keres','Lucian','Magnus','Nero','Onyx','Phelan','Riven','Sable','Taliesin','Ursa','Valerian','Wraith','Xerxes','Yorick','Zane','Aether','Bram','Corvus','Dante','Ephraim','Gideon','Hector','Ignis','Lysander','Marius','Orpheus','Percival','Raphael','Severin','Theron'];
         const femaleNames = ['Seraphine','Vesper','Nyx','Ravenna','Selene','Ember','Astrid','Drusilla','Elara','Gwendolyn','Isolde','Lilith','Nephthys','Persephone','Rhiannon','Umbra','Xandria','Yvaine','Zephyra','Amaris','Celestine','Elysia','Fane','Keres','Lirael','Maelis','Nerys','Orenda','Sable','Ursa','Valkyrie','Wren','Yara','Astra','Belladonna','Cassiopeia','Dahlia','Eudora','Freyja','Hecate','Iris','Jade','Luna','Mira','Nova','Onyx','Pandora','Raven','Stella','Tempest','Vega','Willow','Xena','Zara'];
         let currentGender = null;
@@ -979,7 +916,9 @@
             setTimeout(() => { this.textContent = '↻ Generate More'; }, 800);
         });
 
-        // Birds
+        // =============================================
+        // 4. BIRDS (unchanged)
+        // =============================================
         const canvas = document.getElementById('birdCanvas');
         const ctx = canvas.getContext('2d');
         let birds = [];
@@ -1046,17 +985,17 @@
                 }
                 this.wingPhase += this.wingSpeed;
                 this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
-                const titleEl = document.querySelector('.guild-logo');
-                if (titleEl) {
-                    const rect = titleEl.getBoundingClientRect();
-                    const titleRect = {
+                const logoEl = document.querySelector('.guild-logo');
+                if (logoEl) {
+                    const rect = logoEl.getBoundingClientRect();
+                    const logoRect = {
                         x: rect.left + rect.width*0.1,
                         y: rect.top + rect.height*0.1,
                         width: rect.width*0.8,
                         height: rect.height*0.8
                     };
-                    if (this.x > titleRect.x && this.x < titleRect.x + titleRect.width &&
-                        this.y > titleRect.y && this.y < titleRect.y + titleRect.height) {
+                    if (this.x > logoRect.x && this.x < logoRect.x + logoRect.width &&
+                        this.y > logoRect.y && this.y < logoRect.y + logoRect.height) {
                         this.triggerDisappear();
                     }
                 }
@@ -1178,6 +1117,145 @@
                 animateBirds();
             }
         });
+
+        // =============================================
+        // 5. LIVING EMBER OVERLAY (NEW)
+        // =============================================
+        const emberCanvas = document.getElementById('emberCanvas');
+        const emberCtx = emberCanvas.getContext('2d');
+        let emberParticles = [];
+        let embersActive = false;
+        let emberAnimationId = null;
+
+        function resizeEmberCanvas() {
+            const parent = emberCanvas.parentElement;
+            const rect = parent.getBoundingClientRect();
+            emberCanvas.width = rect.width;
+            emberCanvas.height = rect.height;
+        }
+
+        // Resize ember canvas when logo loads or window resizes
+        window.addEventListener('resize', resizeEmberCanvas);
+        // Also resize when the main app becomes visible
+        const observer = new MutationObserver(() => {
+            if (mainApp.classList.contains('visible')) {
+                setTimeout(resizeEmberCanvas, 300);
+            }
+        });
+        observer.observe(mainApp, { attributes: true, attributeFilter: ['class'] });
+
+        class Ember {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                const w = emberCanvas.width;
+                const h = emberCanvas.height;
+                this.x = Math.random() * w;
+                this.y = h + 10;
+                this.size = 2 + Math.random() * 5;
+                this.speed = 0.2 + Math.random() * 0.5;
+                this.opacity = 0.1 + Math.random() * 0.3;
+                this.wobble = Math.random() * 0.5;
+                this.wobbleSpeed = 0.01 + Math.random() * 0.02;
+                this.wobbleOffset = Math.random() * Math.PI * 2;
+                this.life = 1;
+                this.decay = 0.002 + Math.random() * 0.004;
+                const colors = [
+                    'rgba(255, 50, 30, ',  // deep red
+                    'rgba(255, 100, 50, ', // orange-red
+                    'rgba(200, 50, 100, ', // purple-red
+                    'rgba(255, 80, 30, ',  // bright ember
+                ];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+            update() {
+                this.y -= this.speed;
+                this.x += Math.sin(this.wobbleOffset) * this.wobble;
+                this.wobbleOffset += this.wobbleSpeed;
+                this.life -= this.decay;
+                this.opacity *= 0.995;
+                if (this.life <= 0 || this.opacity < 0.01) {
+                    this.reset();
+                }
+            }
+            draw() {
+                const alpha = this.opacity * this.life;
+                if (alpha < 0.01) return;
+                emberCtx.save();
+                emberCtx.globalAlpha = alpha;
+                // Glow
+                const gradient = emberCtx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.size * 3
+                );
+                gradient.addColorStop(0, this.color + '0.8)');
+                gradient.addColorStop(0.5, this.color + '0.3)');
+                gradient.addColorStop(1, this.color + '0)');
+                emberCtx.fillStyle = gradient;
+                emberCtx.beginPath();
+                emberCtx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
+                emberCtx.fill();
+
+                // Core
+                emberCtx.fillStyle = this.color + '1)';
+                emberCtx.shadowColor = '#ff4422';
+                emberCtx.shadowBlur = 15;
+                emberCtx.beginPath();
+                emberCtx.arc(this.x, this.y, this.size * 0.6, 0, Math.PI * 2);
+                emberCtx.fill();
+                emberCtx.restore();
+            }
+        }
+
+        function initEmbers() {
+            const count = 25 + Math.floor(Math.random() * 15);
+            emberParticles = [];
+            for (let i = 0; i < count; i++) {
+                const e = new Ember();
+                // Spread them out vertically
+                e.y = Math.random() * emberCanvas.height;
+                e.life = 0.3 + Math.random() * 0.7;
+                emberParticles.push(e);
+            }
+        }
+
+        function animateEmbers() {
+            if (!embersActive) return;
+            emberCtx.clearRect(0, 0, emberCanvas.width, emberCanvas.height);
+            for (const e of emberParticles) {
+                e.update();
+                e.draw();
+            }
+            emberAnimationId = requestAnimationFrame(animateEmbers);
+        }
+
+        function startEmbers() {
+            if (embersActive) return;
+            resizeEmberCanvas();
+            initEmbers();
+            embersActive = true;
+            animateEmbers();
+        }
+
+        // Stop embers when page is hidden (performance)
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && embersActive) {
+                if (emberAnimationId) { cancelAnimationFrame(emberAnimationId); emberAnimationId = null; }
+            } else if (!document.hidden && embersActive && !emberAnimationId) {
+                animateEmbers();
+            }
+        });
+
+        // Also restart embers if window resizes
+        window.addEventListener('resize', () => {
+            if (embersActive) {
+                resizeEmberCanvas();
+                initEmbers();
+            }
+        });
+
+        console.log('🔥 Living Ember Overlay active!');
     </script>
 </body>
 </html>
