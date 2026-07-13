@@ -658,7 +658,7 @@
 </head>
 <body>
 
-    <!-- ====== WATERMARK – BOLD & OBVIOUS ====== -->
+    <!-- ====== WATERMARK ====== -->
     <div id="watermark">✦ FR4NX ✦</div>
 
     <!-- ====== RIPPLE CONTAINER ====== -->
@@ -719,7 +719,7 @@
         </div>
     </div>
 
-    <!-- ====== AUDIO – PRELOADED FOR INSTANT PLAY ====== -->
+    <!-- ====== AUDIO ====== -->
     <audio id="bg-music" loop preload="auto">
         <source src="./music.mp3" type="audio/mpeg" />
         <source src="/SYMBOL-GUILD-NAME-GENERATOR/music.mp3" type="audio/mpeg" />
@@ -727,7 +727,7 @@
 
     <script>
         // =============================================
-        // 0. RIPPLE CURSOR EFFECT (Phantom Style)
+        // 0. RIPPLE CURSOR EFFECT
         // =============================================
         const rippleContainer = document.getElementById('ripple-container');
 
@@ -749,13 +749,11 @@
                 el.style.animation = 'rippleFade 1.2s ease-out forwards';
             }
             rippleContainer.appendChild(el);
-            // Auto-remove after animation
             setTimeout(() => {
                 if (el && el.parentNode) el.remove();
             }, 1500);
         }
 
-        // --- Mouse move (desktop) ---
         let rippleThrottle = false;
         document.addEventListener('mousemove', function(e) {
             if (rippleThrottle) return;
@@ -766,7 +764,6 @@
             });
         });
 
-        // --- Touch move (mobile) ---
         document.addEventListener('touchmove', function(e) {
             const touch = e.touches[0];
             if (touch) {
@@ -776,7 +773,6 @@
             }
         }, { passive: true });
 
-        // --- Click / Tap (strong burst) ---
         document.addEventListener('click', function(e) {
             createRipple(e.clientX, e.clientY, true);
         });
@@ -1236,7 +1232,7 @@
         });
 
         // =============================================
-        // 8. BIRDS – INCREASED TO 90 (max) / 30 (min)
+        // 8. BIRDS – NOW ONLY FLY AROUND THE LOGO
         // =============================================
         const canvas = document.getElementById('birdCanvas');
         const ctx = canvas.getContext('2d');
@@ -1257,23 +1253,29 @@
                 h = window.innerHeight;
             const area = w * h;
             let count = Math.floor(area / 70000);
-            count = Math.max(30, Math.min(90, count)); // Increased from 20-80 to 30-90 (+10)
+            count = Math.max(30, Math.min(90, count));
             return count;
         }
 
         class Bird {
-            constructor() { this.reset(); }
+            constructor() {
+                this.reset();
+            }
+
             reset() {
-                const margin = 100;
-                const side = Math.floor(Math.random() * 4);
-                if (side === 0) { this.x = Math.random() * canvas.width;
-                    this.y = -margin; } else if (side === 1) { this.x = canvas.width + margin;
-                    this.y = Math.random() * canvas.height; } else if (side === 2) { this.x = Math.random() * canvas.width;
-                    this.y = canvas.height + margin; } else { this.x = -margin;
-                    this.y = Math.random() * canvas.height; }
-                this.targetX = canvas.width / 2 + (Math.random() - 0.5) * 300;
-                this.targetY = canvas.height / 2 - 50 + (Math.random() - 0.5) * 200;
-                this.speed = 0.6 + Math.random() * 0.6;
+                // Spawn near the center (logo area) instead of edges
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2 - 30; // offset slightly up for logo
+                const radius = 120 + Math.random() * 100; // spawn within 120-220px radius
+                const angle = Math.random() * Math.PI * 2;
+                this.x = centerX + Math.cos(angle) * radius;
+                this.y = centerY + Math.sin(angle) * radius;
+
+                // Target is also around the logo
+                this.targetX = centerX + (Math.random() - 0.5) * 200;
+                this.targetY = centerY + (Math.random() - 0.5) * 150;
+
+                this.speed = 0.4 + Math.random() * 0.5; // slightly slower for circling
                 this.angle = 0;
                 this.size = 12 + Math.random() * 10;
                 this.wingPhase = Math.random() * Math.PI * 2;
@@ -1285,6 +1287,7 @@
                 this.disappearing = false;
                 this.disappearTimer = 0;
             }
+
             update() {
                 if (this.disappearing) {
                     this.disappearTimer += 0.02;
@@ -1292,9 +1295,11 @@
                     if (this.disappearTimer >= 1) this.alive = false;
                     return;
                 }
+
                 const dx = this.targetX - this.x;
                 const dy = this.targetY - this.y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
+
                 if (dist > 5) {
                     const angle = Math.atan2(dy, dx);
                     const curveAngle = Math.sin(this.curvePhase) * 0.15;
@@ -1304,11 +1309,17 @@
                     this.curvePhase += this.curveSpeed;
                     this.y += Math.sin(this.curvePhase * 2) * 0.3;
                 } else {
-                    this.targetX = canvas.width / 2 + (Math.random() - 0.5) * 400;
-                    this.targetY = canvas.height / 2 - 50 + (Math.random() - 0.5) * 300;
+                    // Pick a new random target near the logo
+                    const centerX = canvas.width / 2;
+                    const centerY = canvas.height / 2 - 30;
+                    this.targetX = centerX + (Math.random() - 0.5) * 200;
+                    this.targetY = centerY + (Math.random() - 0.5) * 150;
                 }
+
                 this.wingPhase += this.wingSpeed;
                 this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
+
+                // Collision with logo
                 const logoEl = document.querySelector('.guild-logo');
                 if (logoEl) {
                     const rect = logoEl.getBoundingClientRect();
@@ -1324,35 +1335,42 @@
                     }
                 }
             }
+
             triggerDisappear() {
                 if (this.disappearing) return;
                 this.disappearing = true;
                 this.disappearTimer = 0;
                 spawnParticles(this.x, this.y);
             }
+
             draw() {
                 if (!this.alive || this.opacity <= 0) return;
                 ctx.save();
                 ctx.globalAlpha = this.opacity;
                 ctx.translate(this.x, this.y);
                 ctx.rotate(this.angle);
+
                 const wingFlap = Math.sin(this.wingPhase);
                 const size = this.size;
+
                 ctx.fillStyle = '#6a4a8a';
                 ctx.shadowColor = '#9b6dff';
                 ctx.shadowBlur = 15;
                 ctx.beginPath();
                 ctx.ellipse(0, 0, size * 0.6, size * 0.4, 0, 0, Math.PI * 2);
                 ctx.fill();
+
                 ctx.beginPath();
                 ctx.arc(size * 0.5, -size * 0.1, size * 0.25, 0, Math.PI * 2);
                 ctx.fill();
+
                 ctx.fillStyle = '#4a2a6a';
                 ctx.beginPath();
                 ctx.moveTo(size * 0.75, -size * 0.1);
                 ctx.lineTo(size * 0.95, -size * 0.05);
                 ctx.lineTo(size * 0.75, 0);
                 ctx.fill();
+
                 ctx.fillStyle = '#5a3a7a';
                 ctx.beginPath();
                 ctx.ellipse(-size * 0.3, -size * 0.2 + wingFlap * size * 0.15, size * 0.5, size * 0.3, -0.3 + wingFlap * 0.2, 0,
@@ -1362,13 +1380,16 @@
                 ctx.ellipse(-size * 0.3, size * 0.2 - wingFlap * size * 0.15, size * 0.5, size * 0.3, 0.3 - wingFlap * 0.2, 0,
                     Math.PI * 2);
                 ctx.fill();
+
                 ctx.fillStyle = '#4a2a6a';
                 ctx.beginPath();
                 ctx.moveTo(-size * 0.6, -size * 0.15);
                 ctx.lineTo(-size * 0.9, -size * 0.25 + wingFlap * size * 0.1);
                 ctx.lineTo(-size * 0.6, size * 0.15);
                 ctx.fill();
+
                 ctx.restore();
+
                 ctx.save();
                 ctx.globalAlpha = this.opacity * 0.15;
                 ctx.shadowColor = '#9b6dff';
@@ -1431,6 +1452,7 @@
             birds = birds.filter(b => b.alive);
             updateParticles();
             drawParticles();
+
             const targetCount = getBirdCount();
             while (birds.length < targetCount) birds.push(new Bird());
             while (birds.length > targetCount) {
@@ -1445,12 +1467,7 @@
             birdsActive = true;
             const count = getBirdCount();
             for (let i = 0; i < count; i++) {
-                const bird = new Bird();
-                bird.x = Math.random() * canvas.width;
-                bird.y = Math.random() * canvas.height;
-                bird.targetX = canvas.width / 2 + (Math.random() - 0.5) * 300;
-                bird.targetY = canvas.height / 2 - 50 + (Math.random() - 0.5) * 200;
-                birds.push(bird);
+                birds.push(new Bird());
             }
             animateBirds();
         }
