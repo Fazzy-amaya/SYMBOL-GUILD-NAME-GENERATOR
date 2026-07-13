@@ -6,7 +6,11 @@
     <title>ᴘʜᴀɴᴛᴏᴍ・〆 — Name Generator</title>
     <style>
         /* ===== RESET & BASE ===== */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             min-height: 100vh;
@@ -32,28 +36,92 @@
             isolation: isolate;
         }
 
-        /* ===== WATERMARK ===== */
+        /* ===== WATERMARK – BOLD & OBVIOUS ===== */
         #watermark {
             position: fixed;
-            bottom: 15px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 10000;
-            font-size: 0.8rem;
-            color: #b396d9;
-            letter-spacing: 3px;
+            z-index: 10001;
+            font-size: 0.95rem;
+            color: #c4a8f0;
+            letter-spacing: 4px;
             text-transform: uppercase;
-            opacity: 0.7;
+            opacity: 0.85;
             pointer-events: none;
-            text-shadow: 0 0 15px rgba(155,109,255,0.25);
+            text-shadow: 0 0 20px rgba(155, 109, 255, 0.6),
+                         0 0 40px rgba(123, 46, 255, 0.3),
+                         0 0 80px rgba(75, 26, 120, 0.2);
             font-family: 'Segoe UI', sans-serif;
             white-space: nowrap;
-            background: rgba(10,5,20,0.3);
-            padding: 4px 16px;
-            border-radius: 30px;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            border: 1px solid rgba(155,109,255,0.08);
+            background: rgba(10, 5, 20, 0.4);
+            padding: 6px 22px;
+            border-radius: 40px;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(155, 109, 255, 0.2);
+            animation: watermarkPulse 2.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes watermarkPulse {
+            0% {
+                text-shadow: 0 0 20px rgba(155, 109, 255, 0.6), 0 0 40px rgba(123, 46, 255, 0.3), 0 0 80px rgba(75, 26, 120, 0.2);
+                opacity: 0.85;
+            }
+            100% {
+                text-shadow: 0 0 35px rgba(155, 109, 255, 0.9), 0 0 70px rgba(123, 46, 255, 0.5), 0 0 120px rgba(75, 26, 120, 0.3);
+                opacity: 1;
+            }
+        }
+
+        /* ===== RIPPLE CURSOR CONTAINER ===== */
+        #ripple-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 99998;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(123, 46, 255, 0.6), rgba(75, 26, 120, 0.3), transparent 70%);
+            box-shadow: 0 0 20px rgba(123, 46, 255, 0.5), 0 0 60px rgba(75, 26, 120, 0.3);
+            animation: rippleFade 1.2s ease-out forwards;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+        }
+
+        .ripple.click {
+            background: radial-gradient(circle, rgba(123, 46, 255, 0.8), rgba(155, 109, 255, 0.5), transparent 70%);
+            box-shadow: 0 0 40px rgba(123, 46, 255, 0.7), 0 0 100px rgba(75, 26, 120, 0.4);
+            animation: rippleClick 1s ease-out forwards;
+        }
+
+        @keyframes rippleFade {
+            0% {
+                opacity: 0.9;
+                transform: translate(-50%, -50%) scale(0.3);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1.8);
+            }
+        }
+
+        @keyframes rippleClick {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0.2);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(2.5);
+            }
         }
 
         /* ===== INTRO SCREEN ===== */
@@ -100,7 +168,10 @@
             animation: lineFadeIn 0.3s forwards;
         }
         @keyframes lineFadeIn {
-            to { opacity: 1; transform: translateY(0); }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         .cursor-blink {
             display: inline-block;
@@ -112,7 +183,13 @@
             animation: blink 0.7s step-end infinite;
         }
         @keyframes blink {
-            0%,100%{opacity:1;} 50%{opacity:0;}
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
         }
         #click-prompt {
             margin-top: 25px;
@@ -129,10 +206,19 @@
             display: block;
             animation: fadeInPrompt 0.8s forwards, pulseGlow 1.5s ease-in-out infinite;
         }
-        @keyframes fadeInPrompt { to { opacity: 1; } }
+        @keyframes fadeInPrompt {
+            to {
+                opacity: 1;
+            }
+        }
         @keyframes pulseGlow {
-            0%,100% { text-shadow: 0 0 10px #6a2faf; }
-            50% { text-shadow: 0 0 30px #9b6dff, 0 0 60px #4a1a7a; }
+            0%,
+            100% {
+                text-shadow: 0 0 10px #6a2faf;
+            }
+            50% {
+                text-shadow: 0 0 30px #9b6dff, 0 0 60px #4a1a7a;
+            }
         }
 
         /* ===== MAIN APP ===== */
@@ -154,15 +240,15 @@
         }
 
         .container {
-            background: rgba(20,10,30,0.5);
+            background: rgba(20, 10, 30, 0.5);
             backdrop-filter: blur(12px) saturate(1.2);
             -webkit-backdrop-filter: blur(12px) saturate(1.2);
-            border: 1px solid rgba(180,130,255,0.25);
+            border: 1px solid rgba(180, 130, 255, 0.25);
             border-radius: 40px;
             padding: 50px 40px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 0 60px rgba(100,40,180,0.2), inset 0 0 30px rgba(150,100,220,0.05);
+            box-shadow: 0 0 60px rgba(100, 40, 180, 0.2), inset 0 0 30px rgba(150, 100, 220, 0.05);
             position: relative;
             overflow: hidden;
         }
@@ -187,15 +273,21 @@
             transform: translate(-50%, -50%);
             width: 95%;
             height: 95%;
-            background: radial-gradient(circle at center, rgba(123,46,255,0.12), rgba(75,26,120,0.08) 40%, transparent 70%);
+            background: radial-gradient(circle at center, rgba(123, 46, 255, 0.12), rgba(75, 26, 120, 0.08) 40%, transparent 70%);
             border-radius: 50%;
             animation: breathGlow 3s ease-in-out infinite alternate;
             z-index: 0;
             pointer-events: none;
         }
         @keyframes breathGlow {
-            0% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.85); }
-            100% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+            0% {
+                opacity: 0.4;
+                transform: translate(-50%, -50%) scale(0.85);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.15);
+            }
         }
 
         .guild-logo {
@@ -206,7 +298,7 @@
             position: relative;
             z-index: 2;
             background: #32104F;
-            filter: drop-shadow(0 0 30px rgba(123,46,255,0.2));
+            filter: drop-shadow(0 0 30px rgba(123, 46, 255, 0.2));
         }
 
         .sub-title {
@@ -215,22 +307,22 @@
             letter-spacing: 8px;
             text-transform: uppercase;
             margin-bottom: 30px;
-            border-top: 1px solid rgba(150,100,220,0.2);
-            border-bottom: 1px solid rgba(150,100,220,0.2);
+            border-top: 1px solid rgba(150, 100, 220, 0.2);
+            border-bottom: 1px solid rgba(150, 100, 220, 0.2);
             display: inline-block;
             padding: 8px 20px;
-            background: rgba(0,0,0,0.2);
+            background: rgba(0, 0, 0, 0.2);
             border-radius: 30px;
             position: relative;
             z-index: 3;
         }
 
         .result-wrapper {
-            background: rgba(0,0,0,0.3);
+            background: rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
             border-radius: 30px;
-            border: 1px solid rgba(150,100,220,0.2);
+            border: 1px solid rgba(150, 100, 220, 0.2);
             padding: 25px 20px 15px 20px;
             margin-bottom: 15px;
             transition: 0.3s;
@@ -239,8 +331,13 @@
             position: relative;
             z-index: 3;
         }
-        .result-wrapper:hover { border-color: #9b6dff; box-shadow: 0 0 30px rgba(100,40,200,0.2); }
-        .result-wrapper:active { transform: scale(0.98); }
+        .result-wrapper:hover {
+            border-color: #9b6dff;
+            box-shadow: 0 0 30px rgba(100, 40, 200, 0.2);
+        }
+        .result-wrapper:active {
+            transform: scale(0.98);
+        }
 
         #result {
             font-size: clamp(2.2rem, 7vw, 4rem);
@@ -273,7 +370,9 @@
             letter-spacing: 2px;
             font-family: 'Segoe UI', sans-serif;
         }
-        .result-message.show { opacity: 1; }
+        .result-message.show {
+            opacity: 1;
+        }
 
         .copy-hint {
             font-size: 0.75rem;
@@ -289,10 +388,10 @@
             z-index: 3;
         }
         .copy-btn {
-            background: rgba(100,40,180,0.25);
+            background: rgba(100, 40, 180, 0.25);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
-            border: 1px solid rgba(150,100,220,0.3);
+            border: 1px solid rgba(150, 100, 220, 0.3);
             color: #c4a8f0;
             padding: 10px 30px;
             border-radius: 30px;
@@ -303,8 +402,14 @@
             display: inline-block;
             -webkit-tap-highlight-color: transparent;
         }
-        .copy-btn:hover { background: rgba(100,40,180,0.4); border-color: #9b6dff; box-shadow: 0 0 20px rgba(100,40,200,0.2); }
-        .copy-btn:active { transform: scale(0.95); }
+        .copy-btn:hover {
+            background: rgba(100, 40, 180, 0.4);
+            border-color: #9b6dff;
+            box-shadow: 0 0 20px rgba(100, 40, 200, 0.2);
+        }
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
 
         .random-section {
             margin: 20px 0 15px 0;
@@ -312,8 +417,8 @@
             z-index: 3;
         }
         .random-btn {
-            background: rgba(100,40,180,0.15);
-            border: 1px solid rgba(150,100,220,0.2);
+            background: rgba(100, 40, 180, 0.15);
+            border: 1px solid rgba(150, 100, 220, 0.2);
             color: #c4a8f0;
             padding: 8px 25px;
             border-radius: 30px;
@@ -324,8 +429,14 @@
             display: inline-block;
             -webkit-tap-highlight-color: transparent;
         }
-        .random-btn:hover { background: rgba(100,40,180,0.3); border-color: #9b6dff; box-shadow: 0 0 20px rgba(100,40,200,0.15); }
-        .random-btn:active { transform: scale(0.95); }
+        .random-btn:hover {
+            background: rgba(100, 40, 180, 0.3);
+            border-color: #9b6dff;
+            box-shadow: 0 0 20px rgba(100, 40, 200, 0.15);
+        }
+        .random-btn:active {
+            transform: scale(0.95);
+        }
 
         .gender-select {
             display: none;
@@ -334,11 +445,13 @@
             justify-content: center;
             flex-wrap: wrap;
         }
-        .gender-select.open { display: flex; }
+        .gender-select.open {
+            display: flex;
+        }
 
         .gender-btn {
-            background: rgba(100,40,180,0.15);
-            border: 1px solid rgba(150,100,220,0.25);
+            background: rgba(100, 40, 180, 0.15);
+            border: 1px solid rgba(150, 100, 220, 0.25);
             color: #c4a8f0;
             padding: 10px 30px;
             border-radius: 30px;
@@ -348,10 +461,22 @@
             letter-spacing: 2px;
             -webkit-tap-highlight-color: transparent;
         }
-        .gender-btn:hover { background: rgba(100,40,180,0.3); border-color: #9b6dff; box-shadow: 0 0 20px rgba(100,40,200,0.15); }
-        .gender-btn:active { transform: scale(0.95); }
-        .gender-btn.male:hover { border-color: #6a8aff; box-shadow: 0 0 20px rgba(100,140,255,0.2); }
-        .gender-btn.female:hover { border-color: #ff6a9a; box-shadow: 0 0 20px rgba(255,100,150,0.2); }
+        .gender-btn:hover {
+            background: rgba(100, 40, 180, 0.3);
+            border-color: #9b6dff;
+            box-shadow: 0 0 20px rgba(100, 40, 200, 0.15);
+        }
+        .gender-btn:active {
+            transform: scale(0.95);
+        }
+        .gender-btn.male:hover {
+            border-color: #6a8aff;
+            box-shadow: 0 0 20px rgba(100, 140, 255, 0.2);
+        }
+        .gender-btn.female:hover {
+            border-color: #ff6a9a;
+            box-shadow: 0 0 20px rgba(255, 100, 150, 0.2);
+        }
 
         .name-list-container {
             margin-top: 12px;
@@ -360,7 +485,10 @@
             transition: max-height 0.5s ease, opacity 0.5s ease;
             opacity: 0;
         }
-        .name-list-container.open { max-height: 600px; opacity: 1; }
+        .name-list-container.open {
+            max-height: 600px;
+            opacity: 1;
+        }
 
         .name-list {
             display: grid;
@@ -370,8 +498,8 @@
         }
 
         .name-list-item {
-            background: rgba(100,40,180,0.1);
-            border: 1px solid rgba(150,100,220,0.15);
+            background: rgba(100, 40, 180, 0.1);
+            border: 1px solid rgba(150, 100, 220, 0.15);
             border-radius: 20px;
             padding: 8px 12px;
             color: #d4c4f0;
@@ -382,12 +510,19 @@
             letter-spacing: 1px;
             font-family: 'Courier New', monospace;
         }
-        .name-list-item:hover { background: rgba(100,40,180,0.25); border-color: #9b6dff; transform: scale(1.02); box-shadow: 0 0 15px rgba(100,40,200,0.15); }
-        .name-list-item:active { transform: scale(0.95); }
+        .name-list-item:hover {
+            background: rgba(100, 40, 180, 0.25);
+            border-color: #9b6dff;
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(100, 40, 200, 0.15);
+        }
+        .name-list-item:active {
+            transform: scale(0.95);
+        }
 
         .generate-more-btn {
-            background: rgba(100,40,180,0.1);
-            border: 1px dashed rgba(150,100,220,0.25);
+            background: rgba(100, 40, 180, 0.1);
+            border: 1px dashed rgba(150, 100, 220, 0.25);
             color: #8a7aaa;
             padding: 6px 18px;
             border-radius: 20px;
@@ -398,11 +533,24 @@
             margin-top: 5px;
             display: inline-block;
         }
-        .generate-more-btn:hover { background: rgba(100,40,180,0.2); border-color: #9b6dff; color: #c4a8f0; }
+        .generate-more-btn:hover {
+            background: rgba(100, 40, 180, 0.2);
+            border-color: #9b6dff;
+            color: #c4a8f0;
+        }
 
-        .no-more-names { color: #6a4a8a; font-size: 0.8rem; margin-top: 5px; font-style: italic; letter-spacing: 1px; }
+        .no-more-names {
+            color: #6a4a8a;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            font-style: italic;
+            letter-spacing: 1px;
+        }
 
-        .input-area { position: relative; z-index: 3; }
+        .input-area {
+            position: relative;
+            z-index: 3;
+        }
         .input-area label {
             display: block;
             font-size: 0.9rem;
@@ -415,10 +563,10 @@
         .input-area input {
             width: 100%;
             padding: 18px 25px;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
-            border: 1px solid rgba(150,100,220,0.3);
+            border: 1px solid rgba(150, 100, 220, 0.3);
             border-radius: 60px;
             font-size: 1.2rem;
             color: #f0eaff;
@@ -428,8 +576,16 @@
             transition: 0.3s;
             font-weight: 300;
         }
-        .input-area input::placeholder { color: #6a4a8a; font-size: 0.9rem; letter-spacing: 2px; }
-        .input-area input:focus { border-color: #9b6dff; box-shadow: 0 0 25px rgba(120,60,220,0.3); background: rgba(10,5,20,0.6); }
+        .input-area input::placeholder {
+            color: #6a4a8a;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+        }
+        .input-area input:focus {
+            border-color: #9b6dff;
+            box-shadow: 0 0 25px rgba(120, 60, 220, 0.3);
+            background: rgba(10, 5, 20, 0.6);
+        }
 
         .btn {
             margin-top: 15px;
@@ -443,33 +599,70 @@
             color: #f5ecff;
             cursor: pointer;
             transition: 0.3s;
-            box-shadow: 0 0 30px rgba(100,40,200,0.3);
+            box-shadow: 0 0 30px rgba(100, 40, 200, 0.3);
             text-transform: uppercase;
             position: relative;
             z-index: 3;
         }
-        .btn:hover { transform: scale(1.05); background: linear-gradient(135deg, #8235d9, #4f1d8a); box-shadow: 0 0 50px rgba(130,50,220,0.6); }
-        .btn:active { transform: scale(0.95); }
+        .btn:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #8235d9, #4f1d8a);
+            box-shadow: 0 0 50px rgba(130, 50, 220, 0.6);
+        }
+        .btn:active {
+            transform: scale(0.95);
+        }
 
-        .footer-note { display: none; }
+        .footer-note {
+            display: none;
+        }
 
         @media (max-width: 480px) {
-            .container { padding: 30px 20px; }
-            .btn { padding: 14px 30px; font-size: 1rem; letter-spacing: 4px; }
-            .result-wrapper { padding: 15px 10px; }
-            .copy-btn { padding: 8px 20px; font-size: 0.9rem; }
-            .name-list { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
-            .name-list-item { font-size: 0.75rem; padding: 6px 10px; }
-            .gender-btn { padding: 8px 20px; font-size: 0.8rem; }
-            #watermark { font-size: 0.65rem; padding: 3px 12px; bottom: 10px; }
-            .guild-logo { height: auto; }
+            .container {
+                padding: 30px 20px;
+            }
+            .btn {
+                padding: 14px 30px;
+                font-size: 1rem;
+                letter-spacing: 4px;
+            }
+            .result-wrapper {
+                padding: 15px 10px;
+            }
+            .copy-btn {
+                padding: 8px 20px;
+                font-size: 0.9rem;
+            }
+            .name-list {
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            }
+            .name-list-item {
+                font-size: 0.75rem;
+                padding: 6px 10px;
+            }
+            .gender-btn {
+                padding: 8px 20px;
+                font-size: 0.8rem;
+            }
+            #watermark {
+                font-size: 0.8rem;
+                padding: 4px 14px;
+                bottom: 12px;
+                letter-spacing: 3px;
+            }
+            .guild-logo {
+                height: auto;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- ====== WATERMARK ====== -->
+    <!-- ====== WATERMARK – BOLD & OBVIOUS ====== -->
     <div id="watermark">✦ FR4NX ✦</div>
+
+    <!-- ====== RIPPLE CONTAINER ====== -->
+    <div id="ripple-container"></div>
 
     <!-- ====== BIRD CANVAS ====== -->
     <canvas id="birdCanvas"></canvas>
@@ -534,19 +727,81 @@
 
     <script>
         // =============================================
-        // 0. FORCE AUDIO PRELOAD
+        // 0. RIPPLE CURSOR EFFECT (Phantom Style)
+        // =============================================
+        const rippleContainer = document.getElementById('ripple-container');
+
+        function createRipple(x, y, isClick = false) {
+            const el = document.createElement('div');
+            el.className = `ripple${isClick ? ' click' : ''}`;
+            const size = isClick ? 80 + Math.random() * 40 : 30 + Math.random() * 30;
+            el.style.width = size + 'px';
+            el.style.height = size + 'px';
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+            if (isClick) {
+                el.style.background = 'radial-gradient(circle, rgba(123,46,255,0.8), rgba(155,109,255,0.4), transparent 70%)';
+                el.style.boxShadow = '0 0 40px rgba(123,46,255,0.7), 0 0 100px rgba(75,26,120,0.4)';
+                el.style.animation = 'rippleClick 1s ease-out forwards';
+            } else {
+                el.style.background = 'radial-gradient(circle, rgba(123,46,255,0.5), rgba(75,26,120,0.25), transparent 70%)';
+                el.style.boxShadow = '0 0 20px rgba(123,46,255,0.4), 0 0 60px rgba(75,26,120,0.2)';
+                el.style.animation = 'rippleFade 1.2s ease-out forwards';
+            }
+            rippleContainer.appendChild(el);
+            // Auto-remove after animation
+            setTimeout(() => {
+                if (el && el.parentNode) el.remove();
+            }, 1500);
+        }
+
+        // --- Mouse move (desktop) ---
+        let rippleThrottle = false;
+        document.addEventListener('mousemove', function(e) {
+            if (rippleThrottle) return;
+            rippleThrottle = true;
+            requestAnimationFrame(() => {
+                createRipple(e.clientX, e.clientY, false);
+                rippleThrottle = false;
+            });
+        });
+
+        // --- Touch move (mobile) ---
+        document.addEventListener('touchmove', function(e) {
+            const touch = e.touches[0];
+            if (touch) {
+                requestAnimationFrame(() => {
+                    createRipple(touch.clientX, touch.clientY, false);
+                });
+            }
+        }, { passive: true });
+
+        // --- Click / Tap (strong burst) ---
+        document.addEventListener('click', function(e) {
+            createRipple(e.clientX, e.clientY, true);
+        });
+
+        document.addEventListener('touchstart', function(e) {
+            const touch = e.touches[0];
+            if (touch) {
+                createRipple(touch.clientX, touch.clientY, true);
+            }
+        }, { passive: true });
+
+        // =============================================
+        // 1. AUDIO PRELOAD
         // =============================================
         const audio = document.getElementById('bg-music');
         audio.volume = 0.25;
         audio.preload = 'auto';
-        // Start loading immediately
         audio.load();
 
         // =============================================
-        // 1. AUDIO CONTEXT (for typing sounds)
+        // 2. AUDIO CONTEXT
         // =============================================
         let audioCtx = null;
         let audioCtxResumed = false;
+
         function resumeAudioContext() {
             if (audioCtxResumed) return;
             try {
@@ -568,7 +823,7 @@
         document.addEventListener('keydown', resumeAudioContext);
 
         // =============================================
-        // 2. TYPING INTRO
+        // 3. TYPING INTRO
         // =============================================
         const introLines = [
             "Welcome to Phantom ・〆 Guild name generator.",
@@ -632,6 +887,7 @@
             lineElement.className = 'line';
             introContainer.appendChild(lineElement);
             let currentChar = 0;
+
             function typeChar() {
                 if (currentChar < currentLine.length) {
                     const char = currentLine[currentChar];
@@ -670,13 +926,12 @@
         window.addEventListener('load', typeLine);
 
         // =============================================
-        // 3. MUSIC – INSTANT PLAY ON INTRO TAP
+        // 4. MUSIC – INSTANT PLAY ON INTRO TAP
         // =============================================
         let musicStarted = false;
 
         function playMusic() {
             if (musicStarted) return;
-            // Ensure the audio is ready – if not, play will still work once loaded
             const playPromise = audio.play();
             if (playPromise !== undefined) {
                 playPromise.then(() => {
@@ -684,17 +939,15 @@
                     console.log('🔊 Aurora playing at 25% volume');
                 }).catch(err => {
                     console.log('⛔ Play blocked:', err.message);
-                    // If blocked, we'll try again on next user gesture
                 });
             }
         }
 
-        // When intro is complete and user taps, play music instantly
         introScreen.addEventListener('click', function(e) {
             if (introComplete) {
                 introScreen.classList.add('fade-out');
                 mainApp.classList.add('visible');
-                playMusic(); // Instant
+                playMusic();
                 setTimeout(() => startBirds(), 400);
             }
         });
@@ -702,28 +955,54 @@
             if (introComplete) {
                 introScreen.classList.add('fade-out');
                 mainApp.classList.add('visible');
-                playMusic(); // Instant
+                playMusic();
                 setTimeout(() => startBirds(), 400);
             }
         }, { passive: true });
 
-        // Also try to play on any click after intro (just in case)
         document.addEventListener('click', function() {
             if (introComplete && !musicStarted) {
                 playMusic();
             }
         });
 
-        // Ensure audio loops
         audio.addEventListener('ended', () => {
             audio.play().catch(() => {});
         });
 
         // =============================================
-        // 4. NAME GENERATOR
+        // 5. NAME GENERATOR
         // =============================================
-        const smallCapsMap = { 'a':'ᴀ','b':'ʙ','c':'ᴄ','d':'ᴅ','e':'ᴇ','f':'ꜰ','g':'ɢ','h':'ʜ','i':'ɪ','j':'ᴊ','k':'ᴋ','l':'ʟ','m':'ᴍ','n':'ɴ','o':'ᴏ','p':'ᴘ','q':'ǫ','r':'ʀ','s':'ꜱ','t':'ᴛ','u':'ᴜ','v':'ᴠ','w':'ᴡ','x':'x','y':'ʏ','z':'ᴢ' };
+        const smallCapsMap = {
+            'a': 'ᴀ',
+            'b': 'ʙ',
+            'c': 'ᴄ',
+            'd': 'ᴅ',
+            'e': 'ᴇ',
+            'f': 'ꜰ',
+            'g': 'ɢ',
+            'h': 'ʜ',
+            'i': 'ɪ',
+            'j': 'ᴊ',
+            'k': 'ᴋ',
+            'l': 'ʟ',
+            'm': 'ᴍ',
+            'n': 'ɴ',
+            'o': 'ᴏ',
+            'p': 'ᴘ',
+            'q': 'ǫ',
+            'r': 'ʀ',
+            's': 'ꜱ',
+            't': 'ᴛ',
+            'u': 'ᴜ',
+            'v': 'ᴠ',
+            'w': 'ᴡ',
+            'x': 'x',
+            'y': 'ʏ',
+            'z': 'ᴢ'
+        };
         let currentGeneratedName = '';
+
         function updatePreview() {
             const inputField = document.getElementById('userName');
             const resultDisplay = document.getElementById('result');
@@ -760,7 +1039,7 @@
         });
 
         // =============================================
-        // 5. COPY (iOS/Android friendly)
+        // 6. COPY (iOS/Android friendly)
         // =============================================
         function copyResult() {
             const resultDisplay = document.getElementById('result');
@@ -784,6 +1063,7 @@
                 fallbackCopyText(textToCopy, resultDisplay);
             }
         }
+
         function fallbackCopyText(text, resultDisplay) {
             const textarea = document.createElement('textarea');
             textarea.value = text;
@@ -808,6 +1088,7 @@
                 document.body.removeChild(textarea);
             }, 50);
         }
+
         function showCopiedFeedback(resultDisplay) {
             resultDisplay.textContent = '✅  COPIED!  ✅';
             resultDisplay.style.color = '#b3ff9b';
@@ -831,12 +1112,31 @@
         });
 
         // =============================================
-        // 6. RANDOM NAME GENERATOR
+        // 7. RANDOM NAME GENERATOR
         // =============================================
-        const maleNames = ['Zephyr','Morwen','Azrael','Thorne','Orion','Draven','Caius','Fenris','Hades','Jareth','Kael','Mordred','Oberon','Quintus','Balthazar','Darian','Gethin','Helios','Icarus','Juno','Keres','Lucian','Magnus','Nero','Onyx','Phelan','Riven','Sable','Taliesin','Ursa','Valerian','Wraith','Xerxes','Yorick','Zane','Aether','Bram','Corvus','Dante','Ephraim','Gideon','Hector','Ignis','Lysander','Marius','Orpheus','Percival','Raphael','Severin','Theron'];
-        const femaleNames = ['Seraphine','Vesper','Nyx','Ravenna','Selene','Ember','Astrid','Drusilla','Elara','Gwendolyn','Isolde','Lilith','Nephthys','Persephone','Rhiannon','Umbra','Xandria','Yvaine','Zephyra','Amaris','Celestine','Elysia','Fane','Keres','Lirael','Maelis','Nerys','Orenda','Sable','Ursa','Valkyrie','Wren','Yara','Astra','Belladonna','Cassiopeia','Dahlia','Eudora','Freyja','Hecate','Iris','Jade','Luna','Mira','Nova','Onyx','Pandora','Raven','Stella','Tempest','Vega','Willow','Xena','Zara'];
+        const maleNames = [
+            'Zephyr', 'Morwen', 'Azrael', 'Thorne', 'Orion', 'Draven', 'Caius',
+            'Fenris', 'Hades', 'Jareth', 'Kael', 'Mordred', 'Oberon', 'Quintus',
+            'Balthazar', 'Darian', 'Gethin', 'Helios', 'Icarus', 'Juno', 'Keres',
+            'Lucian', 'Magnus', 'Nero', 'Onyx', 'Phelan', 'Riven', 'Sable',
+            'Taliesin', 'Ursa', 'Valerian', 'Wraith', 'Xerxes', 'Yorick', 'Zane',
+            'Aether', 'Bram', 'Corvus', 'Dante', 'Ephraim', 'Gideon', 'Hector',
+            'Ignis', 'Lysander', 'Marius', 'Orpheus', 'Percival', 'Raphael', 'Severin', 'Theron'
+        ];
+        const femaleNames = [
+            'Seraphine', 'Vesper', 'Nyx', 'Ravenna', 'Selene', 'Ember', 'Astrid',
+            'Drusilla', 'Elara', 'Gwendolyn', 'Isolde', 'Lilith', 'Nephthys',
+            'Persephone', 'Rhiannon', 'Umbra', 'Xandria', 'Yvaine', 'Zephyra',
+            'Amaris', 'Celestine', 'Elysia', 'Fane', 'Keres', 'Lirael', 'Maelis',
+            'Nerys', 'Orenda', 'Sable', 'Ursa', 'Valkyrie', 'Wren', 'Yara',
+            'Astra', 'Belladonna', 'Cassiopeia', 'Dahlia', 'Eudora', 'Freyja',
+            'Hecate', 'Iris', 'Jade', 'Luna', 'Mira', 'Nova', 'Onyx', 'Pandora',
+            'Raven', 'Stella', 'Tempest', 'Vega', 'Willow', 'Xena', 'Zara'
+        ];
+
         let currentGender = null;
         let usedIndices = [];
+
         function getRandomNamesFromArray(arr, count) {
             const available = arr.filter((_, idx) => !usedIndices.includes(idx));
             if (available.length === 0) return [];
@@ -848,6 +1148,7 @@
             });
             return selected;
         }
+
         function renderNameList(names) {
             const listContainer = document.getElementById('nameList');
             const noMoreMsg = document.getElementById('noMoreNames');
@@ -869,6 +1170,7 @@
                 listContainer.appendChild(item);
             });
         }
+
         function loadMoreNames() {
             if (!currentGender) return;
             const nameArray = currentGender === 'male' ? maleNames : femaleNames;
@@ -894,6 +1196,7 @@
                 document.getElementById('generateMoreBtn').style.display = 'inline-block';
             }
         }
+
         document.getElementById('randomToggleBtn').addEventListener('click', function() {
             const genderSelect = document.getElementById('genderSelect');
             const container = document.getElementById('nameListContainer');
@@ -913,6 +1216,7 @@
                 this.textContent = '🎲 Random Name (select gender)';
             }
         });
+
         document.querySelectorAll('.gender-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const gender = this.dataset.gender;
@@ -924,6 +1228,7 @@
                 document.getElementById('randomToggleBtn').textContent = `🎲 ${gender === 'male' ? '♂' : '♀'} Names`;
             });
         });
+
         document.getElementById('generateMoreBtn').addEventListener('click', function() {
             loadMoreNames();
             this.textContent = '↻ Refreshed!';
@@ -931,7 +1236,7 @@
         });
 
         // =============================================
-        // 7. BIRDS
+        // 8. BIRDS – INCREASED TO 90 (max) / 30 (min)
         // =============================================
         const canvas = document.getElementById('birdCanvas');
         const ctx = canvas.getContext('2d');
@@ -939,30 +1244,35 @@
         let particles = [];
         let animationId = null;
         let birdsActive = false;
+
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         }
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
+
         function getBirdCount() {
-            const w = window.innerWidth, h = window.innerHeight;
+            const w = window.innerWidth,
+                h = window.innerHeight;
             const area = w * h;
-            let count = Math.floor(area / 80000);
-            count = Math.max(20, Math.min(80, count));
+            let count = Math.floor(area / 70000);
+            count = Math.max(30, Math.min(90, count)); // Increased from 20-80 to 30-90 (+10)
             return count;
         }
+
         class Bird {
             constructor() { this.reset(); }
             reset() {
                 const margin = 100;
                 const side = Math.floor(Math.random() * 4);
-                if (side === 0) { this.x = Math.random() * canvas.width; this.y = -margin; }
-                else if (side === 1) { this.x = canvas.width + margin; this.y = Math.random() * canvas.height; }
-                else if (side === 2) { this.x = Math.random() * canvas.width; this.y = canvas.height + margin; }
-                else { this.x = -margin; this.y = Math.random() * canvas.height; }
-                this.targetX = canvas.width/2 + (Math.random()-0.5)*300;
-                this.targetY = canvas.height/2 - 50 + (Math.random()-0.5)*200;
+                if (side === 0) { this.x = Math.random() * canvas.width;
+                    this.y = -margin; } else if (side === 1) { this.x = canvas.width + margin;
+                    this.y = Math.random() * canvas.height; } else if (side === 2) { this.x = Math.random() * canvas.width;
+                    this.y = canvas.height + margin; } else { this.x = -margin;
+                    this.y = Math.random() * canvas.height; }
+                this.targetX = canvas.width / 2 + (Math.random() - 0.5) * 300;
+                this.targetY = canvas.height / 2 - 50 + (Math.random() - 0.5) * 200;
                 this.speed = 0.6 + Math.random() * 0.6;
                 this.angle = 0;
                 this.size = 12 + Math.random() * 10;
@@ -984,7 +1294,7 @@
                 }
                 const dx = this.targetX - this.x;
                 const dy = this.targetY - this.y;
-                const dist = Math.sqrt(dx*dx + dy*dy);
+                const dist = Math.sqrt(dx * dx + dy * dy);
                 if (dist > 5) {
                     const angle = Math.atan2(dy, dx);
                     const curveAngle = Math.sin(this.curvePhase) * 0.15;
@@ -994,8 +1304,8 @@
                     this.curvePhase += this.curveSpeed;
                     this.y += Math.sin(this.curvePhase * 2) * 0.3;
                 } else {
-                    this.targetX = canvas.width/2 + (Math.random()-0.5)*400;
-                    this.targetY = canvas.height/2 - 50 + (Math.random()-0.5)*300;
+                    this.targetX = canvas.width / 2 + (Math.random() - 0.5) * 400;
+                    this.targetY = canvas.height / 2 - 50 + (Math.random() - 0.5) * 300;
                 }
                 this.wingPhase += this.wingSpeed;
                 this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
@@ -1003,10 +1313,10 @@
                 if (logoEl) {
                     const rect = logoEl.getBoundingClientRect();
                     const logoRect = {
-                        x: rect.left + rect.width*0.1,
-                        y: rect.top + rect.height*0.1,
-                        width: rect.width*0.8,
-                        height: rect.height*0.8
+                        x: rect.left + rect.width * 0.1,
+                        y: rect.top + rect.height * 0.1,
+                        width: rect.width * 0.8,
+                        height: rect.height * 0.8
                     };
                     if (this.x > logoRect.x && this.x < logoRect.x + logoRect.width &&
                         this.y > logoRect.y && this.y < logoRect.y + logoRect.height) {
@@ -1031,48 +1341,74 @@
                 ctx.fillStyle = '#6a4a8a';
                 ctx.shadowColor = '#9b6dff';
                 ctx.shadowBlur = 15;
-                ctx.beginPath(); ctx.ellipse(0,0, size*0.6, size*0.4, 0, 0, Math.PI*2); ctx.fill();
-                ctx.beginPath(); ctx.arc(size*0.5, -size*0.1, size*0.25, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(0, 0, size * 0.6, size * 0.4, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(size * 0.5, -size * 0.1, size * 0.25, 0, Math.PI * 2);
+                ctx.fill();
                 ctx.fillStyle = '#4a2a6a';
-                ctx.beginPath(); ctx.moveTo(size*0.75, -size*0.1); ctx.lineTo(size*0.95, -size*0.05); ctx.lineTo(size*0.75, 0); ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(size * 0.75, -size * 0.1);
+                ctx.lineTo(size * 0.95, -size * 0.05);
+                ctx.lineTo(size * 0.75, 0);
+                ctx.fill();
                 ctx.fillStyle = '#5a3a7a';
-                ctx.beginPath(); ctx.ellipse(-size*0.3, -size*0.2 + wingFlap*size*0.15, size*0.5, size*0.3, -0.3 + wingFlap*0.2, 0, Math.PI*2); ctx.fill();
-                ctx.beginPath(); ctx.ellipse(-size*0.3, size*0.2 - wingFlap*size*0.15, size*0.5, size*0.3, 0.3 - wingFlap*0.2, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(-size * 0.3, -size * 0.2 + wingFlap * size * 0.15, size * 0.5, size * 0.3, -0.3 + wingFlap * 0.2, 0,
+                    Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(-size * 0.3, size * 0.2 - wingFlap * size * 0.15, size * 0.5, size * 0.3, 0.3 - wingFlap * 0.2, 0,
+                    Math.PI * 2);
+                ctx.fill();
                 ctx.fillStyle = '#4a2a6a';
-                ctx.beginPath(); ctx.moveTo(-size*0.6, -size*0.15); ctx.lineTo(-size*0.9, -size*0.25 + wingFlap*size*0.1); ctx.lineTo(-size*0.6, size*0.15); ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(-size * 0.6, -size * 0.15);
+                ctx.lineTo(-size * 0.9, -size * 0.25 + wingFlap * size * 0.1);
+                ctx.lineTo(-size * 0.6, size * 0.15);
+                ctx.fill();
                 ctx.restore();
                 ctx.save();
                 ctx.globalAlpha = this.opacity * 0.15;
                 ctx.shadowColor = '#9b6dff';
                 ctx.shadowBlur = 40;
-                ctx.beginPath(); ctx.arc(this.x, this.y, size*1.2, 0, Math.PI*2);
-                ctx.fillStyle = '#6a2faf'; ctx.fill();
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, size * 1.2, 0, Math.PI * 2);
+                ctx.fillStyle = '#6a2faf';
+                ctx.fill();
                 ctx.restore();
             }
         }
+
         function spawnParticles(x, y) {
             const count = 20 + Math.floor(Math.random() * 15);
-            for (let i=0; i<count; i++) {
+            for (let i = 0; i < count; i++) {
                 const angle = Math.random() * Math.PI * 2;
                 const speed = 0.5 + Math.random() * 3;
                 particles.push({
-                    x, y,
-                    vx: Math.cos(angle)*speed,
-                    vy: Math.sin(angle)*speed - 0.5,
+                    x,
+                    y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed - 0.5,
                     life: 1,
-                    size: 2 + Math.random()*4,
-                    color: `hsl(${260 + Math.random()*40}, 80%, ${50 + Math.random()*30}%)`
+                    size: 2 + Math.random() * 4,
+                    color: `hsl(${260 + Math.random() * 40}, 80%, ${50 + Math.random() * 30}%)`
                 });
             }
         }
+
         function updateParticles() {
-            for (let i=particles.length-1; i>=0; i--) {
+            for (let i = particles.length - 1; i >= 0; i--) {
                 const p = particles[i];
-                p.x += p.vx; p.y += p.vy; p.vy += 0.05;
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.05;
                 p.life -= 0.015;
                 if (p.life <= 0) particles.splice(i, 1);
             }
         }
+
         function drawParticles() {
             for (const p of particles) {
                 ctx.save();
@@ -1080,14 +1416,18 @@
                 ctx.shadowColor = '#9b6dff';
                 ctx.shadowBlur = 20;
                 ctx.fillStyle = p.color;
-                ctx.beginPath(); ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+                ctx.fill();
                 ctx.restore();
             }
         }
+
         function animateBirds() {
             if (!birdsActive) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (const bird of birds) { bird.update(); bird.draw(); }
+            for (const bird of birds) { bird.update();
+                bird.draw(); }
             birds = birds.filter(b => b.alive);
             updateParticles();
             drawParticles();
@@ -1099,20 +1439,22 @@
             }
             animationId = requestAnimationFrame(animateBirds);
         }
+
         function startBirds() {
             if (birdsActive) return;
             birdsActive = true;
             const count = getBirdCount();
-            for (let i=0; i<count; i++) {
+            for (let i = 0; i < count; i++) {
                 const bird = new Bird();
                 bird.x = Math.random() * canvas.width;
                 bird.y = Math.random() * canvas.height;
-                bird.targetX = canvas.width/2 + (Math.random()-0.5)*300;
-                bird.targetY = canvas.height/2 - 50 + (Math.random()-0.5)*200;
+                bird.targetX = canvas.width / 2 + (Math.random() - 0.5) * 300;
+                bird.targetY = canvas.height / 2 - 50 + (Math.random() - 0.5) * 200;
                 birds.push(bird);
             }
             animateBirds();
         }
+
         window.addEventListener('resize', () => {
             resizeCanvas();
             if (birdsActive) {
@@ -1124,9 +1466,11 @@
                 }
             }
         });
+
         document.addEventListener('visibilitychange', () => {
             if (document.hidden && birdsActive) {
-                if (animationId) { cancelAnimationFrame(animationId); animationId = null; }
+                if (animationId) { cancelAnimationFrame(animationId);
+                    animationId = null; }
             } else if (!document.hidden && birdsActive && !animationId) {
                 animateBirds();
             }
