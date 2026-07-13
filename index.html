@@ -50,8 +50,8 @@
             opacity: 0.85;
             pointer-events: none;
             text-shadow: 0 0 20px rgba(155, 109, 255, 0.6),
-                         0 0 40px rgba(123, 46, 255, 0.3),
-                         0 0 80px rgba(75, 26, 120, 0.2);
+                0 0 40px rgba(123, 46, 255, 0.3),
+                0 0 80px rgba(75, 26, 120, 0.2);
             font-family: 'Segoe UI', sans-serif;
             white-space: nowrap;
             background: rgba(10, 5, 20, 0.4);
@@ -264,7 +264,6 @@
             background: transparent;
         }
 
-        /* Breathing glow */
         .logo-wrapper::after {
             content: '';
             position: absolute;
@@ -658,7 +657,7 @@
 </head>
 <body>
 
-    <!-- ====== WATERMARK ====== -->
+    <!-- ====== WATERMARK – BOLD & OBVIOUS ====== -->
     <div id="watermark">✦ FR4NX ✦</div>
 
     <!-- ====== RIPPLE CONTAINER ====== -->
@@ -719,7 +718,7 @@
         </div>
     </div>
 
-    <!-- ====== AUDIO ====== -->
+    <!-- ====== AUDIO – PRELOADED FOR INSTANT PLAY ====== -->
     <audio id="bg-music" loop preload="auto">
         <source src="./music.mp3" type="audio/mpeg" />
         <source src="/SYMBOL-GUILD-NAME-GENERATOR/music.mp3" type="audio/mpeg" />
@@ -727,7 +726,7 @@
 
     <script>
         // =============================================
-        // 0. RIPPLE CURSOR EFFECT
+        // 0. RIPPLE CURSOR EFFECT (Phantom Style)
         // =============================================
         const rippleContainer = document.getElementById('ripple-container');
 
@@ -740,11 +739,13 @@
             el.style.left = x + 'px';
             el.style.top = y + 'px';
             if (isClick) {
-                el.style.background = 'radial-gradient(circle, rgba(123,46,255,0.8), rgba(155,109,255,0.4), transparent 70%)';
+                el.style.background =
+                    'radial-gradient(circle, rgba(123,46,255,0.8), rgba(155,109,255,0.4), transparent 70%)';
                 el.style.boxShadow = '0 0 40px rgba(123,46,255,0.7), 0 0 100px rgba(75,26,120,0.4)';
                 el.style.animation = 'rippleClick 1s ease-out forwards';
             } else {
-                el.style.background = 'radial-gradient(circle, rgba(123,46,255,0.5), rgba(75,26,120,0.25), transparent 70%)';
+                el.style.background =
+                    'radial-gradient(circle, rgba(123,46,255,0.5), rgba(75,26,120,0.25), transparent 70%)';
                 el.style.boxShadow = '0 0 20px rgba(123,46,255,0.4), 0 0 60px rgba(75,26,120,0.2)';
                 el.style.animation = 'rippleFade 1.2s ease-out forwards';
             }
@@ -1232,7 +1233,7 @@
         });
 
         // =============================================
-        // 8. BIRDS – NOW ONLY FLY AROUND THE LOGO
+        // 8. BIRDS – SPAWN FROM LOGO, FLY OUTWARD
         // =============================================
         const canvas = document.getElementById('birdCanvas');
         const ctx = canvas.getContext('2d');
@@ -1257,25 +1258,50 @@
             return count;
         }
 
+        // Get logo center position
+        function getLogoSpawnPoint() {
+            const logoEl = document.querySelector('.guild-logo');
+            if (logoEl) {
+                const rect = logoEl.getBoundingClientRect();
+                return {
+                    x: rect.left + rect.width / 2,
+                    y: rect.top + rect.height / 2,
+                    w: rect.width,
+                    h: rect.height
+                };
+            }
+            return { x: window.innerWidth / 2, y: window.innerHeight / 2, w: 200, h: 100 };
+        }
+
         class Bird {
             constructor() {
                 this.reset();
             }
 
             reset() {
-                // Spawn near the center (logo area) instead of edges
-                const centerX = canvas.width / 2;
-                const centerY = canvas.height / 2 - 30; // offset slightly up for logo
-                const radius = 120 + Math.random() * 100; // spawn within 120-220px radius
-                const angle = Math.random() * Math.PI * 2;
-                this.x = centerX + Math.cos(angle) * radius;
-                this.y = centerY + Math.sin(angle) * radius;
+                // Spawn from logo area with slight randomness
+                const spawn = getLogoSpawnPoint();
+                const spread = Math.min(spawn.w, spawn.h) * 0.3;
+                this.x = spawn.x + (Math.random() - 0.5) * spread;
+                this.y = spawn.y + (Math.random() - 0.5) * spread * 0.5;
 
-                // Target is also around the logo
-                this.targetX = centerX + (Math.random() - 0.5) * 200;
-                this.targetY = centerY + (Math.random() - 0.5) * 150;
+                // Target is a random edge of the screen
+                const side = Math.floor(Math.random() * 4);
+                if (side === 0) { // top
+                    this.targetX = Math.random() * canvas.width;
+                    this.targetY = -50;
+                } else if (side === 1) { // right
+                    this.targetX = canvas.width + 50;
+                    this.targetY = Math.random() * canvas.height;
+                } else if (side === 2) { // bottom
+                    this.targetX = Math.random() * canvas.width;
+                    this.targetY = canvas.height + 50;
+                } else { // left
+                    this.targetX = -50;
+                    this.targetY = Math.random() * canvas.height;
+                }
 
-                this.speed = 0.4 + Math.random() * 0.5; // slightly slower for circling
+                this.speed = 0.6 + Math.random() * 0.8;
                 this.angle = 0;
                 this.size = 12 + Math.random() * 10;
                 this.wingPhase = Math.random() * Math.PI * 2;
@@ -1286,13 +1312,23 @@
                 this.opacity = 1;
                 this.disappearing = false;
                 this.disappearTimer = 0;
+                // Random lifetime before auto-removal (if they don't hit the logo)
+                this.maxLife = 600 + Math.random() * 400;
+                this.life = 0;
             }
 
             update() {
+                this.life++;
                 if (this.disappearing) {
                     this.disappearTimer += 0.02;
                     this.opacity = 1 - this.disappearTimer;
                     if (this.disappearTimer >= 1) this.alive = false;
+                    return;
+                }
+
+                // Auto-remove if too old (prevents infinite birds)
+                if (this.life > this.maxLife) {
+                    this.alive = false;
                     return;
                 }
 
@@ -1302,32 +1338,43 @@
 
                 if (dist > 5) {
                     const angle = Math.atan2(dy, dx);
-                    const curveAngle = Math.sin(this.curvePhase) * 0.15;
+                    const curveAngle = Math.sin(this.curvePhase) * 0.2;
                     const moveAngle = angle + curveAngle;
                     this.x += Math.cos(moveAngle) * this.speed;
                     this.y += Math.sin(moveAngle) * this.speed;
                     this.curvePhase += this.curveSpeed;
-                    this.y += Math.sin(this.curvePhase * 2) * 0.3;
+                    // Slight altitude wobble
+                    this.y += Math.sin(this.curvePhase * 1.5) * 0.2;
                 } else {
-                    // Pick a new random target near the logo
-                    const centerX = canvas.width / 2;
-                    const centerY = canvas.height / 2 - 30;
-                    this.targetX = centerX + (Math.random() - 0.5) * 200;
-                    this.targetY = centerY + (Math.random() - 0.5) * 150;
+                    // Reached edge – reset with new random target
+                    const spawn = getLogoSpawnPoint();
+                    const spread = Math.min(spawn.w, spawn.h) * 0.3;
+                    this.x = spawn.x + (Math.random() - 0.5) * spread;
+                    this.y = spawn.y + (Math.random() - 0.5) * spread * 0.5;
+                    const side2 = Math.floor(Math.random() * 4);
+                    if (side2 === 0) { this.targetX = Math.random() * canvas.width;
+                        this.targetY = -50; } else if (side2 === 1) { this.targetX = canvas.width + 50;
+                        this.targetY = Math.random() * canvas.height; } else if (side2 === 2) { this.targetX = Math.random() *
+                            canvas.width;
+                        this.targetY = canvas.height + 50; } else { this.targetX = -50;
+                        this.targetY = Math.random() * canvas.height; }
+                    this.speed = 0.6 + Math.random() * 0.8;
+                    this.maxLife = 600 + Math.random() * 400;
+                    this.life = 0;
                 }
 
                 this.wingPhase += this.wingSpeed;
                 this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
 
-                // Collision with logo
+                // If bird touches the logo again, trigger disappear effect
                 const logoEl = document.querySelector('.guild-logo');
                 if (logoEl) {
                     const rect = logoEl.getBoundingClientRect();
                     const logoRect = {
-                        x: rect.left + rect.width * 0.1,
-                        y: rect.top + rect.height * 0.1,
-                        width: rect.width * 0.8,
-                        height: rect.height * 0.8
+                        x: rect.left + rect.width * 0.05,
+                        y: rect.top + rect.height * 0.05,
+                        width: rect.width * 0.9,
+                        height: rect.height * 0.9
                     };
                     if (this.x > logoRect.x && this.x < logoRect.x + logoRect.width &&
                         this.y > logoRect.y && this.y < logoRect.y + logoRect.height) {
@@ -1349,28 +1396,23 @@
                 ctx.globalAlpha = this.opacity;
                 ctx.translate(this.x, this.y);
                 ctx.rotate(this.angle);
-
                 const wingFlap = Math.sin(this.wingPhase);
                 const size = this.size;
-
                 ctx.fillStyle = '#6a4a8a';
                 ctx.shadowColor = '#9b6dff';
                 ctx.shadowBlur = 15;
                 ctx.beginPath();
                 ctx.ellipse(0, 0, size * 0.6, size * 0.4, 0, 0, Math.PI * 2);
                 ctx.fill();
-
                 ctx.beginPath();
                 ctx.arc(size * 0.5, -size * 0.1, size * 0.25, 0, Math.PI * 2);
                 ctx.fill();
-
                 ctx.fillStyle = '#4a2a6a';
                 ctx.beginPath();
                 ctx.moveTo(size * 0.75, -size * 0.1);
                 ctx.lineTo(size * 0.95, -size * 0.05);
                 ctx.lineTo(size * 0.75, 0);
                 ctx.fill();
-
                 ctx.fillStyle = '#5a3a7a';
                 ctx.beginPath();
                 ctx.ellipse(-size * 0.3, -size * 0.2 + wingFlap * size * 0.15, size * 0.5, size * 0.3, -0.3 + wingFlap * 0.2, 0,
@@ -1380,16 +1422,13 @@
                 ctx.ellipse(-size * 0.3, size * 0.2 - wingFlap * size * 0.15, size * 0.5, size * 0.3, 0.3 - wingFlap * 0.2, 0,
                     Math.PI * 2);
                 ctx.fill();
-
                 ctx.fillStyle = '#4a2a6a';
                 ctx.beginPath();
                 ctx.moveTo(-size * 0.6, -size * 0.15);
                 ctx.lineTo(-size * 0.9, -size * 0.25 + wingFlap * size * 0.1);
                 ctx.lineTo(-size * 0.6, size * 0.15);
                 ctx.fill();
-
                 ctx.restore();
-
                 ctx.save();
                 ctx.globalAlpha = this.opacity * 0.15;
                 ctx.shadowColor = '#9b6dff';
@@ -1452,7 +1491,6 @@
             birds = birds.filter(b => b.alive);
             updateParticles();
             drawParticles();
-
             const targetCount = getBirdCount();
             while (birds.length < targetCount) birds.push(new Bird());
             while (birds.length > targetCount) {
@@ -1467,21 +1505,27 @@
             birdsActive = true;
             const count = getBirdCount();
             for (let i = 0; i < count; i++) {
-                birds.push(new Bird());
+                const bird = new Bird();
+                // Spread initial birds from logo
+                const spawn = getLogoSpawnPoint();
+                const spread = Math.min(spawn.w, spawn.h) * 0.3;
+                bird.x = spawn.x + (Math.random() - 0.5) * spread;
+                bird.y = spawn.y + (Math.random() - 0.5) * spread * 0.5;
+                const side = Math.floor(Math.random() * 4);
+                if (side === 0) { bird.targetX = Math.random() * canvas.width;
+                    bird.targetY = -50; } else if (side === 1) { bird.targetX = canvas.width + 50;
+                    bird.targetY = Math.random() * canvas.height; } else if (side === 2) { bird.targetX = Math.random() *
+                        canvas.width;
+                    bird.targetY = canvas.height + 50; } else { bird.targetX = -50;
+                    bird.targetY = Math.random() * canvas.height; }
+                birds.push(bird);
             }
             animateBirds();
         }
 
+        // Recalculate on resize
         window.addEventListener('resize', () => {
             resizeCanvas();
-            if (birdsActive) {
-                const targetCount = getBirdCount();
-                while (birds.length < targetCount) birds.push(new Bird());
-                while (birds.length > targetCount) {
-                    const toRemove = birds.pop();
-                    if (toRemove) toRemove.alive = false;
-                }
-            }
         });
 
         document.addEventListener('visibilitychange', () => {
