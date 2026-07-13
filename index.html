@@ -24,7 +24,6 @@
             background: radial-gradient(circle at center, #12081a, #07020a);
         }
 
-        /* ===== BIRD CANVAS ===== */
         #birdCanvas {
             position: fixed;
             top: 0;
@@ -253,7 +252,6 @@
             overflow: hidden;
         }
 
-        /* ===== GUILD LOGO – PLAIN RECTANGLE ===== */
         .logo-wrapper {
             position: relative;
             display: block;
@@ -657,7 +655,7 @@
 </head>
 <body>
 
-    <!-- ====== WATERMARK – BOLD & OBVIOUS ====== -->
+    <!-- ====== WATERMARK ====== -->
     <div id="watermark">✦ FR4NX ✦</div>
 
     <!-- ====== RIPPLE CONTAINER ====== -->
@@ -675,8 +673,6 @@
     <!-- ====== MAIN APP ====== -->
     <div id="main-app">
         <div class="container">
-
-            <!-- ===== GUILD LOGO – PLAIN RECTANGLE ===== -->
             <div class="logo-wrapper">
                 <img class="guild-logo" src="./Guild.png" alt="Phantom Guild" />
             </div>
@@ -693,15 +689,12 @@
                 <button class="copy-btn" id="manualCopyBtn">📋 Copy Name</button>
             </div>
 
-            <!-- ===== RANDOM NAME SECTION ===== -->
             <div class="random-section">
                 <button class="random-btn" id="randomToggleBtn">🎲 Random Name</button>
-
                 <div class="gender-select" id="genderSelect">
                     <button class="gender-btn male" data-gender="male">♂ Male</button>
                     <button class="gender-btn female" data-gender="female">♀ Female</button>
                 </div>
-
                 <div class="name-list-container" id="nameListContainer">
                     <div class="name-list" id="nameList"></div>
                     <button class="generate-more-btn" id="generateMoreBtn">↻ Generate More</button>
@@ -718,7 +711,7 @@
         </div>
     </div>
 
-    <!-- ====== AUDIO – PRELOADED FOR INSTANT PLAY ====== -->
+    <!-- ====== AUDIO ====== -->
     <audio id="bg-music" loop preload="auto">
         <source src="./music.mp3" type="audio/mpeg" />
         <source src="/SYMBOL-GUILD-NAME-GENERATOR/music.mp3" type="audio/mpeg" />
@@ -726,7 +719,7 @@
 
     <script>
         // =============================================
-        // 0. RIPPLE CURSOR EFFECT (Phantom Style)
+        // 0. RIPPLE CURSOR EFFECT
         // =============================================
         const rippleContainer = document.getElementById('ripple-container');
 
@@ -786,16 +779,13 @@
         }, { passive: true });
 
         // =============================================
-        // 1. AUDIO PRELOAD
+        // 1. AUDIO
         // =============================================
         const audio = document.getElementById('bg-music');
         audio.volume = 0.25;
         audio.preload = 'auto';
         audio.load();
 
-        // =============================================
-        // 2. AUDIO CONTEXT
-        // =============================================
         let audioCtx = null;
         let audioCtxResumed = false;
 
@@ -820,7 +810,7 @@
         document.addEventListener('keydown', resumeAudioContext);
 
         // =============================================
-        // 3. TYPING INTRO
+        // 2. TYPING INTRO
         // =============================================
         const introLines = [
             "Welcome to Phantom ・〆 Guild name generator.",
@@ -923,7 +913,7 @@
         window.addEventListener('load', typeLine);
 
         // =============================================
-        // 4. MUSIC – INSTANT PLAY ON INTRO TAP
+        // 3. MUSIC
         // =============================================
         let musicStarted = false;
 
@@ -968,7 +958,7 @@
         });
 
         // =============================================
-        // 5. NAME GENERATOR
+        // 4. NAME GENERATOR
         // =============================================
         const smallCapsMap = {
             'a': 'ᴀ',
@@ -1036,7 +1026,7 @@
         });
 
         // =============================================
-        // 6. COPY (iOS/Android friendly)
+        // 5. COPY (iOS/Android friendly)
         // =============================================
         function copyResult() {
             const resultDisplay = document.getElementById('result');
@@ -1109,7 +1099,7 @@
         });
 
         // =============================================
-        // 7. RANDOM NAME GENERATOR
+        // 6. RANDOM NAME GENERATOR
         // =============================================
         const maleNames = [
             'Zephyr', 'Morwen', 'Azrael', 'Thorne', 'Orion', 'Draven', 'Caius',
@@ -1233,7 +1223,7 @@
         });
 
         // =============================================
-        // 8. BIRDS – SPAWN FROM LOGO, FLY OUTWARD
+        // 7. BIRDS – SMOOTH EMERGENCE FROM LOGO
         // =============================================
         const canvas = document.getElementById('birdCanvas');
         const ctx = canvas.getContext('2d');
@@ -1258,7 +1248,6 @@
             return count;
         }
 
-        // Get logo center position
         function getLogoSpawnPoint() {
             const logoEl = document.querySelector('.guild-logo');
             if (logoEl) {
@@ -1279,27 +1268,23 @@
             }
 
             reset() {
-                // Spawn from logo area with slight randomness
                 const spawn = getLogoSpawnPoint();
-                const spread = Math.min(spawn.w, spawn.h) * 0.3;
+                const spread = Math.min(spawn.w, spawn.h) * 0.25;
                 this.x = spawn.x + (Math.random() - 0.5) * spread;
                 this.y = spawn.y + (Math.random() - 0.5) * spread * 0.5;
 
-                // Target is a random edge of the screen
-                const side = Math.floor(Math.random() * 4);
-                if (side === 0) { // top
-                    this.targetX = Math.random() * canvas.width;
-                    this.targetY = -50;
-                } else if (side === 1) { // right
-                    this.targetX = canvas.width + 50;
-                    this.targetY = Math.random() * canvas.height;
-                } else if (side === 2) { // bottom
-                    this.targetX = Math.random() * canvas.width;
-                    this.targetY = canvas.height + 50;
-                } else { // left
-                    this.targetX = -50;
-                    this.targetY = Math.random() * canvas.height;
-                }
+                // Start with a small random velocity (emerging phase)
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 0.2 + Math.random() * 0.3;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+
+                // Target edge – will be set after emerging
+                this.targetX = null;
+                this.targetY = null;
+                this.emerging = true;
+                this.emergingTimer = 0;
+                this.emergingDuration = 60 + Math.random() * 40; // frames
 
                 this.speed = 0.6 + Math.random() * 0.8;
                 this.angle = 0;
@@ -1312,7 +1297,6 @@
                 this.opacity = 1;
                 this.disappearing = false;
                 this.disappearTimer = 0;
-                // Random lifetime before auto-removal (if they don't hit the logo)
                 this.maxLife = 600 + Math.random() * 400;
                 this.life = 0;
             }
@@ -1326,12 +1310,36 @@
                     return;
                 }
 
-                // Auto-remove if too old (prevents infinite birds)
                 if (this.life > this.maxLife) {
                     this.alive = false;
                     return;
                 }
 
+                // If emerging, gently drift and slowly increase speed
+                if (this.emerging) {
+                    this.emergingTimer++;
+                    // Gradually increase velocity toward a random direction
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    // Fade in opacity
+                    this.opacity = Math.min(1, this.emergingTimer / 30);
+                    // After emerging duration, pick an edge target
+                    if (this.emergingTimer >= this.emergingDuration) {
+                        this.emerging = false;
+                        const side = Math.floor(Math.random() * 4);
+                        if (side === 0) { this.targetX = Math.random() * canvas.width;
+                            this.targetY = -50; } else if (side === 1) { this.targetX = canvas.width + 50;
+                            this.targetY = Math.random() * canvas.height; } else if (side === 2) { this.targetX = Math.random() *
+                                canvas.width;
+                            this.targetY = canvas.height + 50; } else { this.targetX = -50;
+                            this.targetY = Math.random() * canvas.height; }
+                        // Speed up a bit for the journey
+                        this.speed = 0.8 + Math.random() * 0.8;
+                    }
+                    return;
+                }
+
+                // Flying toward edge
                 const dx = this.targetX - this.x;
                 const dy = this.targetY - this.y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
@@ -1343,24 +1351,28 @@
                     this.x += Math.cos(moveAngle) * this.speed;
                     this.y += Math.sin(moveAngle) * this.speed;
                     this.curvePhase += this.curveSpeed;
-                    // Slight altitude wobble
                     this.y += Math.sin(this.curvePhase * 1.5) * 0.2;
                 } else {
-                    // Reached edge – reset with new random target
+                    // Reached edge – reset (spawn from logo again)
+                    this.reset();
+                    // Randomize the emergence direction a bit
                     const spawn = getLogoSpawnPoint();
-                    const spread = Math.min(spawn.w, spawn.h) * 0.3;
-                    this.x = spawn.x + (Math.random() - 0.5) * spread;
-                    this.y = spawn.y + (Math.random() - 0.5) * spread * 0.5;
-                    const side2 = Math.floor(Math.random() * 4);
-                    if (side2 === 0) { this.targetX = Math.random() * canvas.width;
-                        this.targetY = -50; } else if (side2 === 1) { this.targetX = canvas.width + 50;
-                        this.targetY = Math.random() * canvas.height; } else if (side2 === 2) { this.targetX = Math.random() *
-                            canvas.width;
-                        this.targetY = canvas.height + 50; } else { this.targetX = -50;
-                        this.targetY = Math.random() * canvas.height; }
+                    const spread2 = Math.min(spawn.w, spawn.h) * 0.25;
+                    this.x = spawn.x + (Math.random() - 0.5) * spread2;
+                    this.y = spawn.y + (Math.random() - 0.5) * spread2 * 0.5;
+                    const ang2 = Math.random() * Math.PI * 2;
+                    const spd2 = 0.2 + Math.random() * 0.3;
+                    this.vx = Math.cos(ang2) * spd2;
+                    this.vy = Math.sin(ang2) * spd2;
+                    this.emerging = true;
+                    this.emergingTimer = 0;
+                    this.opacity = 0;
+                    this.targetX = null;
+                    this.targetY = null;
                     this.speed = 0.6 + Math.random() * 0.8;
                     this.maxLife = 600 + Math.random() * 400;
                     this.life = 0;
+                    return;
                 }
 
                 this.wingPhase += this.wingSpeed;
@@ -1506,27 +1518,25 @@
             const count = getBirdCount();
             for (let i = 0; i < count; i++) {
                 const bird = new Bird();
-                // Spread initial birds from logo
+                // Spread initial birds from logo with emergence already active
                 const spawn = getLogoSpawnPoint();
-                const spread = Math.min(spawn.w, spawn.h) * 0.3;
+                const spread = Math.min(spawn.w, spawn.h) * 0.25;
                 bird.x = spawn.x + (Math.random() - 0.5) * spread;
                 bird.y = spawn.y + (Math.random() - 0.5) * spread * 0.5;
-                const side = Math.floor(Math.random() * 4);
-                if (side === 0) { bird.targetX = Math.random() * canvas.width;
-                    bird.targetY = -50; } else if (side === 1) { bird.targetX = canvas.width + 50;
-                    bird.targetY = Math.random() * canvas.height; } else if (side === 2) { bird.targetX = Math.random() *
-                        canvas.width;
-                    bird.targetY = canvas.height + 50; } else { bird.targetX = -50;
-                    bird.targetY = Math.random() * canvas.height; }
+                // Give them a random emergent velocity
+                const ang = Math.random() * Math.PI * 2;
+                const spd = 0.2 + Math.random() * 0.3;
+                bird.vx = Math.cos(ang) * spd;
+                bird.vy = Math.sin(ang) * spd;
+                bird.emerging = true;
+                bird.emergingTimer = 0;
+                bird.opacity = 0;
                 birds.push(bird);
             }
             animateBirds();
         }
 
-        // Recalculate on resize
-        window.addEventListener('resize', () => {
-            resizeCanvas();
-        });
+        window.addEventListener('resize', resizeCanvas);
 
         document.addEventListener('visibilitychange', () => {
             if (document.hidden && birdsActive) {
