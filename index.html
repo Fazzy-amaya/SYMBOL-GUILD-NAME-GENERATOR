@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>ᴘʜᴀɴᴛᴏᴍ・〆 — Name Generator</title>
     <style>
-        /* ===== RESET & BASE ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
@@ -21,7 +20,6 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* ===== BIRD CANVAS ===== */
         #birdCanvas {
             position: fixed;
             top: 0;
@@ -33,7 +31,6 @@
             isolation: isolate;
         }
 
-        /* ===== WATERMARK ===== */
         #watermark {
             position: fixed;
             bottom: 25px;
@@ -63,7 +60,6 @@
             100% { text-shadow: 0 0 50px rgba(155,109,255,1), 0 0 100px rgba(155,109,255,0.5), 0 0 150px rgba(100,40,180,0.3); border-color: rgba(155,109,255,0.5); }
         }
 
-        /* ===== PHANTOM EFFECTS – Simplified for performance ===== */
         #effect-layer {
             position: fixed;
             top: 0;
@@ -106,7 +102,6 @@
             border-width: 1px;
         }
 
-        /* ===== INTRO SCREEN ===== */
         #intro-screen {
             position: fixed;
             inset: 0;
@@ -124,11 +119,7 @@
             -webkit-tap-highlight-color: transparent;
             overflow-y: auto;
         }
-        #intro-screen.fade-out {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
+        #intro-screen.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
 
         #intro-text {
             max-width: 750px;
@@ -144,14 +135,8 @@
             z-index: 2;
             position: relative;
         }
-        #intro-text .line {
-            opacity: 0;
-            transform: translateY(8px);
-            animation: lineFadeIn 0.3s forwards;
-        }
-        @keyframes lineFadeIn {
-            to { opacity: 1; transform: translateY(0); }
-        }
+        #intro-text .line { opacity: 0; transform: translateY(8px); animation: lineFadeIn 0.3s forwards; }
+        @keyframes lineFadeIn { to { opacity: 1; transform: translateY(0); } }
         .cursor-blink {
             display: inline-block;
             width: 3px;
@@ -183,7 +168,6 @@
             50% { text-shadow: 0 0 30px #9b6dff, 0 0 60px #4a1a7a; }
         }
 
-        /* ===== MAIN APP ===== */
         #main-app {
             opacity: 0;
             transition: opacity 1.5s ease;
@@ -196,10 +180,7 @@
             position: relative;
             z-index: 2;
         }
-        #main-app.visible {
-            opacity: 1;
-            pointer-events: all;
-        }
+        #main-app.visible { opacity: 1; pointer-events: all; }
 
         .container {
             background: rgba(20,10,30,0.5);
@@ -215,7 +196,6 @@
             overflow: hidden;
         }
 
-        /* ===== GUILD LOGO ===== */
         .logo-wrapper {
             position: relative;
             display: block;
@@ -351,7 +331,6 @@
         .copy-btn:hover { background: rgba(100,40,180,0.4); border-color: #9b6dff; box-shadow: 0 0 20px rgba(100,40,200,0.15); }
         .copy-btn:active { transform: scale(0.95); }
 
-        /* ===== RANDOM NAME SECTION ===== */
         .random-section {
             margin: 20px 0 15px 0;
             position: relative;
@@ -499,7 +478,6 @@
         .btn:hover { transform: scale(1.03); background: linear-gradient(135deg, #8235d9, #4f1d8a); box-shadow: 0 0 40px rgba(130,50,220,0.4); }
         .btn:active { transform: scale(0.95); }
 
-        /* ===== BUY BUTTON ===== */
         .buy-btn {
             display: inline-block;
             margin-top: 20px;
@@ -522,7 +500,130 @@
         .buy-btn:hover { transform: scale(1.03); box-shadow: 0 0 40px rgba(255,107,53,0.5); }
         .buy-btn:active { transform: scale(0.95); }
 
-        /* ===== ACTIVE COUNTERS (Random numbers – no real tracking) ===== */
+        .sensitivity-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(150,100,220,0.2);
+            position: relative;
+            z-index: 3;
+        }
+        .sensitivity-section h2 {
+            color: #e4d5ff;
+            text-shadow: 0 0 20px #8a4bff;
+            margin-bottom: 10px;
+            font-size: 1.6rem;
+        }
+        .sensitivity-section .sub-desc {
+            color: #b396d9;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        .device-search-wrap {
+            position: relative;
+            max-width: 400px;
+            margin: 0 auto 20px;
+        }
+        .device-search-wrap input {
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 60px;
+            border: 1px solid rgba(150,100,220,0.3);
+            background: rgba(0,0,0,0.4);
+            color: #f0eaff;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+            -webkit-appearance: none;
+        }
+        .device-search-wrap input:focus {
+            border-color: #9b6dff;
+            box-shadow: 0 0 25px rgba(120,60,220,0.2);
+        }
+        .device-list-dropdown {
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(20,10,30,0.95);
+            border-radius: 20px;
+            margin-top: 8px;
+            display: none;
+            position: absolute;
+            width: 100%;
+            z-index: 99999;
+            border: 1px solid rgba(150,100,220,0.3);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .device-list-dropdown div {
+            padding: 12px 20px;
+            color: #c4a8f0;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(150,100,220,0.1);
+            transition: 0.2s;
+        }
+        .device-list-dropdown div:hover {
+            background: rgba(100,40,180,0.2);
+        }
+        .sensitivity-result {
+            background: rgba(0,0,0,0.3);
+            border-radius: 30px;
+            padding: 25px;
+            border: 1px solid rgba(150,100,220,0.2);
+            display: none;
+            margin-top: 15px;
+        }
+        .sensitivity-result .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .sensitivity-result .result-header h3 {
+            color: #f2e9ff;
+            font-size: 1.3rem;
+        }
+        .sensitivity-result .result-header span {
+            color: #b396d9;
+            font-size: 0.8rem;
+        }
+        .sensitivity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .sensitivity-grid .sens-item span:first-child {
+            color: #7a5a9a;
+            display: block;
+            font-size: 0.8rem;
+        }
+        .sensitivity-grid .sens-item span:last-child {
+            color: #b3ff9b;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        /* ===== REQUEST DEVICE – WHATSAPP LINK ===== */
+        .request-device-btn {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 10px 25px;
+            background: rgba(37, 211, 102, 0.2);
+            border: 1px solid rgba(37, 211, 102, 0.3);
+            color: #25D366;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.3s;
+            letter-spacing: 1px;
+            text-decoration: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .request-device-btn:hover {
+            background: rgba(37, 211, 102, 0.3);
+            border-color: #25D366;
+            box-shadow: 0 0 20px rgba(37, 211, 102, 0.2);
+        }
+
         .active-counters {
             margin-top: 20px;
             display: flex;
@@ -572,31 +673,25 @@
             .guild-logo { height: auto; }
             .buy-btn { padding: 12px 24px; font-size: 1rem; width: 100%; }
             .active-counters { font-size: 0.6rem; }
+            .sensitivity-grid { grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); }
+            .sensitivity-grid .sens-item span:last-child { font-size: 1.4rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ====== WATERMARK ====== -->
     <div id="watermark">✦ FR4NX ✦</div>
-
-    <!-- ====== EFFECT LAYER ====== -->
     <div id="effect-layer"></div>
-
-    <!-- ====== BIRD CANVAS ====== -->
     <canvas id="birdCanvas"></canvas>
 
-    <!-- ====== INTRO SCREEN ====== -->
     <div id="intro-screen">
         <div id="intro-text"></div>
         <div id="click-prompt">✦ Click anywhere to enter ✦</div>
     </div>
 
-    <!-- ====== MAIN APP ====== -->
     <div id="main-app">
         <div class="container">
 
-            <!-- ===== GUILD LOGO ===== -->
             <div class="logo-wrapper">
                 <img class="guild-logo" src="./Guild.png" alt="Phantom Guild" />
             </div>
@@ -613,15 +708,12 @@
                 <button class="copy-btn" id="manualCopyBtn">📋 Copy Name</button>
             </div>
 
-            <!-- ===== RANDOM NAME SECTION ===== -->
             <div class="random-section">
                 <button class="random-btn" id="randomToggleBtn">🎲 Random Name</button>
-
                 <div class="gender-select" id="genderSelect">
                     <button class="gender-btn male" data-gender="male">♂ Male</button>
                     <button class="gender-btn female" data-gender="female">♀ Female</button>
                 </div>
-
                 <div class="name-list-container" id="nameListContainer">
                     <div class="name-list" id="nameList"></div>
                     <button class="generate-more-btn" id="generateMoreBtn">↻ Generate More</button>
@@ -636,12 +728,46 @@
 
             <button class="btn" id="doneBtn">D O N E ?</button>
 
-            <!-- ===== BUY BUTTON ===== -->
             <a href="https://pdf-tool-by-fr4nx.onrender.com/" target="_blank" class="buy-btn">
                 🛒 Buy Free Fire Likes
             </a>
 
-            <!-- ===== ACTIVE COUNTERS ===== -->
+            <!-- ========================================================= -->
+            <!-- ===== SENSITIVITY GENERATOR – WITH WHATSAPP REQUEST BUTTON ===== -->
+            <!-- ========================================================= -->
+            <div class="sensitivity-section">
+                <h2>⚙️ Free Fire Sensitivity Generator</h2>
+                <p class="sub-desc">Select your device for the best sensitivity &amp; fire button size.</p>
+
+                <div class="device-search-wrap">
+                    <input type="text" id="deviceSearch" placeholder="Search for your device..." onkeyup="filterDevices()" />
+                    <div class="device-list-dropdown" id="deviceList"></div>
+                </div>
+
+                <div class="sensitivity-result" id="sensitivityResult">
+                    <div class="result-header">
+                        <h3 id="selectedDeviceName">Device Name</h3>
+                        <span>Recommended Settings</span>
+                    </div>
+                    <div class="sensitivity-grid">
+                        <div class="sens-item"><span>General</span><span id="sGen">-</span></div>
+                        <div class="sens-item"><span>Red Dot</span><span id="sRed">-</span></div>
+                        <div class="sens-item"><span>2x Scope</span><span id="s2x">-</span></div>
+                        <div class="sens-item"><span>4x Scope</span><span id="s4x">-</span></div>
+                        <div class="sens-item"><span>Sniper</span><span id="sSnip">-</span></div>
+                        <div class="sens-item"><span>🔥 Fire Button</span><span id="sFire">-</span></div>
+                    </div>
+                </div>
+
+                <!-- ===== REQUEST DEVICE – WHATSAPP LINK ===== -->
+                <div style="margin-top: 15px;">
+                    <a href="https://wa.me/2348141516162" target="_blank" class="request-device-btn">
+                        📱 Device not listed? Request it on WhatsApp
+                    </a>
+                    <p style="color:#6a4a8a; font-size:0.65rem; margin-top:6px;">Message us your device and we'll add custom sensitivity within 24 hours.</p>
+                </div>
+            </div>
+
             <div class="active-counters">
                 <div class="stat">
                     👁️ <span id="visitCount">0</span> visitors have entered the Phantom realm.
@@ -655,7 +781,6 @@
         </div>
     </div>
 
-    <!-- ====== AUDIO ====== -->
     <audio id="bg-music" loop preload="auto">
         <source src="./music.mp3" type="audio/mpeg" />
         <source src="/SYMBOL-GUILD-NAME-GENERATOR/music.mp3" type="audio/mpeg" />
@@ -663,18 +788,14 @@
 
     <script>
         // =============================================
-        // ACTIVE COUNTERS – Random numbers, live updates
+        // ACTIVE COUNTERS
         // =============================================
         (function activeCounters() {
             const visitEl = document.getElementById('visitCount');
             const onlineEl = document.getElementById('onlineCount');
 
-            function randomTotal() {
-                return Math.floor(Math.random() * 500) + 500; // 500–999
-            }
-            function randomOnline() {
-                return Math.floor(Math.random() * 10) + 3; // 3–12
-            }
+            function randomTotal() { return Math.floor(Math.random() * 500) + 500; }
+            function randomOnline() { return Math.floor(Math.random() * 10) + 3; }
 
             let currentTotal = randomTotal();
             function updateTotal() {
@@ -686,30 +807,117 @@
                 visitEl.textContent = currentTotal;
             }
 
-            function updateOnline() {
-                onlineEl.textContent = randomOnline();
-            }
+            function updateOnline() { onlineEl.textContent = randomOnline(); }
 
             visitEl.textContent = currentTotal;
             updateOnline();
-
             setInterval(updateTotal, 20000);
             setInterval(updateOnline, 8000);
         })();
 
+        // =============================================
+        // SENSITIVITY GENERATOR – 20 Devices (SCALED TO MAX 200)
+        // =============================================
+        const sensitivityData = [
+            // APPLE / iPhone (values now up to 200)
+            { name: "iPhone 6 / 6s", brand: "Apple", gen: "150", red: "140", twox: "130", fourx: "110", sniper: "60", fire: "55%" },
+            { name: "iPhone 7 / 8", brand: "Apple", gen: "155", red: "145", twox: "135", fourx: "115", sniper: "65", fire: "58%" },
+            { name: "iPhone X / XS", brand: "Apple", gen: "160", red: "150", twox: "140", fourx: "120", sniper: "70", fire: "60%" },
+            { name: "iPhone 11", brand: "Apple", gen: "165", red: "155", twox: "145", fourx: "125", sniper: "75", fire: "62%" },
+            { name: "iPhone 12 / 13", brand: "Apple", gen: "170", red: "160", twox: "150", fourx: "130", sniper: "80", fire: "65%" },
+            { name: "iPhone 14 / 15", brand: "Apple", gen: "175", red: "165", twox: "155", fourx: "135", sniper: "85", fire: "68%" },
+            { name: "iPhone SE (2020/22)", brand: "Apple", gen: "150", red: "140", twox: "130", fourx: "110", sniper: "60", fire: "55%" },
+
+            // SAMSUNG
+            { name: "Samsung Galaxy A12/A13", brand: "Samsung", gen: "160", red: "150", twox: "140", fourx: "125", sniper: "75", fire: "65%" },
+            { name: "Samsung Galaxy A22/A23", brand: "Samsung", gen: "165", red: "155", twox: "145", fourx: "130", sniper: "80", fire: "68%" },
+            { name: "Samsung Galaxy A32/A33", brand: "Samsung", gen: "170", red: "160", twox: "150", fourx: "135", sniper: "85", fire: "70%" },
+            { name: "Samsung Galaxy A52/A53", brand: "Samsung", gen: "175", red: "165", twox: "155", fourx: "140", sniper: "90", fire: "72%" },
+            { name: "Samsung Galaxy S Series", brand: "Samsung", gen: "180", red: "170", twox: "160", fourx: "145", sniper: "95", fire: "75%" },
+
+            // XIAOMI / POCO / REDMI
+            { name: "Redmi 9/10 Series", brand: "Xiaomi", gen: "185", red: "175", twox: "165", fourx: "150", sniper: "100", fire: "70%" },
+            { name: "Redmi Note 11/12", brand: "Xiaomi", gen: "190", red: "180", twox: "170", fourx: "155", sniper: "105", fire: "72%" },
+            { name: "Redmi Note 13/14", brand: "Xiaomi", gen: "195", red: "185", twox: "175", fourx: "160", sniper: "110", fire: "75%" },
+            { name: "Poco X Series", brand: "Xiaomi", gen: "200", red: "190", twox: "180", fourx: "165", sniper: "115", fire: "78%" },
+
+            // TECNO
+            { name: "Tecno Spark 8/9", brand: "Tecno", gen: "155", red: "145", twox: "135", fourx: "115", sniper: "65", fire: "60%" },
+            { name: "Tecno Spark 10/11", brand: "Tecno", gen: "160", red: "150", twox: "140", fourx: "120", sniper: "70", fire: "62%" },
+            { name: "Tecno Camon Series", brand: "Tecno", gen: "165", red: "155", twox: "145", fourx: "125", sniper: "75", fire: "65%" },
+
+            // INFINIX
+            { name: "Infinix Hot Series", brand: "Infinix", gen: "150", red: "140", twox: "130", fourx: "110", sniper: "60", fire: "58%" },
+            { name: "Infinix Note Series", brand: "Infinix", gen: "155", red: "145", twox: "135", fourx: "115", sniper: "65", fire: "60%" },
+
+            // ITEL
+            { name: "Itel City / P Series", brand: "Itel", gen: "140", red: "130", twox: "120", fourx: "100", sniper: "50", fire: "50%" },
+
+            // ONEPLUS
+            { name: "OnePlus (General)", brand: "OnePlus", gen: "185", red: "175", twox: "165", fourx: "150", sniper: "100", fire: "74%" }
+        ];
+
+        const deviceListEl = document.getElementById('deviceList');
+        const searchInput = document.getElementById('deviceSearch');
+
+        function renderDeviceList(filter = '') {
+            deviceListEl.innerHTML = '';
+            const filtered = sensitivityData.filter(d => d.name.toLowerCase().includes(filter.toLowerCase()) || d.brand.toLowerCase().includes(filter.toLowerCase()));
+            if (filtered.length === 0) {
+                deviceListEl.innerHTML = '<div style="padding:12px; color:#6a4a8a;">No devices found.</div>';
+                deviceListEl.style.display = 'block';
+                return;
+            }
+            filtered.forEach(device => {
+                const div = document.createElement('div');
+                div.textContent = device.name + ' (' + device.brand + ')';
+                div.onmouseover = () => div.style.background = 'rgba(100,40,180,0.2)';
+                div.onmouseout = () => div.style.background = 'transparent';
+                div.onclick = () => selectDevice(device);
+                deviceListEl.appendChild(div);
+            });
+            deviceListEl.style.display = 'block';
+        }
+
+        function filterDevices() {
+            const val = searchInput.value;
+            if (val.length > 0) { renderDeviceList(val); } else { deviceListEl.style.display = 'none'; }
+        }
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#deviceSearch') && !e.target.closest('#deviceList')) {
+                deviceListEl.style.display = 'none';
+            }
+        });
+
+        function selectDevice(device) {
+            searchInput.value = device.name;
+            deviceListEl.style.display = 'none';
+
+            document.getElementById('selectedDeviceName').textContent = device.name + ' (' + device.brand + ')';
+            document.getElementById('sGen').textContent = device.gen;
+            document.getElementById('sRed').textContent = device.red;
+            document.getElementById('s2x').textContent = device.twox;
+            document.getElementById('s4x').textContent = device.fourx;
+            document.getElementById('sSnip').textContent = device.sniper;
+            document.getElementById('sFire').textContent = device.fire;
+
+            document.getElementById('sensitivityResult').style.display = 'block';
+        }
+
+        renderDeviceList();
 
         // =============================================
-        // PHANTOM EFFECTS – Optimised for performance
+        // PHANTOM EFFECTS – Optimised
         // =============================================
         (function phantomEffects() {
             const layer = document.getElementById('effect-layer');
             let lastX = 0, lastY = 0;
-            let trailTimer = 0;
 
             function createTrailParticle(x, y) {
                 const el = document.createElement('div');
                 el.className = 'trail-particle';
-                const size = 4 + Math.random() * 6; // smaller
+                const size = 4 + Math.random() * 6;
                 el.style.width = size + 'px';
                 el.style.height = size + 'px';
                 el.style.left = (x - size/2) + 'px';
@@ -784,7 +992,6 @@
             });
         })();
 
-
         // =============================================
         // AUDIO PRELOAD
         // =============================================
@@ -801,16 +1008,13 @@
             try {
                 if (!audioCtx) { audioCtx = new(window.AudioContext || window.webkitAudioContext)(); }
                 if (audioCtx.state === 'suspended') {
-                    audioCtx.resume().then(() => {
-                        audioCtxResumed = true;
-                    }).catch(() => {});
+                    audioCtx.resume().then(() => { audioCtxResumed = true; }).catch(() => {});
                 } else { audioCtxResumed = true; }
             } catch (e) {}
         }
         document.addEventListener('click', resumeAudioContext);
         document.addEventListener('touchstart', resumeAudioContext);
         document.addEventListener('keydown', resumeAudioContext);
-
 
         // =============================================
         // TYPING INTRO
@@ -911,7 +1115,6 @@
         }
         window.addEventListener('load', typeLine);
 
-
         // =============================================
         // MUSIC – INSTANT PLAY ON INTRO TAP
         // =============================================
@@ -921,9 +1124,7 @@
             if (musicStarted) return;
             const playPromise = audio.play();
             if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    musicStarted = true;
-                }).catch(() => {});
+                playPromise.then(() => { musicStarted = true; }).catch(() => {});
             }
         }
 
@@ -948,10 +1149,7 @@
             if (introComplete && !musicStarted) { playMusic(); }
         });
 
-        audio.addEventListener('ended', () => {
-            audio.play().catch(() => {});
-        });
-
+        audio.addEventListener('ended', () => { audio.play().catch(() => {}); });
 
         // =============================================
         // NAME GENERATOR
@@ -996,9 +1194,8 @@
             }
         });
 
-
         // =============================================
-        // COPY (iOS/Android friendly)
+        // COPY
         // =============================================
         function copyResult() {
             const resultDisplay = document.getElementById('result');
@@ -1070,7 +1267,6 @@
         document.getElementById('userName').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') { document.getElementById('doneBtn').click(); }
         });
-
 
         // =============================================
         // RANDOM NAME GENERATOR
@@ -1178,9 +1374,8 @@
             setTimeout(() => { this.textContent = '↻ Generate More'; }, 800);
         });
 
-
         // =============================================
-        // BIRDS – ADAPTIVE & OPTIMISED FOR LOW END
+        // BIRDS – ADAPTIVE & OPTIMISED
         // =============================================
         const canvas = document.getElementById('birdCanvas');
         const ctx = canvas.getContext('2d');
@@ -1199,7 +1394,6 @@
         function getBirdCount() {
             const w = window.innerWidth, h = window.innerHeight;
             const area = w * h;
-            // Reduced density: 1 bird per 200,000 px (was 80,000)
             let count = Math.floor(area / 200000);
             count = Math.max(10, Math.min(45, count));
             return count;
@@ -1294,7 +1488,6 @@
                 ctx.fillStyle = '#3a2a4a';
                 ctx.beginPath(); ctx.moveTo(-size*0.5, -size*0.12); ctx.lineTo(-size*0.7, -size*0.2 + wingFlap*size*0.08); ctx.lineTo(-size*0.5, size*0.12); ctx.fill();
                 ctx.restore();
-                // Glow – simplified
                 ctx.save();
                 ctx.globalAlpha = this.opacity * 0.1;
                 ctx.shadowColor = '#9b6dff';
@@ -1395,7 +1588,7 @@
             }
         });
 
-        console.log('🔥 Phantom Guild – Optimised & Ready');
+        console.log('🔥 Phantom Guild – 20 Device Sensitivity Generator Ready (Max 200)');
     </script>
 </body>
 </html>
