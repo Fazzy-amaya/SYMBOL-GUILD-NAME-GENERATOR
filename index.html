@@ -602,7 +602,7 @@
             font-weight: 700;
         }
 
-        /* ===== REQUEST DEVICE – WHATSAPP LINK ===== */
+        /* ===== REQUEST DEVICE – WHATSAPP LINK WITH PREFILL ===== */
         .request-device-btn {
             display: inline-block;
             margin-top: 12px;
@@ -733,7 +733,7 @@
             </a>
 
             <!-- ========================================================= -->
-            <!-- ===== SENSITIVITY GENERATOR – WITH WHATSAPP REQUEST BUTTON ===== -->
+            <!-- ===== SENSITIVITY GENERATOR – 30+ DEVICES ===== -->
             <!-- ========================================================= -->
             <div class="sensitivity-section">
                 <h2>⚙️ Free Fire Sensitivity Generator</h2>
@@ -759,12 +759,12 @@
                     </div>
                 </div>
 
-                <!-- ===== REQUEST DEVICE – WHATSAPP LINK ===== -->
+                <!-- ===== REQUEST DEVICE – WHATSAPP WITH PREFILL ===== -->
                 <div style="margin-top: 15px;">
-                    <a href="https://wa.me/2348141516162" target="_blank" class="request-device-btn">
+                    <a href="https://wa.me/2348141516162?text=PLS%20ADD%20DEVICE" target="_blank" class="request-device-btn">
                         📱 Device not listed? Request it on WhatsApp
                     </a>
-                    <p style="color:#6a4a8a; font-size:0.65rem; margin-top:6px;">Message us your device and we'll add custom sensitivity within 24 hours.</p>
+                    <p style="color:#6a4a8a; font-size:0.65rem; margin-top:6px;">Tap to send "PLS ADD DEVICE" – we'll add your device within 24 hours.</p>
                 </div>
             </div>
 
@@ -816,10 +816,10 @@
         })();
 
         // =============================================
-        // SENSITIVITY GENERATOR – 20 Devices (SCALED TO MAX 200)
+        // SENSITIVITY GENERATOR – 30+ Devices (MAX 200)
         // =============================================
         const sensitivityData = [
-            // APPLE / iPhone (values now up to 200)
+            // APPLE / iPhone
             { name: "iPhone 6 / 6s", brand: "Apple", gen: "150", red: "140", twox: "130", fourx: "110", sniper: "60", fire: "35%" },
             { name: "iPhone 7 / 8", brand: "Apple", gen: "155", red: "145", twox: "135", fourx: "115", sniper: "65", fire: "43%" },
             { name: "iPhone X / XS", brand: "Apple", gen: "160", red: "150", twox: "140", fourx: "120", sniper: "70", fire: "47%" },
@@ -854,7 +854,20 @@
             { name: "Itel City / P Series", brand: "Itel", gen: "140", red: "130", twox: "120", fourx: "100", sniper: "50", fire: "33%" },
 
             // ONEPLUS
-            { name: "OnePlus (General)", brand: "OnePlus", gen: "185", red: "175", twox: "165", fourx: "150", sniper: "100", fire: "45%" }
+            { name: "OnePlus (General)", brand: "OnePlus", gen: "185", red: "175", twox: "165", fourx: "150", sniper: "100", fire: "45%" },
+
+            // ✧ NEW DEVICES
+            { name: "Google Pixel 6/7", brand: "Google", gen: "170", red: "160", twox: "150", fourx: "130", sniper: "80", fire: "48%" },
+            { name: "Google Pixel 8/9", brand: "Google", gen: "175", red: "165", twox: "155", fourx: "135", sniper: "85", fire: "52%" },
+            { name: "Nokia G Series", brand: "Nokia", gen: "145", red: "135", twox: "125", fourx: "105", sniper: "55", fire: "36%" },
+            { name: "Motorola G Series", brand: "Motorola", gen: "150", red: "140", twox: "130", fourx: "110", sniper: "60", fire: "40%" },
+            { name: "Motorola Edge", brand: "Motorola", gen: "165", red: "155", twox: "145", fourx: "125", sniper: "75", fire: "45%" },
+            { name: "Sony Xperia", brand: "Sony", gen: "170", red: "160", twox: "150", fourx: "130", sniper: "80", fire: "48%" },
+            { name: "LG (General)", brand: "LG", gen: "155", red: "145", twox: "135", fourx: "115", sniper: "65", fire: "42%" },
+            { name: "Huawei P Series", brand: "Huawei", gen: "165", red: "155", twox: "145", fourx: "125", sniper: "75", fire: "44%" },
+            { name: "Huawei Mate Series", brand: "Huawei", gen: "175", red: "165", twox: "155", fourx: "135", sniper: "85", fire: "50%" },
+            { name: "Nothing Phone (1/2)", brand: "Nothing", gen: "170", red: "160", twox: "150", fourx: "130", sniper: "80", fire: "46%" },
+            { name: "Oppo Find Series", brand: "Oppo", gen: "175", red: "165", twox: "155", fourx: "135", sniper: "85", fire: "50%" }
         ];
 
         const deviceListEl = document.getElementById('deviceList');
@@ -1588,7 +1601,7 @@
             }
         });
 
-        console.log('🔥 Phantom Guild – 20 Device Sensitivity Generator Ready (Max 200)');
+        console.log('🔥 Phantom Guild – 30+ Device Sensitivity Generator Ready (Max 200)');
     </script>
 </body>
 </html>
