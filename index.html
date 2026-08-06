@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>ᴘʜᴀɴᴛᴏᴍ・〆 — Name Generator</title>
     <style>
+        /* ============================
+           ALL STYLES – UNCHANGED
+           ============================ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
@@ -20,7 +23,6 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* ===== BIRD CANVAS ===== */
         #birdCanvas {
             position: fixed;
             top: 0;
@@ -32,7 +34,6 @@
             isolation: isolate;
         }
 
-        /* ===== WATERMARK ===== */
         #watermark {
             position: fixed;
             bottom: 25px;
@@ -62,7 +63,6 @@
             100% { text-shadow: 0 0 50px rgba(155,109,255,1), 0 0 100px rgba(155,109,255,0.5), 0 0 150px rgba(100,40,180,0.3); border-color: rgba(155,109,255,0.5); }
         }
 
-        /* ===== PHANTOM EFFECTS ===== */
         #effect-layer {
             position: fixed;
             top: 0;
@@ -105,7 +105,6 @@
             border-width: 1px;
         }
 
-        /* ===== INTRO SCREEN ===== */
         #intro-screen {
             position: fixed;
             inset: 0;
@@ -172,7 +171,6 @@
             50% { text-shadow: 0 0 30px #9b6dff, 0 0 60px #4a1a7a; }
         }
 
-        /* ===== MAIN APP ===== */
         #main-app {
             opacity: 0;
             transition: opacity 1.5s ease;
@@ -201,7 +199,6 @@
             overflow: hidden;
         }
 
-        /* ===== GUILD LOGO ===== */
         .logo-wrapper {
             position: relative;
             display: block;
@@ -1254,13 +1251,12 @@
                             </div>
                             <div>
                                 <div class="card-title">Auto Device Scanner</div>
-                                <div class="card-sub">Reads RAM, CPU cores &amp; screen specs from your browser</div>
+                                <div class="card-sub">Reads device info from your browser</div>
                             </div>
                         </div>
 
-                        <!-- ===== HELPER TEXT – CLEAR EXPLANATION ===== -->
                         <p style="color:#b396d9; font-size:0.85rem; margin-bottom:15px; text-align:center; line-height:1.5;">
-                            🔍 Can't find your device? Click <strong>"Detect My Device"</strong> – we'll read your specs and calculate the best sensitivity for you.
+                            🔍 Can't find your device? Click <strong>"Detect My Device"</strong> – we'll read your browser info and find the closest match.
                         </p>
 
                         <button class="btn-detect" id="detectBtn" onclick="detectDevice()">
@@ -1314,9 +1310,7 @@
                             </div>
                         </div>
                         <div class="specs">
-                            <div class="spec-box"><div class="spec-lbl">RAM</div><div class="spec-val ora" id="sRAM">—</div></div>
-                            <div class="spec-box"><div class="spec-lbl">CPU Cores</div><div class="spec-val ora" id="sCPU">—</div></div>
-                            <div class="spec-box"><div class="spec-lbl">Resolution</div><div class="spec-val cya" id="sRes">—</div></div>
+                            <div class="spec-box"><div class="spec-lbl">Screen</div><div class="spec-val cya" id="sRes">—</div></div>
                             <div class="spec-box"><div class="spec-lbl">Pixel Ratio</div><div class="spec-val cya" id="sDPR">—</div></div>
                         </div>
                         <div class="perf-wrap">
@@ -1539,7 +1533,7 @@
         loadRandomNames('freestyle');
 
         // =========================================================
-        // 3. SENSITIVITY GENERATOR – DEVICE DATABASE (UPDATED)
+        // 3. SENSITIVITY GENERATOR – DEVICE DATABASE (30+ Devices)
         // =========================================================
         const deviceDatabase = [
             // APPLE
@@ -1558,7 +1552,9 @@
             { name: "iPhone SE (2020/22)", brand: "Apple", ram: 3, cpu: 6, res: "750x1334", dpr: 2, gen: "148", red: "138",
                 twox: "128", fourx: "108", sniper: "58", fire: "55%" },
 
-            // SAMSUNG – updated (removed Galaxy A12/A13)
+            // SAMSUNG
+            { name: "Galaxy A12/A13", brand: "Samsung", ram: 4, cpu: 4, res: "720x1600", dpr: 1.5, gen: "160", red: "150",
+                twox: "140", fourx: "125", sniper: "75", fire: "40%" },
             { name: "Galaxy A22/A23", brand: "Samsung", ram: 4, cpu: 6, res: "720x1600", dpr: 1.5, gen: "165", red: "155",
                 twox: "145", fourx: "130", sniper: "78", fire: "45%" },
             { name: "Galaxy A32/A33", brand: "Samsung", ram: 6, cpu: 6, res: "1080x2400", dpr: 2.5, gen: "170", red: "160",
@@ -1756,7 +1752,7 @@
         }
 
         // =========================================================
-        // 7. AUTO DETECT – HARDWARE-BASED (ACCURATE)
+        // 7. AUTO DETECT – BEST METHOD (ua-parser-js + Client Hints)
         // =========================================================
         function detectDevice() {
             const btn = document.getElementById('detectBtn');
@@ -1766,63 +1762,84 @@
             btn.style.display = 'none';
             loader.classList.add('show');
 
-            setTimeout(() => {
-                const ram = navigator.deviceMemory || 4;
-                const cpu = navigator.hardwareConcurrency || 4;
-                const width = window.screen.width;
-                const height = window.screen.height;
-                const dpr = window.devicePixelRatio || 1;
+            // Load ua-parser-js from CDN if needed
+            if (typeof UAParser === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/UAParser.js/2.0.0/ua-parser.min.js';
+                script.onload = () => performDetection();
+                document.head.appendChild(script);
+            } else {
+                performDetection();
+            }
 
-                // Store detected specs for later use
-                window.detectedSpecs = { ram, cpu, width, height, dpr };
+            function performDetection() {
+                setTimeout(() => {
+                    const parser = new UAParser();
+                    const result = parser.getResult();
+                    const device = result.device || {};
 
-                // Show detected specs
-                document.getElementById('dpName').textContent = 'Custom Hardware';
-                document.getElementById('dpSpecs').textContent =
-                    `${ram}GB RAM · ${cpu} Cores · ${width}x${height} (${dpr}x) · Auto‑calculated`;
-                panel.classList.add('show');
+                    // Get screen details
+                    const width = window.screen.width;
+                    const height = window.screen.height;
+                    const dpr = window.devicePixelRatio || 1;
 
-                renderAgeButtons('autoAgeGrid', 'autoAgeNote', 'auto');
+                    // Build device name
+                    let deviceName = device.model || 'Unknown Device';
+                    if (device.vendor && device.vendor !== 'Unknown') {
+                        deviceName = device.vendor + ' ' + deviceName;
+                    }
+
+                    // Try Client Hints for more specific model
+                    if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
+                        navigator.userAgentData.getHighEntropyValues(['model'])
+                            .then(ua => {
+                                if (ua.model && ua.model !== deviceName) {
+                                    deviceName = ua.model + ' (' + deviceName + ')';
+                                }
+                                finishDetection(deviceName, width, height, dpr);
+                            })
+                            .catch(() => finishDetection(deviceName, width, height, dpr));
+                    } else {
+                        finishDetection(deviceName, width, height, dpr);
+                    }
+                }, 500);
+            }
+
+            function finishDetection(deviceName, width, height, dpr) {
+                // Find closest match from database (using resolution + DPR)
+                let bestMatch = null;
+                let bestScore = Infinity;
+                const totalPixels = width * height;
+
+                deviceDatabase.forEach(device => {
+                    const dprDiff = Math.abs(device.dpr - dpr) / 3 * 100;
+                    const devicePixels = parseInt(device.res.split('x')[0]) * parseInt(device.res.split('x')[1]);
+                    const resDiff = Math.abs(devicePixels - totalPixels) / 10000000 * 100;
+                    const score = dprDiff * 0.4 + resDiff * 0.6;
+                    if (score < bestScore) {
+                        bestScore = score;
+                        bestMatch = device;
+                    }
+                });
+
+                if (bestMatch) {
+                    selectedDevice = bestMatch;
+                    isAutoDetect = true;
+                    const confidence = Math.round(Math.max(0, 100 - bestScore));
+                    document.getElementById('dpName').textContent = deviceName;
+                    document.getElementById('dpSpecs').textContent =
+                        `${width}x${height} (${dpr}x) · Match: ${confidence}%`;
+                    panel.classList.add('show');
+                    renderAgeButtons('autoAgeGrid', 'autoAgeNote', 'auto');
+                }
 
                 loader.classList.remove('show');
                 btn.style.display = 'flex';
-            }, 1500);
+            }
         }
 
         // =========================================================
-        // 8. HARDWARE-BASED SENSITIVITY CALCULATOR
-        // =========================================================
-        function calculateSensitivityFromSpecs(ram, cpu, width, height, dpr, ageFactor) {
-            const ramScore = Math.min(ram / 12, 1) * 100;
-            const cpuScore = Math.min(cpu / 8, 1) * 100;
-            const pixels = width * height;
-            const resScore = Math.min(pixels / (3840 * 2160), 1) * 100;
-            const dprScore = Math.min(dpr / 3, 1) * 100;
-
-            const hwScore = Math.round((ramScore * 0.35 + cpuScore * 0.25 + resScore * 0.25 + dprScore * 0.15));
-
-            const gen = Math.round(130 + (hwScore / 100) * 70);
-            const red = Math.round(120 + (hwScore / 100) * 70);
-            const twox = Math.round(110 + (hwScore / 100) * 80);
-            const fourx = Math.round(100 + (hwScore / 100) * 70);
-            const sniper = Math.round(50 + (hwScore / 100) * 70);
-            const firePct = Math.round(35 + (hwScore / 100) * 35);
-
-            const factor = ageFactor || 1.0;
-            return {
-                gen: Math.round(gen * factor),
-                red: Math.round(red * factor),
-                twox: Math.round(twox * factor),
-                fourx: Math.round(fourx * factor),
-                sniper: Math.round(sniper * factor),
-                fire: firePct + '%',
-                hwScore: hwScore,
-                ageWear: Math.round((1 - factor) * 100)
-            };
-        }
-
-        // =========================================================
-        // 9. GENERATE SENSITIVITY
+        // 8. GENERATE SENSITIVITY
         // =========================================================
         function generateFromSearch() {
             if (!selectedDevice) { alert('Please select a device first.'); return; }
@@ -1831,67 +1848,22 @@
         }
 
         function generateFromAuto() {
-            if (!window.detectedSpecs) {
-                alert('Please detect your device first.');
-                return;
-            }
-            if (selectedAge === null) {
-                alert('Please select your device age.');
-                return;
-            }
-            const ageFactor = ageOptions.find(a => a.value === selectedAge);
-            const factor = ageFactor ? ageFactor.factor : 1.0;
-
-            const specs = window.detectedSpecs;
-            const result = calculateSensitivityFromSpecs(
-                specs.ram, specs.cpu, specs.width, specs.height, specs.dpr, factor
-            );
-
-            const fakeDevice = {
-                name: `Custom (${specs.ram}GB, ${specs.cpu} cores)`,
-                brand: 'Auto‑Detected',
-                ram: specs.ram,
-                cpu: specs.cpu,
-                res: `${specs.width}x${specs.height}`,
-                dpr: specs.dpr,
-                gen: result.gen,
-                red: result.red,
-                twox: result.twox,
-                fourx: result.fourx,
-                sniper: result.sniper,
-                fire: result.fire
-            };
-
-            currentResult = {
-                device: fakeDevice,
-                age: selectedAge,
-                factor: factor,
-                hwScore: result.hwScore,
-                ageWear: result.ageWear,
-                adjustedScore: Math.round(result.hwScore * factor),
-                gen: result.gen,
-                red: result.red,
-                twox: result.twox,
-                fourx: result.fourx,
-                sniper: result.sniper,
-                fire: result.fire,
-                source: 'Auto Detect (hardware)'
-            };
-
-            displayResults(currentResult);
+            if (!selectedDevice) { alert('Please detect your device first.'); return; }
+            if (selectedAge === null) { alert('Please select your device age.'); return; }
+            generateSensitivity(selectedDevice, selectedAge, 'Auto Detect');
         }
 
         function generateSensitivity(device, age, source) {
             const ageFactor = ageOptions.find(a => a.value === age);
             const factor = ageFactor ? ageFactor.factor : 1.0;
 
+            // Compute hardware score using device specs (internal, not shown)
             const ramScore = Math.min(device.ram / 8, 1) * 100;
             const cpuScore = Math.min(device.cpu / 8, 1) * 100;
             const resScore = device.dpr > 2.5 ? 85 : (device.dpr > 1.8 ? 70 : 50);
             const hwScore = Math.round((ramScore * 0.4 + cpuScore * 0.3 + resScore * 0.3));
 
             const ageWear = Math.round((1 - factor) * 100);
-            const adjustedScore = Math.round(hwScore * factor);
 
             const genVal = Math.round(parseInt(device.gen) * factor);
             const redVal = Math.round(parseInt(device.red) * factor);
@@ -1905,7 +1877,6 @@
                 factor: factor,
                 hwScore: hwScore,
                 ageWear: ageWear,
-                adjustedScore: adjustedScore,
                 gen: genVal,
                 red: redVal,
                 twox: twoxVal,
@@ -1919,7 +1890,7 @@
         }
 
         // =========================================================
-        // 10. DISPLAY RESULTS
+        // 9. DISPLAY RESULTS
         // =========================================================
         function displayResults(data) {
             const results = document.getElementById('results');
@@ -1927,11 +1898,10 @@
 
             document.getElementById('devName').textContent = data.device.name;
             document.getElementById('osLine').textContent = `Detected via ${data.source} · ${data.device.brand}`;
-            document.getElementById('matchPill').textContent = data.source === 'Auto Detect (hardware)' ? 'CUSTOM' : 'PRESET';
+            document.getElementById('matchPill').textContent = data.source === 'Auto Detect' ? 'AUTO MATCH' : 'PRESET';
             document.getElementById('agePill').textContent = ageOptions.find(a => a.value === data.age).label;
 
-            document.getElementById('sRAM').textContent = data.device.ram + 'GB';
-            document.getElementById('sCPU').textContent = data.device.cpu + ' Cores';
+            // Only show screen specs
             document.getElementById('sRes').textContent = data.device.res;
             document.getElementById('sDPR').textContent = data.device.dpr + 'x';
 
@@ -1971,7 +1941,7 @@
         }
 
         // =========================================================
-        // 11. COPY SETTINGS
+        // 10. COPY SETTINGS
         // =========================================================
         function copySettings() {
             if (!currentResult) { alert('Generate sensitivity first!'); return; }
@@ -2021,7 +1991,7 @@
         }
 
         // =========================================================
-        // 12. RESET GENERATOR
+        // 11. RESET GENERATOR
         // =========================================================
         function resetGenerator() {
             document.getElementById('results').classList.remove('show');
@@ -2045,7 +2015,7 @@
         }
 
         // =========================================================
-        // 13. INIT
+        // 12. INIT
         // =========================================================
         document.addEventListener('DOMContentLoaded', function() {
             renderAgeButtons('searchAgeGrid', 'searchAgeNote', 'search');
@@ -2060,7 +2030,7 @@
         });
 
         // =========================================================
-        // 14. PHANTOM EFFECTS
+        // 13. PHANTOM EFFECTS
         // =========================================================
         (function phantomEffects() {
             const layer = document.getElementById('effect-layer');
@@ -2150,7 +2120,7 @@
         })();
 
         // =========================================================
-        // 15. AUDIO PRELOAD
+        // 14. AUDIO PRELOAD
         // =========================================================
         const audio = document.getElementById('bg-music');
         audio.volume = 0.25;
@@ -2174,7 +2144,7 @@
         document.addEventListener('keydown', resumeAudioContext);
 
         // =========================================================
-        // 16. TYPING INTRO
+        // 15. TYPING INTRO
         // =========================================================
         const introLines = [
             "Welcome to Phantom ・〆 Guild name generator.",
@@ -2273,7 +2243,7 @@
         window.addEventListener('load', typeLine);
 
         // =========================================================
-        // 17. MUSIC – INSTANT PLAY ON INTRO TAP
+        // 16. MUSIC – INSTANT PLAY ON INTRO TAP
         // =========================================================
         let musicStarted = false;
 
@@ -2309,7 +2279,7 @@
         audio.addEventListener('ended', () => { audio.play().catch(() => {}); });
 
         // =========================================================
-        // 18. NAME GENERATOR
+        // 17. NAME GENERATOR
         // =========================================================
         const smallCapsMap = {
             'a': 'ᴀ',
@@ -2377,7 +2347,7 @@
         });
 
         // =========================================================
-        // 19. COPY (iOS/Android friendly)
+        // 18. COPY (iOS/Android friendly)
         // =========================================================
         function copyResult() {
             const resultDisplay = document.getElementById('result');
@@ -2451,7 +2421,7 @@
         });
 
         // =========================================================
-        // 20. BIRDS – ADAPTIVE & OPTIMISED
+        // 19. BIRDS – ADAPTIVE & OPTIMISED
         // =========================================================
         const canvas = document.getElementById('birdCanvas');
         const ctx = canvas.getContext('2d');
