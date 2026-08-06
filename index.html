@@ -20,6 +20,7 @@
             -webkit-overflow-scrolling: touch;
         }
 
+        /* ===== BIRD CANVAS ===== */
         #birdCanvas {
             position: fixed;
             top: 0;
@@ -31,6 +32,7 @@
             isolation: isolate;
         }
 
+        /* ===== WATERMARK ===== */
         #watermark {
             position: fixed;
             bottom: 25px;
@@ -60,6 +62,7 @@
             100% { text-shadow: 0 0 50px rgba(155,109,255,1), 0 0 100px rgba(155,109,255,0.5), 0 0 150px rgba(100,40,180,0.3); border-color: rgba(155,109,255,0.5); }
         }
 
+        /* ===== PHANTOM EFFECTS ===== */
         #effect-layer {
             position: fixed;
             top: 0;
@@ -102,6 +105,7 @@
             border-width: 1px;
         }
 
+        /* ===== INTRO SCREEN ===== */
         #intro-screen {
             position: fixed;
             inset: 0;
@@ -168,6 +172,7 @@
             50% { text-shadow: 0 0 30px #9b6dff, 0 0 60px #4a1a7a; }
         }
 
+        /* ===== MAIN APP ===== */
         #main-app {
             opacity: 0;
             transition: opacity 1.5s ease;
@@ -196,6 +201,7 @@
             overflow: hidden;
         }
 
+        /* ===== GUILD LOGO ===== */
         .logo-wrapper {
             position: relative;
             display: block;
@@ -331,6 +337,7 @@
         .copy-btn:hover { background: rgba(100,40,180,0.4); border-color: #9b6dff; box-shadow: 0 0 20px rgba(100,40,200,0.15); }
         .copy-btn:active { transform: scale(0.95); }
 
+        /* ===== RANDOM NAME SECTION – Freestyle + Normal (Male Only) ===== */
         .random-section {
             margin: 20px 0 15px 0;
             position: relative;
@@ -511,6 +518,10 @@
         }
         .buy-btn:hover { transform: scale(1.03); box-shadow: 0 0 40px rgba(255,107,53,0.5); }
         .buy-btn:active { transform: scale(0.95); }
+
+        /* ========================================================= */
+        /* ===== SENSITIVITY GENERATOR ===== */
+        /* ========================================================= */
 
         .sensitivity-section {
             margin-top: 30px;
@@ -1108,18 +1119,26 @@
 </head>
 <body>
 
+    <!-- ====== WATERMARK ====== -->
     <div id="watermark">✦ FR4NX ✦</div>
+
+    <!-- ====== EFFECT LAYER ====== -->
     <div id="effect-layer"></div>
+
+    <!-- ====== BIRD CANVAS ====== -->
     <canvas id="birdCanvas"></canvas>
 
+    <!-- ====== INTRO SCREEN ====== -->
     <div id="intro-screen">
         <div id="intro-text"></div>
         <div id="click-prompt">✦ Click anywhere to enter ✦</div>
     </div>
 
+    <!-- ====== MAIN APP ====== -->
     <div id="main-app">
         <div class="container">
 
+            <!-- ===== GUILD LOGO ===== -->
             <div class="logo-wrapper">
                 <img class="guild-logo" src="./Guild.png" alt="Phantom Guild" />
             </div>
@@ -1136,6 +1155,7 @@
                 <button class="copy-btn" id="manualCopyBtn">📋 Copy Name</button>
             </div>
 
+            <!-- ===== RANDOM NAME SECTION – Freestyle + Normal (Male Only) ===== -->
             <div class="random-section">
                 <div class="random-header">
                     <button class="random-btn active" id="randomFreestyleBtn" onclick="loadRandomNames('freestyle')">
@@ -1164,6 +1184,9 @@
                 🛒 Buy Free Fire Likes
             </a>
 
+            <!-- ========================================================= -->
+            <!-- ===== SENSITIVITY GENERATOR ===== -->
+            <!-- ========================================================= -->
             <div class="sensitivity-section">
                 <h2>⚙️ Free Fire Sensitivity Generator</h2>
                 <p class="sub-desc">Find the perfect sensitivity for your device – powered by real device data.</p>
@@ -1179,6 +1202,7 @@
                     </button>
                 </div>
 
+                <!-- ===== TAB 1: SEARCH ===== -->
                 <div class="panel active" id="panelSearch">
                     <div class="sens-card">
                         <div class="card-top-line"></div>
@@ -1220,6 +1244,7 @@
                     </div>
                 </div>
 
+                <!-- ===== TAB 2: AUTO DETECT – IMPROVED ===== -->
                 <div class="panel" id="panelAuto">
                     <div class="sens-card">
                         <div class="card-top-line"></div>
@@ -1233,8 +1258,9 @@
                             </div>
                         </div>
 
+                        <!-- ===== HELPER TEXT – CLEAR EXPLANATION ===== -->
                         <p style="color:#b396d9; font-size:0.85rem; margin-bottom:15px; text-align:center; line-height:1.5;">
-                            🔍 Can't find your device? Click <strong>"Detect My Device"</strong> – we'll read your specs and find the closest match.
+                            🔍 Can't find your device? Click <strong>"Detect My Device"</strong> – we'll read your specs and calculate the best sensitivity for you.
                         </p>
 
                         <button class="btn-detect" id="detectBtn" onclick="detectDevice()">
@@ -1265,6 +1291,7 @@
                     </div>
                 </div>
 
+                <!-- ===== RESULTS ===== -->
                 <div class="results" id="results">
                     <div class="sens-card">
                         <div class="card-top-line"></div>
@@ -1508,12 +1535,14 @@
             }
         }
 
+        // Initial load
         loadRandomNames('freestyle');
 
         // =========================================================
-        // 3. SENSITIVITY GENERATOR – DEVICE DATABASE (30+ Devices)
+        // 3. SENSITIVITY GENERATOR – DEVICE DATABASE (UPDATED)
         // =========================================================
         const deviceDatabase = [
+            // APPLE
             { name: "iPhone 6 / 6s", brand: "Apple", ram: 2, cpu: 2, res: "750x1334", dpr: 2, gen: "145", red: "135", twox: "125",
                 fourx: "105", sniper: "55", fire: "35%" },
             { name: "iPhone 7 / 8", brand: "Apple", ram: 2, cpu: 2, res: "750x1334", dpr: 2, gen: "148", red: "138", twox: "128",
@@ -1528,8 +1557,8 @@
                 fourx: "132", sniper: "82", fire: "68%" },
             { name: "iPhone SE (2020/22)", brand: "Apple", ram: 3, cpu: 6, res: "750x1334", dpr: 2, gen: "148", red: "138",
                 twox: "128", fourx: "108", sniper: "58", fire: "55%" },
-            { name: "Galaxy A12/A13", brand: "Samsung", ram: 4, cpu: 4, res: "720x1600", dpr: 1.5, gen: "160", red: "150",
-                twox: "140", fourx: "125", sniper: "75", fire: "40%" },
+
+            // SAMSUNG – updated (removed Galaxy A12/A13)
             { name: "Galaxy A22/A23", brand: "Samsung", ram: 4, cpu: 6, res: "720x1600", dpr: 1.5, gen: "165", red: "155",
                 twox: "145", fourx: "130", sniper: "78", fire: "45%" },
             { name: "Galaxy A32/A33", brand: "Samsung", ram: 6, cpu: 6, res: "1080x2400", dpr: 2.5, gen: "170", red: "160",
@@ -1538,6 +1567,8 @@
                 twox: "155", fourx: "140", sniper: "85", fire: "43%" },
             { name: "Galaxy S Series", brand: "Samsung", ram: 8, cpu: 8, res: "1440x3088", dpr: 3, gen: "185", red: "175",
                 twox: "165", fourx: "150", sniper: "95", fire: "52%" },
+
+            // XIAOMI
             { name: "Redmi 9/10 Series", brand: "Xiaomi", ram: 4, cpu: 4, res: "1080x2400", dpr: 2.5, gen: "180", red: "170",
                 twox: "160", fourx: "145", sniper: "90", fire: "45%" },
             { name: "Redmi Note 11/12", brand: "Xiaomi", ram: 6, cpu: 6, res: "1080x2400", dpr: 2.5, gen: "188", red: "178",
@@ -1546,38 +1577,60 @@
                 twox: "175", fourx: "160", sniper: "105", fire: "47%" },
             { name: "Poco X Series", brand: "Xiaomi", ram: 8, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "200", red: "190",
                 twox: "180", fourx: "165", sniper: "115", fire: "43%" },
+
+            // TECNO
             { name: "Tecno Spark 8/9", brand: "Tecno", ram: 3, cpu: 4, res: "720x1600", dpr: 1.5, gen: "150", red: "140",
                 twox: "130", fourx: "110", sniper: "60", fire: "41%" },
             { name: "Tecno Spark 10/11", brand: "Tecno", ram: 4, cpu: 6, res: "1080x2400", dpr: 2.5, gen: "158", red: "148",
                 twox: "138", fourx: "118", sniper: "68", fire: "43%" },
             { name: "Tecno Camon Series", brand: "Tecno", ram: 6, cpu: 6, res: "1080x2400", dpr: 2.5, gen: "162", red: "152",
                 twox: "142", fourx: "122", sniper: "72", fire: "40%" },
+
+            // INFINIX
             { name: "Infinix Hot Series", brand: "Infinix", ram: 3, cpu: 4, res: "720x1600", dpr: 1.5, gen: "145", red: "135",
                 twox: "125", fourx: "105", sniper: "55", fire: "40%" },
             { name: "Infinix Note Series", brand: "Infinix", ram: 4, cpu: 6, res: "1080x2400", dpr: 2.5, gen: "152", red: "142",
                 twox: "132", fourx: "112", sniper: "62", fire: "42%" },
+
+            // ITEL
             { name: "Itel City / P Series", brand: "Itel", ram: 2, cpu: 2, res: "720x1600", dpr: 1.5, gen: "135", red: "125",
                 twox: "115", fourx: "95", sniper: "45", fire: "33%" },
+
+            // ONEPLUS
             { name: "OnePlus (General)", brand: "OnePlus", ram: 8, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "185", red: "175",
                 twox: "165", fourx: "150", sniper: "100", fire: "45%" },
+
+            // GOOGLE
             { name: "Google Pixel 6/7", brand: "Google", ram: 6, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "170", red: "160",
                 twox: "150", fourx: "130", sniper: "80", fire: "48%" },
             { name: "Google Pixel 8/9", brand: "Google", ram: 8, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "178", red: "168",
                 twox: "158", fourx: "138", sniper: "85", fire: "52%" },
+
+            // NOKIA
             { name: "Nokia G Series", brand: "Nokia", ram: 4, cpu: 4, res: "720x1600", dpr: 1.5, gen: "140", red: "130",
                 twox: "120", fourx: "100", sniper: "50", fire: "36%" },
+
+            // MOTOROLA
             { name: "Motorola G Series", brand: "Motorola", ram: 4, cpu: 6, res: "720x1600", dpr: 1.5, gen: "148", red: "138",
                 twox: "128", fourx: "108", sniper: "58", fire: "40%" },
             { name: "Motorola Edge", brand: "Motorola", ram: 6, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "162", red: "152",
                 twox: "142", fourx: "122", sniper: "72", fire: "45%" },
+
+            // SONY
             { name: "Sony Xperia", brand: "Sony", ram: 6, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "168", red: "158",
                 twox: "148", fourx: "128", sniper: "78", fire: "48%" },
+
+            // HUAWEI
             { name: "Huawei P Series", brand: "Huawei", ram: 6, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "165", red: "155",
                 twox: "145", fourx: "125", sniper: "75", fire: "44%" },
             { name: "Huawei Mate Series", brand: "Huawei", ram: 8, cpu: 8, res: "1220x2712", dpr: 3, gen: "175", red: "165",
                 twox: "155", fourx: "135", sniper: "85", fire: "50%" },
+
+            // NOTHING
             { name: "Nothing Phone (1/2)", brand: "Nothing", ram: 8, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "170", red: "160",
                 twox: "150", fourx: "130", sniper: "80", fire: "46%" },
+
+            // OPPO
             { name: "Oppo Find Series", brand: "Oppo", ram: 8, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "175", red: "165",
                 twox: "155", fourx: "135", sniper: "85", fire: "50%" }
         ];
@@ -1703,7 +1756,7 @@
         }
 
         // =========================================================
-        // 7. AUTO DETECT – PHYSICAL RESOLUTION (ACCURATE)
+        // 7. AUTO DETECT – HARDWARE-BASED (ACCURATE)
         // =========================================================
         function detectDevice() {
             const btn = document.getElementById('detectBtn');
@@ -1714,47 +1767,22 @@
             loader.classList.add('show');
 
             setTimeout(() => {
-                // Read physical specs
                 const ram = navigator.deviceMemory || 4;
                 const cpu = navigator.hardwareConcurrency || 4;
-                const cssWidth = window.screen.width;
-                const cssHeight = window.screen.height;
+                const width = window.screen.width;
+                const height = window.screen.height;
                 const dpr = window.devicePixelRatio || 1;
-                const physWidth = Math.round(cssWidth * dpr);
-                const physHeight = Math.round(cssHeight * dpr);
-                const totalPixels = physWidth * physHeight;
-                const detectedRes = `${physWidth}x${physHeight}`;
 
-                let bestMatch = null;
-                let bestScore = Infinity;
+                // Store detected specs for later use
+                window.detectedSpecs = { ram, cpu, width, height, dpr };
 
-                deviceDatabase.forEach(device => {
-                    const ramDiff = Math.abs(device.ram - ram) / 8 * 100;
-                    const cpuDiff = Math.abs(device.cpu - cpu) / 8 * 100;
-                    const dprDiff = Math.abs(device.dpr - dpr) / 3 * 100;
-                    const devParts = device.res.split('x');
-                    const devPixels = parseInt(devParts[0]) * parseInt(devParts[1]);
-                    const resDiff = Math.abs(devPixels - totalPixels) / 10000000 * 100;
+                // Show detected specs
+                document.getElementById('dpName').textContent = 'Custom Hardware';
+                document.getElementById('dpSpecs').textContent =
+                    `${ram}GB RAM · ${cpu} Cores · ${width}x${height} (${dpr}x) · Auto‑calculated`;
+                panel.classList.add('show');
 
-                    const score = ramDiff * 0.25 + cpuDiff * 0.15 + dprDiff * 0.2 + resDiff * 0.4;
-                    if (score < bestScore) {
-                        bestScore = score;
-                        bestMatch = device;
-                    }
-                });
-
-                if (bestMatch) {
-                    selectedDevice = bestMatch;
-                    isAutoDetect = true;
-
-                    const confidence = Math.round(Math.max(0, 100 - bestScore));
-                    document.getElementById('dpName').textContent = bestMatch.name;
-                    document.getElementById('dpSpecs').textContent =
-                        `${ram}GB RAM · ${cpu} Cores · ${detectedRes} (${dpr}x) · Match: ${confidence}%`;
-                    panel.classList.add('show');
-
-                    renderAgeButtons('autoAgeGrid', 'autoAgeNote', 'auto');
-                }
+                renderAgeButtons('autoAgeGrid', 'autoAgeNote', 'auto');
 
                 loader.classList.remove('show');
                 btn.style.display = 'flex';
@@ -1762,7 +1790,39 @@
         }
 
         // =========================================================
-        // 8. GENERATE SENSITIVITY
+        // 8. HARDWARE-BASED SENSITIVITY CALCULATOR
+        // =========================================================
+        function calculateSensitivityFromSpecs(ram, cpu, width, height, dpr, ageFactor) {
+            const ramScore = Math.min(ram / 12, 1) * 100;
+            const cpuScore = Math.min(cpu / 8, 1) * 100;
+            const pixels = width * height;
+            const resScore = Math.min(pixels / (3840 * 2160), 1) * 100;
+            const dprScore = Math.min(dpr / 3, 1) * 100;
+
+            const hwScore = Math.round((ramScore * 0.35 + cpuScore * 0.25 + resScore * 0.25 + dprScore * 0.15));
+
+            const gen = Math.round(130 + (hwScore / 100) * 70);
+            const red = Math.round(120 + (hwScore / 100) * 70);
+            const twox = Math.round(110 + (hwScore / 100) * 80);
+            const fourx = Math.round(100 + (hwScore / 100) * 70);
+            const sniper = Math.round(50 + (hwScore / 100) * 70);
+            const firePct = Math.round(35 + (hwScore / 100) * 35);
+
+            const factor = ageFactor || 1.0;
+            return {
+                gen: Math.round(gen * factor),
+                red: Math.round(red * factor),
+                twox: Math.round(twox * factor),
+                fourx: Math.round(fourx * factor),
+                sniper: Math.round(sniper * factor),
+                fire: firePct + '%',
+                hwScore: hwScore,
+                ageWear: Math.round((1 - factor) * 100)
+            };
+        }
+
+        // =========================================================
+        // 9. GENERATE SENSITIVITY
         // =========================================================
         function generateFromSearch() {
             if (!selectedDevice) { alert('Please select a device first.'); return; }
@@ -1771,9 +1831,54 @@
         }
 
         function generateFromAuto() {
-            if (!selectedDevice) { alert('Please detect your device first.'); return; }
-            if (selectedAge === null) { alert('Please select your device age.'); return; }
-            generateSensitivity(selectedDevice, selectedAge, 'Auto Detect');
+            if (!window.detectedSpecs) {
+                alert('Please detect your device first.');
+                return;
+            }
+            if (selectedAge === null) {
+                alert('Please select your device age.');
+                return;
+            }
+            const ageFactor = ageOptions.find(a => a.value === selectedAge);
+            const factor = ageFactor ? ageFactor.factor : 1.0;
+
+            const specs = window.detectedSpecs;
+            const result = calculateSensitivityFromSpecs(
+                specs.ram, specs.cpu, specs.width, specs.height, specs.dpr, factor
+            );
+
+            const fakeDevice = {
+                name: `Custom (${specs.ram}GB, ${specs.cpu} cores)`,
+                brand: 'Auto‑Detected',
+                ram: specs.ram,
+                cpu: specs.cpu,
+                res: `${specs.width}x${specs.height}`,
+                dpr: specs.dpr,
+                gen: result.gen,
+                red: result.red,
+                twox: result.twox,
+                fourx: result.fourx,
+                sniper: result.sniper,
+                fire: result.fire
+            };
+
+            currentResult = {
+                device: fakeDevice,
+                age: selectedAge,
+                factor: factor,
+                hwScore: result.hwScore,
+                ageWear: result.ageWear,
+                adjustedScore: Math.round(result.hwScore * factor),
+                gen: result.gen,
+                red: result.red,
+                twox: result.twox,
+                fourx: result.fourx,
+                sniper: result.sniper,
+                fire: result.fire,
+                source: 'Auto Detect (hardware)'
+            };
+
+            displayResults(currentResult);
         }
 
         function generateSensitivity(device, age, source) {
@@ -1814,7 +1919,7 @@
         }
 
         // =========================================================
-        // 9. DISPLAY RESULTS
+        // 10. DISPLAY RESULTS
         // =========================================================
         function displayResults(data) {
             const results = document.getElementById('results');
@@ -1822,7 +1927,7 @@
 
             document.getElementById('devName').textContent = data.device.name;
             document.getElementById('osLine').textContent = `Detected via ${data.source} · ${data.device.brand}`;
-            document.getElementById('matchPill').textContent = data.source === 'Auto Detect' ? 'AUTO MATCH' : 'PRESET';
+            document.getElementById('matchPill').textContent = data.source === 'Auto Detect (hardware)' ? 'CUSTOM' : 'PRESET';
             document.getElementById('agePill').textContent = ageOptions.find(a => a.value === data.age).label;
 
             document.getElementById('sRAM').textContent = data.device.ram + 'GB';
@@ -1866,7 +1971,7 @@
         }
 
         // =========================================================
-        // 10. COPY SETTINGS
+        // 11. COPY SETTINGS
         // =========================================================
         function copySettings() {
             if (!currentResult) { alert('Generate sensitivity first!'); return; }
@@ -1916,7 +2021,7 @@
         }
 
         // =========================================================
-        // 11. RESET GENERATOR
+        // 12. RESET GENERATOR
         // =========================================================
         function resetGenerator() {
             document.getElementById('results').classList.remove('show');
@@ -1940,7 +2045,7 @@
         }
 
         // =========================================================
-        // 12. INIT
+        // 13. INIT
         // =========================================================
         document.addEventListener('DOMContentLoaded', function() {
             renderAgeButtons('searchAgeGrid', 'searchAgeNote', 'search');
@@ -1955,7 +2060,7 @@
         });
 
         // =========================================================
-        // 13. PHANTOM EFFECTS
+        // 14. PHANTOM EFFECTS
         // =========================================================
         (function phantomEffects() {
             const layer = document.getElementById('effect-layer');
@@ -2045,7 +2150,7 @@
         })();
 
         // =========================================================
-        // 14. AUDIO PRELOAD
+        // 15. AUDIO PRELOAD
         // =========================================================
         const audio = document.getElementById('bg-music');
         audio.volume = 0.25;
@@ -2069,7 +2174,7 @@
         document.addEventListener('keydown', resumeAudioContext);
 
         // =========================================================
-        // 15. TYPING INTRO
+        // 16. TYPING INTRO
         // =========================================================
         const introLines = [
             "Welcome to Phantom ・〆 Guild name generator.",
@@ -2168,7 +2273,7 @@
         window.addEventListener('load', typeLine);
 
         // =========================================================
-        // 16. MUSIC – INSTANT PLAY ON INTRO TAP
+        // 17. MUSIC – INSTANT PLAY ON INTRO TAP
         // =========================================================
         let musicStarted = false;
 
@@ -2204,7 +2309,7 @@
         audio.addEventListener('ended', () => { audio.play().catch(() => {}); });
 
         // =========================================================
-        // 17. NAME GENERATOR
+        // 18. NAME GENERATOR
         // =========================================================
         const smallCapsMap = {
             'a': 'ᴀ',
@@ -2272,7 +2377,7 @@
         });
 
         // =========================================================
-        // 18. COPY (iOS/Android friendly)
+        // 19. COPY (iOS/Android friendly)
         // =========================================================
         function copyResult() {
             const resultDisplay = document.getElementById('result');
@@ -2346,7 +2451,7 @@
         });
 
         // =========================================================
-        // 19. BIRDS
+        // 20. BIRDS – ADAPTIVE & OPTIMISED
         // =========================================================
         const canvas = document.getElementById('birdCanvas');
         const ctx = canvas.getContext('2d');
