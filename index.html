@@ -20,6 +20,7 @@
             -webkit-overflow-scrolling: touch;
         }
 
+        /* ===== BIRD CANVAS ===== */
         #birdCanvas {
             position: fixed;
             top: 0;
@@ -31,6 +32,7 @@
             isolation: isolate;
         }
 
+        /* ===== WATERMARK ===== */
         #watermark {
             position: fixed;
             bottom: 25px;
@@ -60,6 +62,7 @@
             100% { text-shadow: 0 0 50px rgba(155,109,255,1), 0 0 100px rgba(155,109,255,0.5), 0 0 150px rgba(100,40,180,0.3); border-color: rgba(155,109,255,0.5); }
         }
 
+        /* ===== PHANTOM EFFECTS ===== */
         #effect-layer {
             position: fixed;
             top: 0;
@@ -102,6 +105,7 @@
             border-width: 1px;
         }
 
+        /* ===== INTRO SCREEN ===== */
         #intro-screen {
             position: fixed;
             inset: 0;
@@ -168,6 +172,7 @@
             50% { text-shadow: 0 0 30px #9b6dff, 0 0 60px #4a1a7a; }
         }
 
+        /* ===== MAIN APP ===== */
         #main-app {
             opacity: 0;
             transition: opacity 1.5s ease;
@@ -196,6 +201,7 @@
             overflow: hidden;
         }
 
+        /* ===== GUILD LOGO ===== */
         .logo-wrapper {
             position: relative;
             display: block;
@@ -500,6 +506,10 @@
         .buy-btn:hover { transform: scale(1.03); box-shadow: 0 0 40px rgba(255,107,53,0.5); }
         .buy-btn:active { transform: scale(0.95); }
 
+        /* ========================================================= */
+        /* ===== SENSITIVITY GENERATOR – Full Feature Set ===== */
+        /* ========================================================= */
+
         .sensitivity-section {
             margin-top: 30px;
             padding-top: 20px;
@@ -518,14 +528,108 @@
             margin-bottom: 20px;
             font-size: 0.9rem;
         }
-        .device-search-wrap {
-            position: relative;
-            max-width: 400px;
-            margin: 0 auto 20px;
+
+        /* Tab Switcher */
+        .tab-switcher {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
-        .device-search-wrap input {
+        .tab-btn {
+            padding: 10px 25px;
+            border-radius: 60px;
+            border: 1px solid rgba(150,100,220,0.2);
+            background: rgba(0,0,0,0.3);
+            color: #b396d9;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            font-weight: 600;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .tab-btn:hover {
+            border-color: #9b6dff;
+            color: #f2e9ff;
+        }
+        .tab-btn.active {
+            background: rgba(100,40,180,0.3);
+            border-color: #9b6dff;
+            color: #f2e9ff;
+            box-shadow: 0 0 30px rgba(100,40,200,0.15);
+        }
+        .tab-btn svg {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+
+        .panel { display: none; }
+        .panel.active { display: block; }
+
+        /* Cards */
+        .sens-card {
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 30px;
+            border: 1px solid rgba(150,100,220,0.2);
+            padding: 25px 20px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .sens-card .card-top-line {
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(90deg, #9b6dff, #6a2faf);
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .sens-card .card-head {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        .sens-card .card-ico {
+            width: 40px;
+            height: 40px;
+            background: rgba(100,40,180,0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #9b6dff;
+        }
+        .sens-card .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #f2e9ff;
+        }
+        .sens-card .card-sub {
+            font-size: 0.8rem;
+            color: #b396d9;
+        }
+
+        /* Device Search */
+        .search-wrap {
+            position: relative;
             width: 100%;
-            padding: 14px 20px;
+        }
+        .search-wrap .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6a4a8a;
+        }
+        .search-wrap .search-input {
+            width: 100%;
+            padding: 14px 20px 14px 48px;
             border-radius: 60px;
             border: 1px solid rgba(150,100,220,0.3);
             background: rgba(0,0,0,0.4);
@@ -535,11 +639,26 @@
             transition: 0.3s;
             -webkit-appearance: none;
         }
-        .device-search-wrap input:focus {
+        .search-wrap .search-input:focus {
             border-color: #9b6dff;
             box-shadow: 0 0 25px rgba(120,60,220,0.2);
         }
-        .device-list-dropdown {
+        .search-wrap .search-clear {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #6a4a8a;
+            cursor: pointer;
+            padding: 4px;
+            display: none;
+        }
+        .search-wrap .search-clear.show { display: block; }
+        .search-wrap .search-clear:hover { color: #b396d9; }
+
+        .dropdown {
             max-height: 200px;
             overflow-y: auto;
             background: rgba(20,10,30,0.95);
@@ -553,76 +672,390 @@
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
         }
-        .device-list-dropdown div {
+        .dropdown.show { display: block; }
+        .dropdown div {
             padding: 12px 20px;
             color: #c4a8f0;
             cursor: pointer;
             border-bottom: 1px solid rgba(150,100,220,0.1);
             transition: 0.2s;
         }
-        .device-list-dropdown div:hover {
+        .dropdown div:hover {
             background: rgba(100,40,180,0.2);
         }
-        .sensitivity-result {
-            background: rgba(0,0,0,0.3);
-            border-radius: 30px;
-            padding: 25px;
-            border: 1px solid rgba(150,100,220,0.2);
-            display: none;
-            margin-top: 15px;
-        }
-        .sensitivity-result .result-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .sensitivity-result .result-header h3 {
-            color: #f2e9ff;
-            font-size: 1.3rem;
-        }
-        .sensitivity-result .result-header span {
-            color: #b396d9;
-            font-size: 0.8rem;
-        }
-        .sensitivity-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-        .sensitivity-grid .sens-item span:first-child {
-            color: #7a5a9a;
-            display: block;
-            font-size: 0.8rem;
-        }
-        .sensitivity-grid .sens-item span:last-child {
-            color: #b3ff9b;
-            font-size: 1.8rem;
-            font-weight: 700;
-        }
 
-        /* ===== REQUEST DEVICE – WHATSAPP LINK WITH PREFILL ===== */
-        .request-device-btn {
-            display: inline-block;
-            margin-top: 12px;
-            padding: 10px 25px;
-            background: rgba(37, 211, 102, 0.2);
-            border: 1px solid rgba(37, 211, 102, 0.3);
-            color: #25D366;
+        .selected-device {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            background: rgba(100,40,180,0.15);
+            border: 1px solid rgba(150,100,220,0.25);
+            border-radius: 30px;
+            padding: 12px 20px;
+            margin-top: 15px;
+        }
+        .selected-device.show { display: flex; }
+        .selected-device .sd-name {
+            color: #f2e9ff;
+            font-weight: 600;
+            flex: 1;
+        }
+        .selected-device .sd-clear {
+            background: none;
+            border: none;
+            color: #6a4a8a;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .selected-device .sd-clear:hover { color: #ff6b6b; }
+
+        /* Detect Button */
+        .btn-detect {
+            width: 100%;
+            padding: 16px;
             border-radius: 60px;
-            font-size: 0.9rem;
+            border: none;
+            background: linear-gradient(135deg, #6c2bb3, #3b1470);
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
             cursor: pointer;
             transition: 0.3s;
+            box-shadow: 0 0 30px rgba(100,40,200,0.2);
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-detect:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 50px rgba(130,50,220,0.4);
+        }
+        .btn-detect:active { transform: scale(0.98); }
+        .btn-detect .pulse {
+            width: 10px;
+            height: 10px;
+            background: #66ff33;
+            border-radius: 50%;
+            animation: pulse 1.5s ease-in-out infinite;
+            display: inline-block;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        .loader.show { display: block; }
+        .loader .ring {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(100,40,180,0.1);
+            border-top-color: #9b6dff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 10px;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .loader .loader-label {
+            color: #b396d9;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+        }
+
+        .detected-panel {
+            display: none;
+            background: rgba(100,40,180,0.1);
+            border: 1px solid rgba(150,100,220,0.2);
+            border-radius: 20px;
+            padding: 15px 20px;
+            margin-top: 15px;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .detected-panel.show { display: flex; }
+        .detected-panel .dp-name { color: #f2e9ff; font-weight: 600; }
+        .detected-panel .dp-specs { color: #b396d9; font-size: 0.8rem; }
+        .detected-panel .dp-check { color: #66ff33; }
+
+        /* Age Section */
+        .age-section {
+            margin-top: 20px;
+        }
+        .age-section-title {
+            color: #b396d9;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
             letter-spacing: 1px;
-            text-decoration: none;
-            -webkit-tap-highlight-color: transparent;
         }
-        .request-device-btn:hover {
-            background: rgba(37, 211, 102, 0.3);
-            border-color: #25D366;
-            box-shadow: 0 0 20px rgba(37, 211, 102, 0.2);
+        .age-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
         }
+        .age-btn {
+            padding: 10px 12px;
+            border-radius: 30px;
+            border: 1px solid rgba(150,100,220,0.2);
+            background: rgba(0,0,0,0.3);
+            color: #b396d9;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+        .age-btn:hover { border-color: #9b6dff; color: #f2e9ff; }
+        .age-btn.active {
+            background: rgba(100,40,180,0.3);
+            border-color: #9b6dff;
+            color: #f2e9ff;
+            box-shadow: 0 0 20px rgba(100,40,200,0.15);
+        }
+        .age-note {
+            color: #6a4a8a;
+            font-size: 0.7rem;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        .btn-generate {
+            width: 100%;
+            padding: 16px;
+            border-radius: 60px;
+            border: none;
+            background: linear-gradient(135deg, #ff6b35, #e63946);
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 30px rgba(255,107,53,0.2);
+            letter-spacing: 2px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-generate:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 50px rgba(255,107,53,0.4);
+        }
+        .btn-generate:active { transform: scale(0.98); }
+
+        /* Results */
+        .results {
+            display: none;
+            margin-top: 20px;
+        }
+        .results.show { display: block; }
+
+        .device-banner {
+            background: rgba(100,40,180,0.1);
+            border-radius: 20px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-left: 3px solid #9b6dff;
+        }
+        .device-banner .device-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #f2e9ff;
+        }
+        .device-banner .device-meta {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+            flex-wrap: wrap;
+        }
+        .device-banner .match-pill {
+            background: rgba(100,40,180,0.2);
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            color: #b396d9;
+        }
+        .device-banner .age-pill {
+            background: rgba(255,107,53,0.15);
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            color: #ff6b35;
+        }
+
+        .specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .spec-box {
+            background: rgba(0,0,0,0.2);
+            border-radius: 15px;
+            padding: 10px;
+            text-align: center;
+        }
+        .spec-box .spec-lbl {
+            color: #6a4a8a;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .spec-box .spec-val {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+        .spec-box .spec-val.ora { color: #ff9f43; }
+        .spec-box .spec-val.cya { color: #00d2d3; }
+
+        .perf-wrap, .age-impact {
+            margin-bottom: 12px;
+        }
+        .perf-lbl, .ai-lbl {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #6a4a8a;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .perf-lbl span:last-child, .ai-lbl span:last-child {
+            font-weight: 700;
+        }
+        .perf-track, .ai-track {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .perf-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b35, #ff9f43);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.6s ease;
+        }
+        .ai-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd93d, #ff6b35);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.6s ease;
+        }
+
+        .sensi-list {
+            margin: 15px 0;
+        }
+        .sensi-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .sensi-row .sensi-label {
+            color: #b396d9;
+            font-size: 0.9rem;
+        }
+        .sensi-row .sensi-value {
+            color: #b3ff9b;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .disclaimer {
+            font-size: 0.7rem;
+            color: #6a4a8a;
+            padding: 12px 0;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            margin-top: 10px;
+        }
+        .disclaimer strong { color: #b396d9; }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        .btn-action {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 60px;
+            border: 1px solid rgba(150,100,220,0.2);
+            background: rgba(0,0,0,0.3);
+            color: #c4a8f0;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-width: 120px;
+        }
+        .btn-action:hover {
+            border-color: #9b6dff;
+            background: rgba(100,40,180,0.2);
+        }
+        .btn-action.btn-copy:hover {
+            border-color: #66ff33;
+            color: #b3ff9b;
+        }
+        .btn-action.btn-reset:hover {
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+        }
+
+        .copy-ok {
+            display: none;
+            color: #b3ff9b;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        .copy-ok.show { display: block; }
+
+        /* Tips */
+        .tip-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .tip {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .tip .tip-n {
+            min-width: 28px;
+            height: 28px;
+            background: rgba(100,40,180,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #9b6dff;
+            flex-shrink: 0;
+        }
+        .tip .tip-t {
+            color: #b396d9;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        .tip .tip-t strong { color: #f2e9ff; }
 
         .active-counters {
             margin-top: 20px;
@@ -673,25 +1106,38 @@
             .guild-logo { height: auto; }
             .buy-btn { padding: 12px 24px; font-size: 1rem; width: 100%; }
             .active-counters { font-size: 0.6rem; }
-            .sensitivity-grid { grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); }
-            .sensitivity-grid .sens-item span:last-child { font-size: 1.4rem; }
+            .tab-btn { padding: 8px 16px; font-size: 0.8rem; }
+            .sens-card { padding: 18px 15px; }
+            .specs { grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); }
+            .spec-box .spec-val { font-size: 0.9rem; }
+            .sensi-row .sensi-value { font-size: 0.95rem; }
+            .actions { flex-direction: column; }
+            .btn-action { min-width: unset; }
         }
     </style>
 </head>
 <body>
 
+    <!-- ====== WATERMARK ====== -->
     <div id="watermark">✦ FR4NX ✦</div>
+
+    <!-- ====== EFFECT LAYER ====== -->
     <div id="effect-layer"></div>
+
+    <!-- ====== BIRD CANVAS ====== -->
     <canvas id="birdCanvas"></canvas>
 
+    <!-- ====== INTRO SCREEN ====== -->
     <div id="intro-screen">
         <div id="intro-text"></div>
         <div id="click-prompt">✦ Click anywhere to enter ✦</div>
     </div>
 
+    <!-- ====== MAIN APP ====== -->
     <div id="main-app">
         <div class="container">
 
+            <!-- ===== GUILD LOGO ===== -->
             <div class="logo-wrapper">
                 <img class="guild-logo" src="./Guild.png" alt="Phantom Guild" />
             </div>
@@ -733,38 +1179,191 @@
             </a>
 
             <!-- ========================================================= -->
-            <!-- ===== SENSITIVITY GENERATOR – 30+ DEVICES ===== -->
+            <!-- ===== SENSITIVITY GENERATOR – Full Integration ===== -->
             <!-- ========================================================= -->
             <div class="sensitivity-section">
                 <h2>⚙️ Free Fire Sensitivity Generator</h2>
-                <p class="sub-desc">Select your device for the best sensitivity &amp; fire button size.</p>
+                <p class="sub-desc">Find the perfect sensitivity for your device – powered by real device data.</p>
 
-                <div class="device-search-wrap">
-                    <input type="text" id="deviceSearch" placeholder="Search for your device..." onkeyup="filterDevices()" />
-                    <div class="device-list-dropdown" id="deviceList"></div>
+                <div class="tab-switcher">
+                    <button class="tab-btn active" id="tabSearch" onclick="switchTab('search')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                        Search Device
+                    </button>
+                    <button class="tab-btn" id="tabAuto" onclick="switchTab('auto')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M12 2a10 10 0 0 1 7.07 17.07"/><path d="M12 6a6 6 0 0 1 4.24 10.24"/><path d="M12 10a2 2 0 0 1 1.41 3.41"/></svg>
+                        Auto Detect
+                    </button>
                 </div>
 
-                <div class="sensitivity-result" id="sensitivityResult">
-                    <div class="result-header">
-                        <h3 id="selectedDeviceName">Device Name</h3>
-                        <span>Recommended Settings</span>
-                    </div>
-                    <div class="sensitivity-grid">
-                        <div class="sens-item"><span>General</span><span id="sGen">-</span></div>
-                        <div class="sens-item"><span>Red Dot</span><span id="sRed">-</span></div>
-                        <div class="sens-item"><span>2x Scope</span><span id="s2x">-</span></div>
-                        <div class="sens-item"><span>4x Scope</span><span id="s4x">-</span></div>
-                        <div class="sens-item"><span>Sniper</span><span id="sSnip">-</span></div>
-                        <div class="sens-item"><span>🔥 Fire Button</span><span id="sFire">-</span></div>
+                <!-- ===== TAB 1: SEARCH ===== -->
+                <div class="panel active" id="panelSearch">
+                    <div class="sens-card">
+                        <div class="card-top-line"></div>
+                        <div class="card-head">
+                            <div class="card-ico">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                            </div>
+                            <div>
+                                <div class="card-title">Search Your Device</div>
+                                <div class="card-sub">Type brand or model — e.g. "iPhone", "Samsung A", "Redmi"</div>
+                            </div>
+                        </div>
+                        <div class="search-wrap">
+                            <span class="search-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                            </span>
+                            <input class="search-input" id="searchInput" type="text" placeholder="Type device name..." oninput="filterDevices(this.value)" autocomplete="off" />
+                            <button class="search-clear" id="searchClear" onclick="clearSearch()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
+                            <div class="dropdown" id="dropdown"></div>
+                        </div>
+                        <div class="selected-device" id="selectedDevice">
+                            <span style="font-size:20px">📱</span>
+                            <span class="sd-name" id="sdName">—</span>
+                            <button class="sd-clear" onclick="clearSelection()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
+                        </div>
+                        <div class="age-section" id="searchAgeSection">
+                            <p class="age-section-title">📅 How old is your device?</p>
+                            <div class="age-grid" id="searchAgeGrid"></div>
+                            <div class="age-note" id="searchAgeNote">Select age to adjust for lag and performance loss.</div>
+                            <button class="btn-generate" id="searchGenerateBtn" onclick="generateFromSearch()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                                GENERATE SENSITIVITY
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- ===== REQUEST DEVICE – WHATSAPP WITH PREFILL ===== -->
-                <div style="margin-top: 15px;">
-                    <a href="https://wa.me/2348141516162?text=PLS%20ADD%20DEVICE" target="_blank" class="request-device-btn">
-                        📱 Device not listed? Request it on WhatsApp
-                    </a>
-                    <p style="color:#6a4a8a; font-size:0.65rem; margin-top:6px;">Tap to send "PLS ADD DEVICE" – we'll add your device within 24 hours.</p>
+                <!-- ===== TAB 2: AUTO DETECT ===== -->
+                <div class="panel" id="panelAuto">
+                    <div class="sens-card">
+                        <div class="card-top-line"></div>
+                        <div class="card-head">
+                            <div class="card-ico">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M12 2a10 10 0 0 1 7.07 17.07"/><path d="M12 6a6 6 0 0 1 4.24 10.24"/><path d="M12 10a2 2 0 0 1 1.41 3.41"/></svg>
+                            </div>
+                            <div>
+                                <div class="card-title">Auto Device Scanner</div>
+                                <div class="card-sub">Reads RAM, CPU cores &amp; screen specs from your browser</div>
+                            </div>
+                        </div>
+                        <button class="btn-detect" id="detectBtn" onclick="detectDevice()">
+                            <span class="pulse"></span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><rect width="7" height="5" x="7" y="7" rx="1"/><rect width="7" height="5" x="10" y="12" rx="1"/></svg>
+                            DETECT MY DEVICE
+                        </button>
+                        <div class="loader" id="loader">
+                            <div class="ring"></div>
+                            <div class="loader-label">SCANNING DEVICE...</div>
+                        </div>
+                        <div class="detected-panel" id="detectedPanel">
+                            <div>
+                                <div class="dp-name" id="dpName">—</div>
+                                <div class="dp-specs" id="dpSpecs">—</div>
+                            </div>
+                            <div class="dp-check">✅</div>
+                        </div>
+                        <div class="age-section" id="autoAgeSection">
+                            <p class="age-section-title">📅 How old is your device?</p>
+                            <div class="age-grid" id="autoAgeGrid"></div>
+                            <div class="age-note" id="autoAgeNote">Select age to adjust for lag and performance loss.</div>
+                            <button class="btn-generate" id="autoGenerateBtn" onclick="generateFromAuto()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                                GENERATE SENSITIVITY
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== RESULTS ===== -->
+                <div class="results" id="results">
+                    <div class="sens-card">
+                        <div class="card-top-line"></div>
+                        <div class="card-head">
+                            <div class="card-ico">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+                            </div>
+                            <div>
+                                <div class="card-title">Device Profile</div>
+                                <div class="card-sub" id="osLine">—</div>
+                            </div>
+                        </div>
+                        <div class="device-banner">
+                            <div>
+                                <div class="device-name" id="devName">—</div>
+                                <div class="device-meta">
+                                    <span class="match-pill" id="matchPill">PRESET</span>
+                                    <span class="age-pill" id="agePill">—</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="specs">
+                            <div class="spec-box"><div class="spec-lbl">RAM</div><div class="spec-val ora" id="sRAM">—</div></div>
+                            <div class="spec-box"><div class="spec-lbl">CPU Cores</div><div class="spec-val ora" id="sCPU">—</div></div>
+                            <div class="spec-box"><div class="spec-lbl">Resolution</div><div class="spec-val cya" id="sRes">—</div></div>
+                            <div class="spec-box"><div class="spec-lbl">Pixel Ratio</div><div class="spec-val cya" id="sDPR">—</div></div>
+                        </div>
+                        <div class="perf-wrap">
+                            <div class="perf-lbl"><span>HARDWARE SCORE</span><span id="perfPct" style="color:#ff9f43;">0</span></div>
+                            <div class="perf-track"><div class="perf-fill" id="perfFill"></div></div>
+                        </div>
+                        <div class="age-impact">
+                            <div class="ai-lbl"><span>AGE WEAR FACTOR</span><span id="agePct" style="color:#ffd93d;">0%</span></div>
+                            <div class="ai-track"><div class="ai-fill" id="ageFill"></div></div>
+                        </div>
+                    </div>
+
+                    <div class="sens-card">
+                        <div class="card-top-line"></div>
+                        <div class="card-head">
+                            <div class="card-ico">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3z"/></svg>
+                            </div>
+                            <div>
+                                <div class="card-title">Sensitivity Settings</div>
+                                <div class="card-sub">Apply in FF → Settings → Sensitivity</div>
+                            </div>
+                        </div>
+                        <div class="sensi-list" id="sensiList"></div>
+                        <div class="disclaimer">
+                            <strong>⚠️ Note:</strong> These are <strong>starting-point estimates</strong> based on device tier &amp; age. Use Training Mode to fine-tune.
+                        </div>
+                        <div class="actions">
+                            <button class="btn-action btn-copy" id="copyBtn" onclick="copySettings()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                                COPY SETTINGS
+                            </button>
+                            <button class="btn-action btn-reset" onclick="resetGenerator()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+                                RESET
+                            </button>
+                        </div>
+                        <div class="copy-ok" id="copyOk">✅ COPIED TO CLIPBOARD!</div>
+                    </div>
+
+                    <div class="sens-card">
+                        <div class="card-top-line"></div>
+                        <div class="card-head">
+                            <div class="card-ico">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                            </div>
+                            <div>
+                                <div class="card-title">How To Use These</div>
+                                <div class="card-sub">Make them actually work for you</div>
+                            </div>
+                        </div>
+                        <div class="tip-list">
+                            <div class="tip"><div class="tip-n">1</div><div class="tip-t"><strong>Apply in-game:</strong> Free Fire → Settings → Sensitivity and enter these values exactly.</div></div>
+                            <div class="tip"><div class="tip-n">2</div><div class="tip-t"><strong>Test in Training Mode</strong> for 15+ minutes before ranked — your muscle memory needs to adjust.</div></div>
+                            <div class="tip"><div class="tip-n">3</div><div class="tip-t"><strong>Older devices get lower values</strong> — this compensates for lag, thermal throttling and reduced touch response over time.</div></div>
+                            <div class="tip"><div class="tip-n">4</div><div class="tip-t"><strong>Tweak ±5 at a time.</strong> Too slow? Raise General by 5. Too shaky? Lower it by 5.</div></div>
+                            <div class="tip"><div class="tip-n">5</div><div class="tip-t"><strong>These are not magic numbers.</strong> Pro players on the same phone use very different values — find what works for you.</div></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -787,9 +1386,9 @@
     </audio>
 
     <script>
-        // =============================================
-        // ACTIVE COUNTERS
-        // =============================================
+        // =========================================================
+        // 1. ACTIVE COUNTERS
+        // =========================================================
         (function activeCounters() {
             const visitEl = document.getElementById('visitCount');
             const onlineEl = document.getElementById('onlineCount');
@@ -815,117 +1414,480 @@
             setInterval(updateOnline, 8000);
         })();
 
-        // =============================================
-        // SENSITIVITY GENERATOR – 30+ Devices (MAX 200)
-        // =============================================
-        const sensitivityData = [
-            // APPLE / iPhone
-            { name: "iPhone 6 / 6s", brand: "Apple", gen: "150", red: "140", twox: "130", fourx: "110", sniper: "60", fire: "35%" },
-            { name: "iPhone 7 / 8", brand: "Apple", gen: "155", red: "145", twox: "135", fourx: "115", sniper: "65", fire: "43%" },
-            { name: "iPhone X / XS", brand: "Apple", gen: "160", red: "150", twox: "140", fourx: "120", sniper: "70", fire: "47%" },
-            { name: "iPhone 11", brand: "Apple", gen: "165", red: "155", twox: "145", fourx: "125", sniper: "75", fire: "47%" },
-            { name: "iPhone 12 / 13", brand: "Apple", gen: "170", red: "160", twox: "150", fourx: "130", sniper: "80", fire: "65%" },
-            { name: "iPhone 14 / 15", brand: "Apple", gen: "175", red: "165", twox: "155", fourx: "135", sniper: "85", fire: "68%" },
-            { name: "iPhone SE (2020/22)", brand: "Apple", gen: "150", red: "140", twox: "130", fourx: "110", sniper: "60", fire: "55%" },
+        // =========================================================
+        // 2. SENSITIVITY GENERATOR – DEVICE DATABASE (30+ Devices)
+        // =========================================================
+        const deviceDatabase = [
+            // APPLE
+            { name: "iPhone 6 / 6s", brand: "Apple", ram: 2, cpu: 2, res: "750x1334", dpr: 2, gen: "145", red: "135", twox: "125", fourx: "105", sniper: "55", fire: "35%" },
+            { name: "iPhone 7 / 8", brand: "Apple", ram: 2, cpu: 2, res: "750x1334", dpr: 2, gen: "148", red: "138", twox: "128", fourx: "108", sniper: "58", fire: "43%" },
+            { name: "iPhone X / XS", brand: "Apple", ram: 3, cpu: 6, res: "1125x2436", dpr: 3, gen: "155", red: "145", twox: "135", fourx: "115", sniper: "65", fire: "47%" },
+            { name: "iPhone 11", brand: "Apple", ram: 4, cpu: 6, res: "828x1792", dpr: 2, gen: "160", red: "150", twox: "140", fourx: "120", sniper: "70", fire: "47%" },
+            { name: "iPhone 12 / 13", brand: "Apple", ram: 4, cpu: 6, res: "1170x2532", dpr: 3, gen: "168", red: "158", twox: "148", fourx: "128", sniper: "78", fire: "65%" },
+            { name: "iPhone 14 / 15", brand: "Apple", ram: 6, cpu: 6, res: "1170x2532", dpr: 3, gen: "172", red: "162", twox: "152", fourx: "132", sniper: "82", fire: "68%" },
+            { name: "iPhone SE (2020/22)", brand: "Apple", ram: 3, cpu: 6, res: "750x1334", dpr: 2, gen: "148", red: "138", twox: "128", fourx: "108", sniper: "58", fire: "55%" },
 
             // SAMSUNG
-            { name: "Samsung Galaxy A12/A13", brand: "Samsung", gen: "160", red: "150", twox: "140", fourx: "125", sniper: "75", fire: "40%" },
-            { name: "Samsung Galaxy A22/A23", brand: "Samsung", gen: "165", red: "155", twox: "145", fourx: "130", sniper: "80", fire: "45%" },
-            { name: "Samsung Galaxy A32/A33", brand: "Samsung", gen: "170", red: "160", twox: "150", fourx: "135", sniper: "85", fire: "60%" },
-            { name: "Samsung Galaxy A52/A53", brand: "Samsung", gen: "175", red: "165", twox: "155", fourx: "140", sniper: "90", fire: "43%" },
-            { name: "Samsung Galaxy S Series", brand: "Samsung", gen: "180", red: "170", twox: "160", fourx: "145", sniper: "95", fire: "52%" },
+            { name: "Galaxy A12/A13", brand: "Samsung", ram: 4, cpu: 4, res: "720x1600", dpr: 1.5, gen: "160", red: "150", twox: "140", fourx: "125", sniper: "75", fire: "40%" },
+            { name: "Galaxy A22/A23", brand: "Samsung", ram: 4, cpu: 6, res: "720x1600", dpr: 1.5, gen: "165", red: "155", twox: "145", fourx: "130", sniper: "78", fire: "45%" },
+            { name: "Galaxy A32/A33", brand: "Samsung", ram: 6, cpu: 6, res: "1080x2400", dpr: 2.5, gen: "170", red: "160", twox: "150", fourx: "135", sniper: "82", fire: "60%" },
+            { name: "Galaxy A52/A53", brand: "Samsung", ram: 6, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "175", red: "165", twox: "155", fourx: "140", sniper: "85", fire: "43%" },
+            { name: "Galaxy S Series", brand: "Samsung", ram: 8, cpu: 8, res: "1440x3088", dpr: 3, gen: "185", red: "175", twox: "165", fourx: "150", sniper: "95", fire: "52%" },
 
-            // XIAOMI / POCO / REDMI
-            { name: "Redmi 9/10 Series", brand: "Xiaomi", gen: "185", red: "175", twox: "165", fourx: "150", sniper: "100", fire: "45%" },
-            { name: "Redmi Note 11/12", brand: "Xiaomi", gen: "190", red: "180", twox: "170", fourx: "155", sniper: "105", fire: "43%" },
-            { name: "Redmi Note 13/14", brand: "Xiaomi", gen: "195", red: "185", twox: "175", fourx: "160", sniper: "110", fire: "47%" },
-            { name: "Poco X Series", brand: "Xiaomi", gen: "200", red: "190", twox: "180", fourx: "165", sniper: "115", fire: "43%" },
+            // XIAOMI
+            { name: "Redmi 9/10 Series", brand: "Xiaomi", ram: 4, cpu: 4, res: "1080x2400", dpr: 2.5, gen: "180", red: "170", twox: "160", fourx: "145", sniper: "90", fire: "45%" },
+            { name: "Redmi Note 11/12", brand: "Xiaomi", ram: 6, cpu: 6, res: "1080x2400", dpr: 2.5, gen: "188", red: "178", twox: "168", fourx: "153", sniper: "95", fire: "43%" },
+            { name: "Redmi Note 13/14", brand: "Xiaomi", ram: 8, cpu: 8, res: "1220x2712", dpr: 3, gen: "195", red: "185", twox: "175", fourx: "160", sniper: "105", fire: "47%" },
+            { name: "Poco X Series", brand: "Xiaomi", ram: 8, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "200", red: "190", twox: "180", fourx: "165", sniper: "115", fire: "43%" },
 
             // TECNO
-            { name: "Tecno Spark 8/9", brand: "Tecno", gen: "155", red: "145", twox: "135", fourx: "115", sniper: "65", fire: "41%" },
-            { name: "Tecno Spark 10/11", brand: "Tecno", gen: "160", red: "150", twox: "140", fourx: "120", sniper: "70", fire: "43%" },
-            { name: "Tecno Camon Series", brand: "Tecno", gen: "165", red: "155", twox: "145", fourx: "125", sniper: "75", fire: "40%" },
+            { name: "Tecno Spark 8/9", brand: "Tecno", ram: 3, cpu: 4, res: "720x1600", dpr: 1.5, gen: "150", red: "140", twox: "130", fourx: "110", sniper: "60", fire: "41%" },
+            { name: "Tecno Spark 10/11", brand: "Tecno", ram: 4, cpu: 6, res: "1080x2400", dpr: 2.5, gen: "158", red: "148", twox: "138", fourx: "118", sniper: "68", fire: "43%" },
+            { name: "Tecno Camon Series", brand: "Tecno", ram: 6, cpu: 6, res: "1080x2400", dpr: 2.5, gen: "162", red: "152", twox: "142", fourx: "122", sniper: "72", fire: "40%" },
 
             // INFINIX
-            { name: "Infinix Hot Series", brand: "Infinix", gen: "150", red: "140", twox: "130", fourx: "110", sniper: "60", fire: "40%" },
-            { name: "Infinix Note Series", brand: "Infinix", gen: "155", red: "145", twox: "135", fourx: "115", sniper: "65", fire: "42%" },
+            { name: "Infinix Hot Series", brand: "Infinix", ram: 3, cpu: 4, res: "720x1600", dpr: 1.5, gen: "145", red: "135", twox: "125", fourx: "105", sniper: "55", fire: "40%" },
+            { name: "Infinix Note Series", brand: "Infinix", ram: 4, cpu: 6, res: "1080x2400", dpr: 2.5, gen: "152", red: "142", twox: "132", fourx: "112", sniper: "62", fire: "42%" },
 
             // ITEL
-            { name: "Itel City / P Series", brand: "Itel", gen: "140", red: "130", twox: "120", fourx: "100", sniper: "50", fire: "33%" },
+            { name: "Itel City / P Series", brand: "Itel", ram: 2, cpu: 2, res: "720x1600", dpr: 1.5, gen: "135", red: "125", twox: "115", fourx: "95", sniper: "45", fire: "33%" },
 
             // ONEPLUS
-            { name: "OnePlus (General)", brand: "OnePlus", gen: "185", red: "175", twox: "165", fourx: "150", sniper: "100", fire: "45%" },
+            { name: "OnePlus (General)", brand: "OnePlus", ram: 8, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "185", red: "175", twox: "165", fourx: "150", sniper: "100", fire: "45%" },
 
-            // ✧ NEW DEVICES
-            { name: "Google Pixel 6/7", brand: "Google", gen: "170", red: "160", twox: "150", fourx: "130", sniper: "80", fire: "48%" },
-            { name: "Google Pixel 8/9", brand: "Google", gen: "175", red: "165", twox: "155", fourx: "135", sniper: "85", fire: "52%" },
-            { name: "Nokia G Series", brand: "Nokia", gen: "145", red: "135", twox: "125", fourx: "105", sniper: "55", fire: "36%" },
-            { name: "Motorola G Series", brand: "Motorola", gen: "150", red: "140", twox: "130", fourx: "110", sniper: "60", fire: "40%" },
-            { name: "Motorola Edge", brand: "Motorola", gen: "165", red: "155", twox: "145", fourx: "125", sniper: "75", fire: "45%" },
-            { name: "Sony Xperia", brand: "Sony", gen: "170", red: "160", twox: "150", fourx: "130", sniper: "80", fire: "48%" },
-            { name: "LG (General)", brand: "LG", gen: "155", red: "145", twox: "135", fourx: "115", sniper: "65", fire: "42%" },
-            { name: "Huawei P Series", brand: "Huawei", gen: "165", red: "155", twox: "145", fourx: "125", sniper: "75", fire: "44%" },
-            { name: "Huawei Mate Series", brand: "Huawei", gen: "175", red: "165", twox: "155", fourx: "135", sniper: "85", fire: "50%" },
-            { name: "Nothing Phone (1/2)", brand: "Nothing", gen: "170", red: "160", twox: "150", fourx: "130", sniper: "80", fire: "46%" },
-            { name: "Oppo Find Series", brand: "Oppo", gen: "175", red: "165", twox: "155", fourx: "135", sniper: "85", fire: "50%" }
+            // GOOGLE
+            { name: "Google Pixel 6/7", brand: "Google", ram: 6, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "170", red: "160", twox: "150", fourx: "130", sniper: "80", fire: "48%" },
+            { name: "Google Pixel 8/9", brand: "Google", ram: 8, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "178", red: "168", twox: "158", fourx: "138", sniper: "85", fire: "52%" },
+
+            // NOKIA
+            { name: "Nokia G Series", brand: "Nokia", ram: 4, cpu: 4, res: "720x1600", dpr: 1.5, gen: "140", red: "130", twox: "120", fourx: "100", sniper: "50", fire: "36%" },
+
+            // MOTOROLA
+            { name: "Motorola G Series", brand: "Motorola", ram: 4, cpu: 6, res: "720x1600", dpr: 1.5, gen: "148", red: "138", twox: "128", fourx: "108", sniper: "58", fire: "40%" },
+            { name: "Motorola Edge", brand: "Motorola", ram: 6, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "162", red: "152", twox: "142", fourx: "122", sniper: "72", fire: "45%" },
+
+            // SONY
+            { name: "Sony Xperia", brand: "Sony", ram: 6, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "168", red: "158", twox: "148", fourx: "128", sniper: "78", fire: "48%" },
+
+            // HUAWEI
+            { name: "Huawei P Series", brand: "Huawei", ram: 6, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "165", red: "155", twox: "145", fourx: "125", sniper: "75", fire: "44%" },
+            { name: "Huawei Mate Series", brand: "Huawei", ram: 8, cpu: 8, res: "1220x2712", dpr: 3, gen: "175", red: "165", twox: "155", fourx: "135", sniper: "85", fire: "50%" },
+
+            // NOTHING
+            { name: "Nothing Phone (1/2)", brand: "Nothing", ram: 8, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "170", red: "160", twox: "150", fourx: "130", sniper: "80", fire: "46%" },
+
+            // OPPO
+            { name: "Oppo Find Series", brand: "Oppo", ram: 8, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "175", red: "165", twox: "155", fourx: "135", sniper: "85", fire: "50%" }
         ];
 
-        const deviceListEl = document.getElementById('deviceList');
-        const searchInput = document.getElementById('deviceSearch');
+        // =========================================================
+        // 3. GENERATOR STATE
+        // =========================================================
+        let selectedDevice = null;
+        let selectedAge = null;
+        let currentResult = null;
+        let isAutoDetect = false;
 
-        function renderDeviceList(filter = '') {
-            deviceListEl.innerHTML = '';
-            const filtered = sensitivityData.filter(d => d.name.toLowerCase().includes(filter.toLowerCase()) || d.brand.toLowerCase().includes(filter.toLowerCase()));
-            if (filtered.length === 0) {
-                deviceListEl.innerHTML = '<div style="padding:12px; color:#6a4a8a;">No devices found.</div>';
-                deviceListEl.style.display = 'block';
+        // Age options
+        const ageOptions = [
+            { value: 0, label: "<1 year", factor: 1.0 },
+            { value: 1, label: "1–2 years", factor: 0.88 },
+            { value: 2, label: "2–3 years", factor: 0.75 },
+            { value: 3, label: "3+ years", factor: 0.60 }
+        ];
+
+        // =========================================================
+        // 4. TAB SWITCHING
+        // =========================================================
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+
+            if (tab === 'search') {
+                document.getElementById('tabSearch').classList.add('active');
+                document.getElementById('panelSearch').classList.add('active');
+            } else {
+                document.getElementById('tabAuto').classList.add('active');
+                document.getElementById('panelAuto').classList.add('active');
+            }
+        }
+
+        // =========================================================
+        // 5. SEARCH TAB LOGIC
+        // =========================================================
+        function filterDevices(query) {
+            const dropdown = document.getElementById('dropdown');
+            const clearBtn = document.getElementById('searchClear');
+
+            if (query.length === 0) {
+                dropdown.classList.remove('show');
+                clearBtn.classList.remove('show');
                 return;
             }
+            clearBtn.classList.add('show');
+
+            const filtered = deviceDatabase.filter(d =>
+                d.name.toLowerCase().includes(query.toLowerCase()) ||
+                d.brand.toLowerCase().includes(query.toLowerCase())
+            );
+
+            if (filtered.length === 0) {
+                dropdown.innerHTML = '<div style="padding:12px; color:#6a4a8a;">No devices found.</div>';
+                dropdown.classList.add('show');
+                return;
+            }
+
+            dropdown.innerHTML = '';
             filtered.forEach(device => {
                 const div = document.createElement('div');
                 div.textContent = device.name + ' (' + device.brand + ')';
-                div.onmouseover = () => div.style.background = 'rgba(100,40,180,0.2)';
-                div.onmouseout = () => div.style.background = 'transparent';
-                div.onclick = () => selectDevice(device);
-                deviceListEl.appendChild(div);
+                div.onclick = () => selectSearchDevice(device);
+                dropdown.appendChild(div);
             });
-            deviceListEl.style.display = 'block';
+            dropdown.classList.add('show');
         }
 
-        function filterDevices() {
-            const val = searchInput.value;
-            if (val.length > 0) { renderDeviceList(val); } else { deviceListEl.style.display = 'none'; }
+        function selectSearchDevice(device) {
+            selectedDevice = device;
+            isAutoDetect = false;
+            document.getElementById('dropdown').classList.remove('show');
+            document.getElementById('searchInput').value = device.name;
+            document.getElementById('searchClear').classList.remove('show');
+
+            const sd = document.getElementById('selectedDevice');
+            document.getElementById('sdName').textContent = device.name + ' (' + device.brand + ')';
+            sd.classList.add('show');
+
+            // Render age buttons for search
+            renderAgeButtons('searchAgeGrid', 'searchAgeNote', 'search');
         }
 
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('dropdown').classList.remove('show');
+            document.getElementById('searchClear').classList.remove('show');
+            clearSelection();
+        }
+
+        function clearSelection() {
+            document.getElementById('selectedDevice').classList.remove('show');
+            selectedDevice = null;
+            selectedAge = null;
+            document.getElementById('results').classList.remove('show');
+        }
+
+        function renderAgeButtons(gridId, noteId, mode) {
+            const grid = document.getElementById(gridId);
+            grid.innerHTML = '';
+            ageOptions.forEach(age => {
+                const btn = document.createElement('button');
+                btn.className = 'age-btn';
+                btn.textContent = age.label;
+                btn.dataset.value = age.value;
+                btn.dataset.factor = age.factor;
+                btn.onclick = () => selectAge(btn, gridId, noteId, mode);
+                grid.appendChild(btn);
+            });
+            // Clear previous selection
+            selectedAge = null;
+            document.getElementById(noteId).textContent = 'Select age to adjust for lag and performance loss.';
+        }
+
+        function selectAge(btn, gridId, noteId, mode) {
+            document.querySelectorAll('#' + gridId + ' .age-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedAge = parseInt(btn.dataset.value);
+            const factor = parseFloat(btn.dataset.factor);
+            const label = btn.textContent;
+            document.getElementById(noteId).textContent = `Selected: ${label} (Age wear factor: ${Math.round((1 - factor) * 100)}% reduction)`;
+        }
+
+        // =========================================================
+        // 6. AUTO DETECT TAB LOGIC
+        // =========================================================
+        function detectDevice() {
+            const btn = document.getElementById('detectBtn');
+            const loader = document.getElementById('loader');
+            const panel = document.getElementById('detectedPanel');
+
+            btn.style.display = 'none';
+            loader.classList.add('show');
+
+            setTimeout(() => {
+                const ram = navigator.deviceMemory || 4;
+                const cpu = navigator.hardwareConcurrency || 4;
+                const width = window.screen.width;
+                const height = window.screen.height;
+                const dpr = window.devicePixelRatio || 1;
+                const res = `${width}x${height}`;
+
+                // Find closest matching device
+                let bestMatch = null;
+                let bestScore = Infinity;
+
+                deviceDatabase.forEach(device => {
+                    const score = Math.abs(device.ram - ram) * 2 +
+                        Math.abs(device.cpu - cpu) * 1.5 +
+                        Math.abs(device.dpr - dpr) * 1;
+
+                    if (score < bestScore) {
+                        bestScore = score;
+                        bestMatch = device;
+                    }
+                });
+
+                if (bestMatch) {
+                    selectedDevice = bestMatch;
+                    isAutoDetect = true;
+
+                    document.getElementById('dpName').textContent = bestMatch.name;
+                    document.getElementById('dpSpecs').textContent = `${ram}GB RAM · ${cpu} Cores · ${res}`;
+                    panel.classList.add('show');
+
+                    // Render age buttons for auto
+                    renderAgeButtons('autoAgeGrid', 'autoAgeNote', 'auto');
+                }
+
+                loader.classList.remove('show');
+                btn.style.display = 'flex';
+            }, 1500);
+        }
+
+        // =========================================================
+        // 7. GENERATE SENSITIVITY
+        // =========================================================
+        function generateFromSearch() {
+            if (!selectedDevice) {
+                alert('Please select a device first.');
+                return;
+            }
+            if (selectedAge === null) {
+                alert('Please select your device age.');
+                return;
+            }
+            generateSensitivity(selectedDevice, selectedAge, 'Search');
+        }
+
+        function generateFromAuto() {
+            if (!selectedDevice) {
+                alert('Please detect your device first.');
+                return;
+            }
+            if (selectedAge === null) {
+                alert('Please select your device age.');
+                return;
+            }
+            generateSensitivity(selectedDevice, selectedAge, 'Auto Detect');
+        }
+
+        function generateSensitivity(device, age, source) {
+            const ageFactor = ageOptions.find(a => a.value === age);
+            const factor = ageFactor ? ageFactor.factor : 1.0;
+
+            // Calculate hardware score
+            const ramScore = Math.min(device.ram / 8, 1) * 100;
+            const cpuScore = Math.min(device.cpu / 8, 1) * 100;
+            const resScore = device.dpr > 2.5 ? 85 : (device.dpr > 1.8 ? 70 : 50);
+            const hwScore = Math.round((ramScore * 0.4 + cpuScore * 0.3 + resScore * 0.3));
+
+            // Apply age factor
+            const ageWear = Math.round((1 - factor) * 100);
+            const adjustedScore = Math.round(hwScore * factor);
+
+            // Generate sensitivity values
+            const genVal = Math.round(parseInt(device.gen) * factor);
+            const redVal = Math.round(parseInt(device.red) * factor);
+            const twoxVal = Math.round(parseInt(device.twox) * factor);
+            const fourxVal = Math.round(parseInt(device.fourx) * factor);
+            const snipVal = Math.round(parseInt(device.sniper) * factor);
+
+            currentResult = {
+                device: device,
+                age: age,
+                factor: factor,
+                hwScore: hwScore,
+                ageWear: ageWear,
+                adjustedScore: adjustedScore,
+                gen: genVal,
+                red: redVal,
+                twox: twoxVal,
+                fourx: fourxVal,
+                sniper: snipVal,
+                fire: device.fire,
+                source: source
+            };
+
+            displayResults(currentResult);
+        }
+
+        // =========================================================
+        // 8. DISPLAY RESULTS
+        // =========================================================
+        function displayResults(data) {
+            const results = document.getElementById('results');
+            results.classList.add('show');
+
+            // Device Profile
+            document.getElementById('devName').textContent = data.device.name;
+            document.getElementById('osLine').textContent = `Detected via ${data.source} · ${data.device.brand}`;
+            document.getElementById('matchPill').textContent = data.source === 'Auto Detect' ? 'AUTO MATCH' : 'PRESET';
+            document.getElementById('agePill').textContent = ageOptions.find(a => a.value === data.age).label;
+
+            // Specs
+            document.getElementById('sRAM').textContent = data.device.ram + 'GB';
+            document.getElementById('sCPU').textContent = data.device.cpu + ' Cores';
+            document.getElementById('sRes').textContent = data.device.res;
+            document.getElementById('sDPR').textContent = data.device.dpr + 'x';
+
+            // Scores
+            document.getElementById('perfPct').textContent = data.hwScore + '%';
+            document.getElementById('perfFill').style.width = data.hwScore + '%';
+
+            document.getElementById('agePct').textContent = data.ageWear + '%';
+            document.getElementById('ageFill').style.width = data.ageWear + '%';
+
+            // Sensitivity List
+            const list = document.getElementById('sensiList');
+            const items = [
+                { label: 'General', value: data.gen },
+                { label: 'Red Dot', value: data.red },
+                { label: '2x Scope', value: data.twox },
+                { label: '4x Scope', value: data.fourx },
+                { label: 'Sniper Scope', value: data.sniper },
+                { label: '🔥 Fire Button Size', value: data.fire }
+            ];
+
+            list.innerHTML = '';
+            items.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'sensi-row';
+                row.innerHTML = `
+                    <span class="sensi-label">${item.label}</span>
+                    <span class="sensi-value">${item.value}</span>
+                `;
+                list.appendChild(row);
+            });
+
+            // Hide copy feedback
+            document.getElementById('copyOk').classList.remove('show');
+
+            // Scroll to results
+            setTimeout(() => {
+                results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 200);
+        }
+
+        // =========================================================
+        // 9. COPY SETTINGS
+        // =========================================================
+        function copySettings() {
+            if (!currentResult) {
+                alert('Generate sensitivity first!');
+                return;
+            }
+
+            const d = currentResult;
+            const text =
+                `📱 Device: ${d.device.name}\n` +
+                `📅 Age: ${ageOptions.find(a => a.value === d.age).label}\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `⚙️ General: ${d.gen}\n` +
+                `🔴 Red Dot: ${d.red}\n` +
+                `🔭 2x Scope: ${d.twox}\n` +
+                `🔭 4x Scope: ${d.fourx}\n` +
+                `🎯 Sniper: ${d.sniper}\n` +
+                `🔥 Fire Button: ${d.fire}\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `💡 Adjust ±5 in Training Mode.`;
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showCopiedFeedback();
+                }).catch(() => {
+                    fallbackCopy(text);
+                });
+            } else {
+                fallbackCopy(text);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            textarea.style.top = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showCopiedFeedback();
+            } catch (e) {
+                alert('Copy failed. Please copy manually:\n\n' + text);
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showCopiedFeedback() {
+            const ok = document.getElementById('copyOk');
+            ok.classList.add('show');
+            setTimeout(() => {
+                ok.classList.remove('show');
+            }, 3000);
+        }
+
+        // =========================================================
+        // 10. RESET GENERATOR
+        // =========================================================
+        function resetGenerator() {
+            document.getElementById('results').classList.remove('show');
+            currentResult = null;
+            selectedDevice = null;
+            selectedAge = null;
+            document.getElementById('selectedDevice').classList.remove('show');
+            document.getElementById('detectedPanel').classList.remove('show');
+            document.getElementById('searchInput').value = '';
+            document.getElementById('dropdown').classList.remove('show');
+            document.getElementById('searchClear').classList.remove('show');
+
+            // Reset age buttons
+            document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('searchAgeNote').textContent = 'Select age to adjust for lag and performance loss.';
+            document.getElementById('autoAgeNote').textContent = 'Select age to adjust for lag and performance loss.';
+
+            document.getElementById('copyOk').classList.remove('show');
+
+            // Reset detect button
+            document.getElementById('detectBtn').style.display = 'flex';
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // =========================================================
+        // 11. INIT
+        // =========================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initial render of age buttons for search tab
+            renderAgeButtons('searchAgeGrid', 'searchAgeNote', 'search');
+        });
+
+        // Click outside dropdown to close
         document.addEventListener('click', function(e) {
-            if (!e.target.closest('#deviceSearch') && !e.target.closest('#deviceList')) {
-                deviceListEl.style.display = 'none';
+            const dropdown = document.getElementById('dropdown');
+            const input = document.getElementById('searchInput');
+            if (!e.target.closest('.search-wrap')) {
+                dropdown.classList.remove('show');
+                document.getElementById('searchClear').classList.remove('show');
             }
         });
 
-        function selectDevice(device) {
-            searchInput.value = device.name;
-            deviceListEl.style.display = 'none';
-
-            document.getElementById('selectedDeviceName').textContent = device.name + ' (' + device.brand + ')';
-            document.getElementById('sGen').textContent = device.gen;
-            document.getElementById('sRed').textContent = device.red;
-            document.getElementById('s2x').textContent = device.twox;
-            document.getElementById('s4x').textContent = device.fourx;
-            document.getElementById('sSnip').textContent = device.sniper;
-            document.getElementById('sFire').textContent = device.fire;
-
-            document.getElementById('sensitivityResult').style.display = 'block';
-        }
-
-        renderDeviceList();
-
-        // =============================================
-        // PHANTOM EFFECTS – Optimised
-        // =============================================
+        // =========================================================
+        // 12. PHANTOM EFFECTS – Optimised
+        // =========================================================
         (function phantomEffects() {
             const layer = document.getElementById('effect-layer');
-            let lastX = 0, lastY = 0;
+            let lastX = 0,
+                lastY = 0;
 
             function createTrailParticle(x, y) {
                 const el = document.createElement('div');
@@ -933,8 +1895,8 @@
                 const size = 4 + Math.random() * 6;
                 el.style.width = size + 'px';
                 el.style.height = size + 'px';
-                el.style.left = (x - size/2) + 'px';
-                el.style.top = (y - size/2) + 'px';
+                el.style.left = (x - size / 2) + 'px';
+                el.style.top = (y - size / 2) + 'px';
                 const angle = Math.random() * Math.PI * 2;
                 const dist = 10 + Math.random() * 20;
                 el.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
@@ -972,11 +1934,14 @@
 
             function handleMove(e) {
                 let x, y;
-                if (e.touches) { x = e.touches[0].clientX; y = e.touches[0].clientY; }
-                else { x = e.clientX; y = e.clientY; }
-                const dx = x - lastX, dy = y - lastY;
-                if (Math.sqrt(dx*dx + dy*dy) < 8) return;
-                lastX = x; lastY = y;
+                if (e.touches) { x = e.touches[0].clientX;
+                    y = e.touches[0].clientY; } else { x = e.clientX;
+                    y = e.clientY; }
+                const dx = x - lastX,
+                    dy = y - lastY;
+                if (Math.sqrt(dx * dx + dy * dy) < 8) return;
+                lastX = x;
+                lastY = y;
                 createTrailParticle(x, y);
                 if (Math.random() > 0.7) {
                     createTrailParticle(x + (Math.random() - 0.5) * 15, y + (Math.random() - 0.5) * 15);
@@ -985,8 +1950,9 @@
 
             function handleClick(e) {
                 let x, y;
-                if (e.touches) { x = e.touches[0].clientX; y = e.touches[0].clientY; }
-                else { x = e.clientX; y = e.clientY; }
+                if (e.touches) { x = e.touches[0].clientX;
+                    y = e.touches[0].clientY; } else { x = e.clientX;
+                    y = e.clientY; }
                 createRipple(x, y);
                 setTimeout(() => {
                     createTrailParticle(x + (Math.random() - 0.5) * 30, y + (Math.random() - 0.5) * 30);
@@ -1005,9 +1971,9 @@
             });
         })();
 
-        // =============================================
-        // AUDIO PRELOAD
-        // =============================================
+        // =========================================================
+        // 13. AUDIO PRELOAD
+        // =========================================================
         const audio = document.getElementById('bg-music');
         audio.volume = 0.25;
         audio.preload = 'auto';
@@ -1029,9 +1995,9 @@
         document.addEventListener('touchstart', resumeAudioContext);
         document.addEventListener('keydown', resumeAudioContext);
 
-        // =============================================
-        // TYPING INTRO
-        // =============================================
+        // =========================================================
+        // 14. TYPING INTRO
+        // =========================================================
         const introLines = [
             "Welcome to Phantom ・〆 Guild name generator.",
             "Here, you get your official Phantom name signature and text style.",
@@ -1128,9 +2094,9 @@
         }
         window.addEventListener('load', typeLine);
 
-        // =============================================
-        // MUSIC – INSTANT PLAY ON INTRO TAP
-        // =============================================
+        // =========================================================
+        // 15. MUSIC – INSTANT PLAY ON INTRO TAP
+        // =========================================================
         let musicStarted = false;
 
         function playMusic() {
@@ -1164,11 +2130,36 @@
 
         audio.addEventListener('ended', () => { audio.play().catch(() => {}); });
 
-        // =============================================
-        // NAME GENERATOR
-        // =============================================
+        // =========================================================
+        // 16. NAME GENERATOR
+        // =========================================================
         const smallCapsMap = {
-            'a':'ᴀ','b':'ʙ','c':'ᴄ','d':'ᴅ','e':'ᴇ','f':'ꜰ','g':'ɢ','h':'ʜ','i':'ɪ','j':'ᴊ','k':'ᴋ','l':'ʟ','m':'ᴍ','n':'ɴ','o':'ᴏ','p':'ᴘ','q':'ǫ','r':'ʀ','s':'ꜱ','t':'ᴛ','u':'ᴜ','v':'ᴠ','w':'ᴡ','x':'x','y':'ʏ','z':'ᴢ'
+            'a': 'ᴀ',
+            'b': 'ʙ',
+            'c': 'ᴄ',
+            'd': 'ᴅ',
+            'e': 'ᴇ',
+            'f': 'ꜰ',
+            'g': 'ɢ',
+            'h': 'ʜ',
+            'i': 'ɪ',
+            'j': 'ᴊ',
+            'k': 'ᴋ',
+            'l': 'ʟ',
+            'm': 'ᴍ',
+            'n': 'ɴ',
+            'o': 'ᴏ',
+            'p': 'ᴘ',
+            'q': 'ǫ',
+            'r': 'ʀ',
+            's': 'ꜱ',
+            't': 'ᴛ',
+            'u': 'ᴜ',
+            'v': 'ᴠ',
+            'w': 'ᴡ',
+            'x': 'x',
+            'y': 'ʏ',
+            'z': 'ᴢ'
         };
         let currentGeneratedName = '';
 
@@ -1207,9 +2198,9 @@
             }
         });
 
-        // =============================================
-        // COPY
-        // =============================================
+        // =========================================================
+        // 17. COPY (iOS/Android friendly)
+        // =========================================================
         function copyResult() {
             const resultDisplay = document.getElementById('result');
             const textToCopy = currentGeneratedName;
@@ -1226,14 +2217,14 @@
                 return;
             }
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(textToCopy).then(() => showCopiedFeedback(resultDisplay))
-                    .catch(() => fallbackCopyText(textToCopy, resultDisplay));
+                navigator.clipboard.writeText(textToCopy).then(() => showCopiedFeedback2(resultDisplay))
+                    .catch(() => fallbackCopyText2(textToCopy, resultDisplay));
             } else {
-                fallbackCopyText(textToCopy, resultDisplay);
+                fallbackCopyText2(textToCopy, resultDisplay);
             }
         }
 
-        function fallbackCopyText(text, resultDisplay) {
+        function fallbackCopyText2(text, resultDisplay) {
             const textarea = document.createElement('textarea');
             textarea.value = text;
             textarea.style.position = 'fixed';
@@ -1252,13 +2243,13 @@
                 textarea.setSelectionRange(0, text.length);
                 try {
                     const success = document.execCommand('copy');
-                    if (success) { showCopiedFeedback(resultDisplay); } else { showCopiedFeedback(resultDisplay); }
-                } catch (e) { showCopiedFeedback(resultDisplay); }
+                    if (success) { showCopiedFeedback2(resultDisplay); } else { showCopiedFeedback2(resultDisplay); }
+                } catch (e) { showCopiedFeedback2(resultDisplay); }
                 document.body.removeChild(textarea);
             }, 50);
         }
 
-        function showCopiedFeedback(resultDisplay) {
+        function showCopiedFeedback2(resultDisplay) {
             resultDisplay.textContent = '✅  COPIED!  ✅';
             resultDisplay.style.color = '#b3ff9b';
             resultDisplay.style.textShadow = '0 0 40px #66ff33';
@@ -1281,11 +2272,21 @@
             if (e.key === 'Enter') { document.getElementById('doneBtn').click(); }
         });
 
-        // =============================================
-        // RANDOM NAME GENERATOR
-        // =============================================
-        const maleNames = ['Zephyr','Morwen','Azrael','Thorne','Orion','Draven','Caius','Fenris','Hades','Jareth','Kael','Mordred','Oberon','Quintus','Balthazar','Darian','Gethin','Helios','Icarus','Juno','Keres','Lucian','Magnus','Nero','Onyx','Phelan','Riven','Sable','Taliesin','Ursa','Valerian','Wraith','Xerxes','Yorick','Zane','Aether','Bram','Corvus','Dante','Ephraim','Gideon','Hector','Ignis','Lysander','Marius','Orpheus','Percival','Raphael','Severin','Theron'];
-        const femaleNames = ['Seraphine','Vesper','Nyx','Ravenna','Selene','Ember','Astrid','Drusilla','Elara','Gwendolyn','Isolde','Lilith','Nephthys','Persephone','Rhiannon','Umbra','Xandria','Yvaine','Zephyra','Amaris','Celestine','Elysia','Fane','Keres','Lirael','Maelis','Nerys','Orenda','Sable','Ursa','Valkyrie','Wren','Yara','Astra','Belladonna','Cassiopeia','Dahlia','Eudora','Freyja','Hecate','Iris','Jade','Luna','Mira','Nova','Onyx','Pandora','Raven','Stella','Tempest','Vega','Willow','Xena','Zara'];
+        // =========================================================
+        // 18. RANDOM NAME GENERATOR
+        // =========================================================
+        const maleNames = ['Zephyr', 'Morwen', 'Azrael', 'Thorne', 'Orion', 'Draven', 'Caius', 'Fenris', 'Hades', 'Jareth', 'Kael',
+            'Mordred', 'Oberon', 'Quintus', 'Balthazar', 'Darian', 'Gethin', 'Helios', 'Icarus', 'Juno', 'Keres', 'Lucian',
+            'Magnus', 'Nero', 'Onyx', 'Phelan', 'Riven', 'Sable', 'Taliesin', 'Ursa', 'Valerian', 'Wraith', 'Xerxes', 'Yorick',
+            'Zane', 'Aether', 'Bram', 'Corvus', 'Dante', 'Ephraim', 'Gideon', 'Hector', 'Ignis', 'Lysander', 'Marius', 'Orpheus',
+            'Percival', 'Raphael', 'Severin', 'Theron'
+        ];
+        const femaleNames = ['Seraphine', 'Vesper', 'Nyx', 'Ravenna', 'Selene', 'Ember', 'Astrid', 'Drusilla', 'Elara',
+            'Gwendolyn', 'Isolde', 'Lilith', 'Nephthys', 'Persephone', 'Rhiannon', 'Umbra', 'Xandria', 'Yvaine', 'Zephyra',
+            'Amaris', 'Celestine', 'Elysia', 'Fane', 'Keres', 'Lirael', 'Maelis', 'Nerys', 'Orenda', 'Sable', 'Ursa', 'Valkyrie',
+            'Wren', 'Yara', 'Astra', 'Belladonna', 'Cassiopeia', 'Dahlia', 'Eudora', 'Freyja', 'Hecate', 'Iris', 'Jade', 'Luna',
+            'Mira', 'Nova', 'Onyx', 'Pandora', 'Raven', 'Stella', 'Tempest', 'Vega', 'Willow', 'Xena', 'Zara'
+        ];
         let currentGender = null;
         let usedIndices = [];
 
@@ -1387,9 +2388,9 @@
             setTimeout(() => { this.textContent = '↻ Generate More'; }, 800);
         });
 
-        // =============================================
-        // BIRDS – ADAPTIVE & OPTIMISED
-        // =============================================
+        // =========================================================
+        // 19. BIRDS – ADAPTIVE & OPTIMISED
+        // =========================================================
         const canvas = document.getElementById('birdCanvas');
         const ctx = canvas.getContext('2d');
         let birds = [];
@@ -1405,7 +2406,8 @@
         resizeCanvas();
 
         function getBirdCount() {
-            const w = window.innerWidth, h = window.innerHeight;
+            const w = window.innerWidth,
+                h = window.innerHeight;
             const area = w * h;
             let count = Math.floor(area / 200000);
             count = Math.max(10, Math.min(45, count));
@@ -1417,12 +2419,13 @@
             reset() {
                 const margin = 100;
                 const side = Math.floor(Math.random() * 4);
-                if (side === 0) { this.x = Math.random() * canvas.width; this.y = -margin; }
-                else if (side === 1) { this.x = canvas.width + margin; this.y = Math.random() * canvas.height; }
-                else if (side === 2) { this.x = Math.random() * canvas.width; this.y = canvas.height + margin; }
-                else { this.x = -margin; this.y = Math.random() * canvas.height; }
-                this.targetX = canvas.width/2 + (Math.random()-0.5)*250;
-                this.targetY = canvas.height/2 - 50 + (Math.random()-0.5)*150;
+                if (side === 0) { this.x = Math.random() * canvas.width;
+                    this.y = -margin; } else if (side === 1) { this.x = canvas.width + margin;
+                    this.y = Math.random() * canvas.height; } else if (side === 2) { this.x = Math.random() * canvas.width;
+                    this.y = canvas.height + margin; } else { this.x = -margin;
+                    this.y = Math.random() * canvas.height; }
+                this.targetX = canvas.width / 2 + (Math.random() - 0.5) * 250;
+                this.targetY = canvas.height / 2 - 50 + (Math.random() - 0.5) * 150;
                 this.speed = 0.5 + Math.random() * 0.5;
                 this.angle = 0;
                 this.size = 10 + Math.random() * 8;
@@ -1444,7 +2447,7 @@
                 }
                 const dx = this.targetX - this.x;
                 const dy = this.targetY - this.y;
-                const dist = Math.sqrt(dx*dx + dy*dy);
+                const dist = Math.sqrt(dx * dx + dy * dy);
                 if (dist > 5) {
                     const angle = Math.atan2(dy, dx);
                     const curveAngle = Math.sin(this.curvePhase) * 0.12;
@@ -1454,8 +2457,8 @@
                     this.curvePhase += this.curveSpeed;
                     this.y += Math.sin(this.curvePhase * 2) * 0.2;
                 } else {
-                    this.targetX = canvas.width/2 + (Math.random()-0.5)*350;
-                    this.targetY = canvas.height/2 - 50 + (Math.random()-0.5)*250;
+                    this.targetX = canvas.width / 2 + (Math.random() - 0.5) * 350;
+                    this.targetY = canvas.height / 2 - 50 + (Math.random() - 0.5) * 250;
                 }
                 this.wingPhase += this.wingSpeed;
                 this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
@@ -1463,10 +2466,10 @@
                 if (logoEl) {
                     const rect = logoEl.getBoundingClientRect();
                     const logoRect = {
-                        x: rect.left + rect.width*0.1,
-                        y: rect.top + rect.height*0.1,
-                        width: rect.width*0.8,
-                        height: rect.height*0.8
+                        x: rect.left + rect.width * 0.1,
+                        y: rect.top + rect.height * 0.1,
+                        width: rect.width * 0.8,
+                        height: rect.height * 0.8
                     };
                     if (this.x > logoRect.x && this.x < logoRect.x + logoRect.width &&
                         this.y > logoRect.y && this.y < logoRect.y + logoRect.height) {
@@ -1491,21 +2494,40 @@
                 ctx.fillStyle = '#5a3a7a';
                 ctx.shadowColor = '#7a4a9a';
                 ctx.shadowBlur = 8;
-                ctx.beginPath(); ctx.ellipse(0,0, size*0.5, size*0.35, 0, 0, Math.PI*2); ctx.fill();
-                ctx.beginPath(); ctx.arc(size*0.4, -size*0.08, size*0.2, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(0, 0, size * 0.5, size * 0.35, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(size * 0.4, -size * 0.08, size * 0.2, 0, Math.PI * 2);
+                ctx.fill();
                 ctx.fillStyle = '#3a2a4a';
-                ctx.beginPath(); ctx.moveTo(size*0.6, -size*0.08); ctx.lineTo(size*0.75, -size*0.04); ctx.lineTo(size*0.6, 0); ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(size * 0.6, -size * 0.08);
+                ctx.lineTo(size * 0.75, -size * 0.04);
+                ctx.lineTo(size * 0.6, 0);
+                ctx.fill();
                 ctx.fillStyle = '#4a2a5a';
-                ctx.beginPath(); ctx.ellipse(-size*0.25, -size*0.15 + wingFlap*size*0.12, size*0.4, size*0.25, -0.2 + wingFlap*0.15, 0, Math.PI*2); ctx.fill();
-                ctx.beginPath(); ctx.ellipse(-size*0.25, size*0.15 - wingFlap*size*0.12, size*0.4, size*0.25, 0.2 - wingFlap*0.15, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(-size * 0.25, -size * 0.15 + wingFlap * size * 0.12, size * 0.4, size * 0.25, -0.2 + wingFlap * 0.15, 0,
+                    Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(-size * 0.25, size * 0.15 - wingFlap * size * 0.12, size * 0.4, size * 0.25, 0.2 - wingFlap * 0.15, 0,
+                    Math.PI * 2);
+                ctx.fill();
                 ctx.fillStyle = '#3a2a4a';
-                ctx.beginPath(); ctx.moveTo(-size*0.5, -size*0.12); ctx.lineTo(-size*0.7, -size*0.2 + wingFlap*size*0.08); ctx.lineTo(-size*0.5, size*0.12); ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(-size * 0.5, -size * 0.12);
+                ctx.lineTo(-size * 0.7, -size * 0.2 + wingFlap * size * 0.08);
+                ctx.lineTo(-size * 0.5, size * 0.12);
+                ctx.fill();
                 ctx.restore();
                 ctx.save();
                 ctx.globalAlpha = this.opacity * 0.1;
                 ctx.shadowColor = '#9b6dff';
                 ctx.shadowBlur = 20;
-                ctx.beginPath(); ctx.arc(this.x, this.y, size*0.8, 0, Math.PI*2);
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, size * 0.8, 0, Math.PI * 2);
                 ctx.fillStyle = '#6a2faf';
                 ctx.fill();
                 ctx.restore();
@@ -1514,24 +2536,27 @@
 
         function spawnParticles(x, y) {
             const count = 15 + Math.floor(Math.random() * 10);
-            for (let i=0; i<count; i++) {
+            for (let i = 0; i < count; i++) {
                 const angle = Math.random() * Math.PI * 2;
                 const speed = 0.5 + Math.random() * 2;
                 particles.push({
-                    x, y,
-                    vx: Math.cos(angle)*speed,
-                    vy: Math.sin(angle)*speed - 0.5,
+                    x,
+                    y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed - 0.5,
                     life: 1,
-                    size: 2 + Math.random()*3,
-                    color: `hsl(${260 + Math.random()*30}, 70%, ${50 + Math.random()*30}%)`
+                    size: 2 + Math.random() * 3,
+                    color: `hsl(${260 + Math.random() * 30}, 70%, ${50 + Math.random() * 30}%)`
                 });
             }
         }
 
         function updateParticles() {
-            for (let i=particles.length-1; i>=0; i--) {
+            for (let i = particles.length - 1; i >= 0; i--) {
                 const p = particles[i];
-                p.x += p.vx; p.y += p.vy; p.vy += 0.04;
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.04;
                 p.life -= 0.02;
                 if (p.life <= 0) particles.splice(i, 1);
             }
@@ -1544,7 +2569,8 @@
                 ctx.shadowColor = '#9b6dff';
                 ctx.shadowBlur = 10;
                 ctx.fillStyle = p.color;
-                ctx.beginPath(); ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI*2);
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.restore();
             }
@@ -1553,7 +2579,8 @@
         function animateBirds() {
             if (!birdsActive) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (const bird of birds) { bird.update(); bird.draw(); }
+            for (const bird of birds) { bird.update();
+                bird.draw(); }
             birds = birds.filter(b => b.alive);
             updateParticles();
             drawParticles();
@@ -1570,12 +2597,12 @@
             if (birdsActive) return;
             birdsActive = true;
             const count = getBirdCount();
-            for (let i=0; i<count; i++) {
+            for (let i = 0; i < count; i++) {
                 const bird = new Bird();
                 bird.x = Math.random() * canvas.width;
                 bird.y = Math.random() * canvas.height;
-                bird.targetX = canvas.width/2 + (Math.random()-0.5)*250;
-                bird.targetY = canvas.height/2 - 50 + (Math.random()-0.5)*150;
+                bird.targetX = canvas.width / 2 + (Math.random() - 0.5) * 250;
+                bird.targetY = canvas.height / 2 - 50 + (Math.random() - 0.5) * 150;
                 birds.push(bird);
             }
             animateBirds();
@@ -1595,13 +2622,14 @@
 
         document.addEventListener('visibilitychange', () => {
             if (document.hidden && birdsActive) {
-                if (animationId) { cancelAnimationFrame(animationId); animationId = null; }
+                if (animationId) { cancelAnimationFrame(animationId);
+                    animationId = null; }
             } else if (!document.hidden && birdsActive && !animationId) {
                 animateBirds();
             }
         });
 
-        console.log('🔥 Phantom Guild – 30+ Device Sensitivity Generator Ready (Max 200)');
+        console.log('🔥 Phantom Guild – Fully Loaded with Sensitivity Generator');
     </script>
 </body>
 </html>
