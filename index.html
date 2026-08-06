@@ -20,7 +20,6 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* ===== BIRD CANVAS ===== */
         #birdCanvas {
             position: fixed;
             top: 0;
@@ -32,7 +31,6 @@
             isolation: isolate;
         }
 
-        /* ===== WATERMARK ===== */
         #watermark {
             position: fixed;
             bottom: 25px;
@@ -62,7 +60,6 @@
             100% { text-shadow: 0 0 50px rgba(155,109,255,1), 0 0 100px rgba(155,109,255,0.5), 0 0 150px rgba(100,40,180,0.3); border-color: rgba(155,109,255,0.5); }
         }
 
-        /* ===== PHANTOM EFFECTS ===== */
         #effect-layer {
             position: fixed;
             top: 0;
@@ -105,7 +102,6 @@
             border-width: 1px;
         }
 
-        /* ===== INTRO SCREEN ===== */
         #intro-screen {
             position: fixed;
             inset: 0;
@@ -172,7 +168,6 @@
             50% { text-shadow: 0 0 30px #9b6dff, 0 0 60px #4a1a7a; }
         }
 
-        /* ===== MAIN APP ===== */
         #main-app {
             opacity: 0;
             transition: opacity 1.5s ease;
@@ -201,7 +196,6 @@
             overflow: hidden;
         }
 
-        /* ===== GUILD LOGO ===== */
         .logo-wrapper {
             position: relative;
             display: block;
@@ -337,7 +331,6 @@
         .copy-btn:hover { background: rgba(100,40,180,0.4); border-color: #9b6dff; box-shadow: 0 0 20px rgba(100,40,200,0.15); }
         .copy-btn:active { transform: scale(0.95); }
 
-        /* ===== RANDOM NAME SECTION – Freestyle + Normal (Male Only) ===== */
         .random-section {
             margin: 20px 0 15px 0;
             position: relative;
@@ -518,10 +511,6 @@
         }
         .buy-btn:hover { transform: scale(1.03); box-shadow: 0 0 40px rgba(255,107,53,0.5); }
         .buy-btn:active { transform: scale(0.95); }
-
-        /* ========================================================= */
-        /* ===== SENSITIVITY GENERATOR ===== */
-        /* ========================================================= */
 
         .sensitivity-section {
             margin-top: 30px;
@@ -1119,26 +1108,18 @@
 </head>
 <body>
 
-    <!-- ====== WATERMARK ====== -->
     <div id="watermark">✦ FR4NX ✦</div>
-
-    <!-- ====== EFFECT LAYER ====== -->
     <div id="effect-layer"></div>
-
-    <!-- ====== BIRD CANVAS ====== -->
     <canvas id="birdCanvas"></canvas>
 
-    <!-- ====== INTRO SCREEN ====== -->
     <div id="intro-screen">
         <div id="intro-text"></div>
         <div id="click-prompt">✦ Click anywhere to enter ✦</div>
     </div>
 
-    <!-- ====== MAIN APP ====== -->
     <div id="main-app">
         <div class="container">
 
-            <!-- ===== GUILD LOGO ===== -->
             <div class="logo-wrapper">
                 <img class="guild-logo" src="./Guild.png" alt="Phantom Guild" />
             </div>
@@ -1155,7 +1136,6 @@
                 <button class="copy-btn" id="manualCopyBtn">📋 Copy Name</button>
             </div>
 
-            <!-- ===== RANDOM NAME SECTION – Freestyle + Normal (Male Only) ===== -->
             <div class="random-section">
                 <div class="random-header">
                     <button class="random-btn active" id="randomFreestyleBtn" onclick="loadRandomNames('freestyle')">
@@ -1184,9 +1164,6 @@
                 🛒 Buy Free Fire Likes
             </a>
 
-            <!-- ========================================================= -->
-            <!-- ===== SENSITIVITY GENERATOR ===== -->
-            <!-- ========================================================= -->
             <div class="sensitivity-section">
                 <h2>⚙️ Free Fire Sensitivity Generator</h2>
                 <p class="sub-desc">Find the perfect sensitivity for your device – powered by real device data.</p>
@@ -1202,7 +1179,6 @@
                     </button>
                 </div>
 
-                <!-- ===== TAB 1: SEARCH ===== -->
                 <div class="panel active" id="panelSearch">
                     <div class="sens-card">
                         <div class="card-top-line"></div>
@@ -1244,7 +1220,6 @@
                     </div>
                 </div>
 
-                <!-- ===== TAB 2: AUTO DETECT – IMPROVED ===== -->
                 <div class="panel" id="panelAuto">
                     <div class="sens-card">
                         <div class="card-top-line"></div>
@@ -1258,7 +1233,6 @@
                             </div>
                         </div>
 
-                        <!-- ===== HELPER TEXT – CLEAR EXPLANATION ===== -->
                         <p style="color:#b396d9; font-size:0.85rem; margin-bottom:15px; text-align:center; line-height:1.5;">
                             🔍 Can't find your device? Click <strong>"Detect My Device"</strong> – we'll read your specs and find the closest match.
                         </p>
@@ -1291,7 +1265,6 @@
                     </div>
                 </div>
 
-                <!-- ===== RESULTS ===== -->
                 <div class="results" id="results">
                     <div class="sens-card">
                         <div class="card-top-line"></div>
@@ -1535,14 +1508,12 @@
             }
         }
 
-        // Initial load
         loadRandomNames('freestyle');
 
         // =========================================================
         // 3. SENSITIVITY GENERATOR – DEVICE DATABASE (30+ Devices)
         // =========================================================
         const deviceDatabase = [
-            // APPLE
             { name: "iPhone 6 / 6s", brand: "Apple", ram: 2, cpu: 2, res: "750x1334", dpr: 2, gen: "145", red: "135", twox: "125",
                 fourx: "105", sniper: "55", fire: "35%" },
             { name: "iPhone 7 / 8", brand: "Apple", ram: 2, cpu: 2, res: "750x1334", dpr: 2, gen: "148", red: "138", twox: "128",
@@ -1557,8 +1528,6 @@
                 fourx: "132", sniper: "82", fire: "68%" },
             { name: "iPhone SE (2020/22)", brand: "Apple", ram: 3, cpu: 6, res: "750x1334", dpr: 2, gen: "148", red: "138",
                 twox: "128", fourx: "108", sniper: "58", fire: "55%" },
-
-            // SAMSUNG
             { name: "Galaxy A12/A13", brand: "Samsung", ram: 4, cpu: 4, res: "720x1600", dpr: 1.5, gen: "160", red: "150",
                 twox: "140", fourx: "125", sniper: "75", fire: "40%" },
             { name: "Galaxy A22/A23", brand: "Samsung", ram: 4, cpu: 6, res: "720x1600", dpr: 1.5, gen: "165", red: "155",
@@ -1569,8 +1538,6 @@
                 twox: "155", fourx: "140", sniper: "85", fire: "43%" },
             { name: "Galaxy S Series", brand: "Samsung", ram: 8, cpu: 8, res: "1440x3088", dpr: 3, gen: "185", red: "175",
                 twox: "165", fourx: "150", sniper: "95", fire: "52%" },
-
-            // XIAOMI
             { name: "Redmi 9/10 Series", brand: "Xiaomi", ram: 4, cpu: 4, res: "1080x2400", dpr: 2.5, gen: "180", red: "170",
                 twox: "160", fourx: "145", sniper: "90", fire: "45%" },
             { name: "Redmi Note 11/12", brand: "Xiaomi", ram: 6, cpu: 6, res: "1080x2400", dpr: 2.5, gen: "188", red: "178",
@@ -1579,60 +1546,38 @@
                 twox: "175", fourx: "160", sniper: "105", fire: "47%" },
             { name: "Poco X Series", brand: "Xiaomi", ram: 8, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "200", red: "190",
                 twox: "180", fourx: "165", sniper: "115", fire: "43%" },
-
-            // TECNO
             { name: "Tecno Spark 8/9", brand: "Tecno", ram: 3, cpu: 4, res: "720x1600", dpr: 1.5, gen: "150", red: "140",
                 twox: "130", fourx: "110", sniper: "60", fire: "41%" },
             { name: "Tecno Spark 10/11", brand: "Tecno", ram: 4, cpu: 6, res: "1080x2400", dpr: 2.5, gen: "158", red: "148",
                 twox: "138", fourx: "118", sniper: "68", fire: "43%" },
             { name: "Tecno Camon Series", brand: "Tecno", ram: 6, cpu: 6, res: "1080x2400", dpr: 2.5, gen: "162", red: "152",
                 twox: "142", fourx: "122", sniper: "72", fire: "40%" },
-
-            // INFINIX
             { name: "Infinix Hot Series", brand: "Infinix", ram: 3, cpu: 4, res: "720x1600", dpr: 1.5, gen: "145", red: "135",
                 twox: "125", fourx: "105", sniper: "55", fire: "40%" },
             { name: "Infinix Note Series", brand: "Infinix", ram: 4, cpu: 6, res: "1080x2400", dpr: 2.5, gen: "152", red: "142",
                 twox: "132", fourx: "112", sniper: "62", fire: "42%" },
-
-            // ITEL
             { name: "Itel City / P Series", brand: "Itel", ram: 2, cpu: 2, res: "720x1600", dpr: 1.5, gen: "135", red: "125",
                 twox: "115", fourx: "95", sniper: "45", fire: "33%" },
-
-            // ONEPLUS
             { name: "OnePlus (General)", brand: "OnePlus", ram: 8, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "185", red: "175",
                 twox: "165", fourx: "150", sniper: "100", fire: "45%" },
-
-            // GOOGLE
             { name: "Google Pixel 6/7", brand: "Google", ram: 6, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "170", red: "160",
                 twox: "150", fourx: "130", sniper: "80", fire: "48%" },
             { name: "Google Pixel 8/9", brand: "Google", ram: 8, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "178", red: "168",
                 twox: "158", fourx: "138", sniper: "85", fire: "52%" },
-
-            // NOKIA
             { name: "Nokia G Series", brand: "Nokia", ram: 4, cpu: 4, res: "720x1600", dpr: 1.5, gen: "140", red: "130",
                 twox: "120", fourx: "100", sniper: "50", fire: "36%" },
-
-            // MOTOROLA
             { name: "Motorola G Series", brand: "Motorola", ram: 4, cpu: 6, res: "720x1600", dpr: 1.5, gen: "148", red: "138",
                 twox: "128", fourx: "108", sniper: "58", fire: "40%" },
             { name: "Motorola Edge", brand: "Motorola", ram: 6, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "162", red: "152",
                 twox: "142", fourx: "122", sniper: "72", fire: "45%" },
-
-            // SONY
             { name: "Sony Xperia", brand: "Sony", ram: 6, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "168", red: "158",
                 twox: "148", fourx: "128", sniper: "78", fire: "48%" },
-
-            // HUAWEI
             { name: "Huawei P Series", brand: "Huawei", ram: 6, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "165", red: "155",
                 twox: "145", fourx: "125", sniper: "75", fire: "44%" },
             { name: "Huawei Mate Series", brand: "Huawei", ram: 8, cpu: 8, res: "1220x2712", dpr: 3, gen: "175", red: "165",
                 twox: "155", fourx: "135", sniper: "85", fire: "50%" },
-
-            // NOTHING
             { name: "Nothing Phone (1/2)", brand: "Nothing", ram: 8, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "170", red: "160",
                 twox: "150", fourx: "130", sniper: "80", fire: "46%" },
-
-            // OPPO
             { name: "Oppo Find Series", brand: "Oppo", ram: 8, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "175", red: "165",
                 twox: "155", fourx: "135", sniper: "85", fire: "50%" }
         ];
@@ -1758,7 +1703,7 @@
         }
 
         // =========================================================
-        // 7. AUTO DETECT – IMPROVED ACCURACY
+        // 7. AUTO DETECT – PHYSICAL RESOLUTION (ACCURATE)
         // =========================================================
         function detectDevice() {
             const btn = document.getElementById('detectBtn');
@@ -1769,15 +1714,17 @@
             loader.classList.add('show');
 
             setTimeout(() => {
-                // Read accurate device specs
+                // Read physical specs
                 const ram = navigator.deviceMemory || 4;
                 const cpu = navigator.hardwareConcurrency || 4;
-                const width = window.screen.width;
-                const height = window.screen.height;
+                const cssWidth = window.screen.width;
+                const cssHeight = window.screen.height;
                 const dpr = window.devicePixelRatio || 1;
-                const totalPixels = width * height;
+                const physWidth = Math.round(cssWidth * dpr);
+                const physHeight = Math.round(cssHeight * dpr);
+                const totalPixels = physWidth * physHeight;
+                const detectedRes = `${physWidth}x${physHeight}`;
 
-                // Find closest match using weighted scoring
                 let bestMatch = null;
                 let bestScore = Infinity;
 
@@ -1785,10 +1732,11 @@
                     const ramDiff = Math.abs(device.ram - ram) / 8 * 100;
                     const cpuDiff = Math.abs(device.cpu - cpu) / 8 * 100;
                     const dprDiff = Math.abs(device.dpr - dpr) / 3 * 100;
-                    const devicePixels = parseInt(device.res.split('x')[0]) * parseInt(device.res.split('x')[1]);
-                    const resDiff = Math.abs(devicePixels - totalPixels) / 10000000 * 100;
+                    const devParts = device.res.split('x');
+                    const devPixels = parseInt(devParts[0]) * parseInt(devParts[1]);
+                    const resDiff = Math.abs(devPixels - totalPixels) / 10000000 * 100;
 
-                    const score = ramDiff * 0.3 + cpuDiff * 0.2 + dprDiff * 0.2 + resDiff * 0.3;
+                    const score = ramDiff * 0.25 + cpuDiff * 0.15 + dprDiff * 0.2 + resDiff * 0.4;
                     if (score < bestScore) {
                         bestScore = score;
                         bestMatch = device;
@@ -1799,11 +1747,10 @@
                     selectedDevice = bestMatch;
                     isAutoDetect = true;
 
-                    // Show detected specs and confidence
                     const confidence = Math.round(Math.max(0, 100 - bestScore));
                     document.getElementById('dpName').textContent = bestMatch.name;
                     document.getElementById('dpSpecs').textContent =
-                        `${ram}GB RAM · ${cpu} Cores · ${width}x${height} (${dpr}x) · Match: ${confidence}%`;
+                        `${ram}GB RAM · ${cpu} Cores · ${detectedRes} (${dpr}x) · Match: ${confidence}%`;
                     panel.classList.add('show');
 
                     renderAgeButtons('autoAgeGrid', 'autoAgeNote', 'auto');
@@ -2399,7 +2346,7 @@
         });
 
         // =========================================================
-        // 19. BIRDS – ADAPTIVE & OPTIMISED
+        // 19. BIRDS
         // =========================================================
         const canvas = document.getElementById('birdCanvas');
         const ctx = canvas.getContext('2d');
