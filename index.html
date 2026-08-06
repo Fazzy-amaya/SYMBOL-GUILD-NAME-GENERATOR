@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>ᴘʜᴀɴᴛᴏᴍ・〆 — Name Generator</title>
     <style>
-        /* ============================
-           ALL STYLES – UNCHANGED
-           ============================ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
@@ -1241,7 +1238,7 @@
                     </div>
                 </div>
 
-                <!-- ===== TAB 2: AUTO DETECT – IMPROVED ===== -->
+                <!-- ===== TAB 2: AUTO DETECT – FIXED FOR MOBILE ===== -->
                 <div class="panel" id="panelAuto">
                     <div class="sens-card">
                         <div class="card-top-line"></div>
@@ -1752,89 +1749,157 @@
         }
 
         // =========================================================
-        // 7. AUTO DETECT – BEST METHOD (ua-parser-js + Client Hints)
+        // 7. AUTO DETECT – FIXED FOR MOBILE (with timeout & fallback)
         // =========================================================
+        let detectTimeout = null;
+
         function detectDevice() {
             const btn = document.getElementById('detectBtn');
             const loader = document.getElementById('loader');
             const panel = document.getElementById('detectedPanel');
 
+            // Clear any previous timeout
+            if (detectTimeout) clearTimeout(detectTimeout);
+
             btn.style.display = 'none';
             loader.classList.add('show');
+            panel.classList.remove('show');
 
-            // Load ua-parser-js from CDN if needed
-            if (typeof UAParser === 'undefined') {
-                const script = document.createElement('script');
-                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/UAParser.js/2.0.0/ua-parser.min.js';
-                script.onload = () => performDetection();
-                document.head.appendChild(script);
-            } else {
+            // If UAParser is already loaded, use it directly
+            if (typeof UAParser !== 'undefined') {
                 performDetection();
+                return;
             }
 
-            function performDetection() {
-                setTimeout(() => {
-                    const parser = new UAParser();
-                    const result = parser.getResult();
-                    const device = result.device || {};
+            // Load script with a timeout fallback
+            let scriptLoaded = false;
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/UAParser.js/2.0.0/ua-parser.min.js';
+            script.onload = function() {
+                scriptLoaded = true;
+                if (detectTimeout) clearTimeout(detectTimeout);
+                performDetection();
+            };
+            script.onerror = function() {
+                // If script fails, fallback immediately
+                scriptLoaded = true;
+                if (detectTimeout) clearTimeout(detectTimeout);
+                fallbackDetection();
+            };
+            document.head.appendChild(script);
 
-                    // Get screen details
-                    const width = window.screen.width;
-                    const height = window.screen.height;
-                    const dpr = window.devicePixelRatio || 1;
+            // Set a timeout: if script doesn't load in 5 seconds, fallback
+            detectTimeout = setTimeout(function() {
+                if (!scriptLoaded) {
+                    // If script is still loading, use fallback
+                    fallbackDetection();
+                }
+            }, 5000);
+        }
 
-                    // Build device name
-                    let deviceName = device.model || 'Unknown Device';
-                    if (device.vendor && device.vendor !== 'Unknown') {
-                        deviceName = device.vendor + ' ' + deviceName;
-                    }
+        function performDetection() {
+            try {
+                const parser = new UAParser();
+                const result = parser.getResult();
+                const device = result.device || {};
 
-                    // Try Client Hints for more specific model
-                    if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
-                        navigator.userAgentData.getHighEntropyValues(['model'])
-                            .then(ua => {
-                                if (ua.model && ua.model !== deviceName) {
-                                    deviceName = ua.model + ' (' + deviceName + ')';
-                                }
-                                finishDetection(deviceName, width, height, dpr);
-                            })
-                            .catch(() => finishDetection(deviceName, width, height, dpr));
-                    } else {
-                        finishDetection(deviceName, width, height, dpr);
-                    }
-                }, 500);
-            }
+                // Get screen details
+                const width = window.screen.width;
+                const height = window.screen.height;
+                const dpr = window.devicePixelRatio || 1;
 
-            function finishDetection(deviceName, width, height, dpr) {
-                // Find closest match from database (using resolution + DPR)
-                let bestMatch = null;
-                let bestScore = Infinity;
-                const totalPixels = width * height;
-
-                deviceDatabase.forEach(device => {
-                    const dprDiff = Math.abs(device.dpr - dpr) / 3 * 100;
-                    const devicePixels = parseInt(device.res.split('x')[0]) * parseInt(device.res.split('x')[1]);
-                    const resDiff = Math.abs(devicePixels - totalPixels) / 10000000 * 100;
-                    const score = dprDiff * 0.4 + resDiff * 0.6;
-                    if (score < bestScore) {
-                        bestScore = score;
-                        bestMatch = device;
-                    }
-                });
-
-                if (bestMatch) {
-                    selectedDevice = bestMatch;
-                    isAutoDetect = true;
-                    const confidence = Math.round(Math.max(0, 100 - bestScore));
-                    document.getElementById('dpName').textContent = deviceName;
-                    document.getElementById('dpSpecs').textContent =
-                        `${width}x${height} (${dpr}x) · Match: ${confidence}%`;
-                    panel.classList.add('show');
-                    renderAgeButtons('autoAgeGrid', 'autoAgeNote', 'auto');
+                // Build device name
+                let deviceName = device.model || 'Unknown Device';
+                if (device.vendor && device.vendor !== 'Unknown') {
+                    deviceName = device.vendor + ' ' + deviceName;
                 }
 
-                loader.classList.remove('show');
-                btn.style.display = 'flex';
+                // Try Client Hints for more specific model (only if available)
+                if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
+                    navigator.userAgentData.getHighEntropyValues(['model'])
+                        .then(ua => {
+                            if (ua.model && ua.model !== deviceName) {
+                                deviceName = ua.model + ' (' + deviceName + ')';
+                            }
+                            finishDetection(deviceName, width, height, dpr);
+                        })
+                        .catch(() => finishDetection(deviceName, width, height, dpr));
+                } else {
+                    finishDetection(deviceName, width, height, dpr);
+                }
+            } catch (e) {
+                // Fallback to basic UA parsing if UAParser fails
+                fallbackDetection();
+            }
+        }
+
+        function fallbackDetection() {
+            const width = window.screen.width;
+            const height = window.screen.height;
+            const dpr = window.devicePixelRatio || 1;
+
+            // Basic UA fallback
+            let deviceName = 'Unknown Device';
+            const ua = navigator.userAgent;
+            if (ua.indexOf('iPhone') !== -1) {
+                deviceName = 'Apple iPhone';
+                // Try to get model from resolution + DPR
+                if (width === 393 && height === 852 && dpr === 3) deviceName = 'Apple iPhone 14 Pro';
+                else if (width === 390 && height === 844 && dpr === 3) deviceName = 'Apple iPhone 14';
+                else if (width === 428 && height === 926 && dpr === 3) deviceName = 'Apple iPhone 14 Pro Max';
+                else if (width === 375 && height === 812 && dpr === 3) deviceName = 'Apple iPhone X';
+                else if (width === 414 && height === 896 && dpr === 2) deviceName = 'Apple iPhone 11';
+            } else if (ua.indexOf('Android') !== -1) {
+                const match = ua.match(/; ([\w\s]+)\)/);
+                if (match) deviceName = 'Android ' + match[1];
+                else deviceName = 'Android Device';
+            } else if (ua.indexOf('Windows') !== -1) {
+                deviceName = 'Windows PC';
+            } else if (ua.indexOf('Mac') !== -1) {
+                deviceName = 'Apple Mac';
+            }
+
+            finishDetection(deviceName, width, height, dpr);
+        }
+
+        function finishDetection(deviceName, width, height, dpr) {
+            const panel = document.getElementById('detectedPanel');
+
+            // Find closest match from database (using resolution + DPR)
+            let bestMatch = null;
+            let bestScore = Infinity;
+            const totalPixels = width * height;
+
+            deviceDatabase.forEach(device => {
+                const dprDiff = Math.abs(device.dpr - dpr) / 3 * 100;
+                const devicePixels = parseInt(device.res.split('x')[0]) * parseInt(device.res.split('x')[1]);
+                const resDiff = Math.abs(devicePixels - totalPixels) / 10000000 * 100;
+                const score = dprDiff * 0.4 + resDiff * 0.6;
+                if (score < bestScore) {
+                    bestScore = score;
+                    bestMatch = device;
+                }
+            });
+
+            if (bestMatch) {
+                selectedDevice = bestMatch;
+                isAutoDetect = true;
+                const confidence = Math.round(Math.max(0, 100 - bestScore));
+                document.getElementById('dpName').textContent = deviceName;
+                document.getElementById('dpSpecs').textContent =
+                    `${width}x${height} (${dpr}x) · Match: ${confidence}%`;
+                panel.classList.add('show');
+                renderAgeButtons('autoAgeGrid', 'autoAgeNote', 'auto');
+            }
+
+            // Hide loader and show detect button again
+            document.getElementById('loader').classList.remove('show');
+            document.getElementById('detectBtn').style.display = 'flex';
+
+            // Clear timeout
+            if (detectTimeout) {
+                clearTimeout(detectTimeout);
+                detectTimeout = null;
             }
         }
 
