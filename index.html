@@ -1244,7 +1244,7 @@
                     </div>
                 </div>
 
-                <!-- ===== TAB 2: AUTO DETECT ===== -->
+                <!-- ===== TAB 2: AUTO DETECT – IMPROVED ===== -->
                 <div class="panel" id="panelAuto">
                     <div class="sens-card">
                         <div class="card-top-line"></div>
@@ -1257,6 +1257,12 @@
                                 <div class="card-sub">Reads RAM, CPU cores &amp; screen specs from your browser</div>
                             </div>
                         </div>
+
+                        <!-- ===== HELPER TEXT – CLEAR EXPLANATION ===== -->
+                        <p style="color:#b396d9; font-size:0.85rem; margin-bottom:15px; text-align:center; line-height:1.5;">
+                            🔍 Can't find your device? Click <strong>"Detect My Device"</strong> – we'll read your specs and find the closest match.
+                        </p>
+
                         <button class="btn-detect" id="detectBtn" onclick="detectDevice()">
                             <span class="pulse"></span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><rect width="7" height="5" x="7" y="7" rx="1"/><rect width="7" height="5" x="10" y="12" rx="1"/></svg>
@@ -1491,7 +1497,6 @@
             currentNameMode = mode;
             usedNameIndices = [];
 
-            // Update button states
             document.querySelectorAll('.random-header .random-btn').forEach(b => b.classList.remove('active'));
             if (mode === 'freestyle') {
                 document.getElementById('randomFreestyleBtn').classList.add('active');
@@ -1753,7 +1758,7 @@
         }
 
         // =========================================================
-        // 7. AUTO DETECT TAB LOGIC
+        // 7. AUTO DETECT – IMPROVED ACCURACY
         // =========================================================
         function detectDevice() {
             const btn = document.getElementById('detectBtn');
@@ -1764,21 +1769,26 @@
             loader.classList.add('show');
 
             setTimeout(() => {
+                // Read accurate device specs
                 const ram = navigator.deviceMemory || 4;
                 const cpu = navigator.hardwareConcurrency || 4;
                 const width = window.screen.width;
                 const height = window.screen.height;
                 const dpr = window.devicePixelRatio || 1;
-                const res = `${width}x${height}`;
+                const totalPixels = width * height;
 
+                // Find closest match using weighted scoring
                 let bestMatch = null;
                 let bestScore = Infinity;
 
                 deviceDatabase.forEach(device => {
-                    const score = Math.abs(device.ram - ram) * 2 +
-                        Math.abs(device.cpu - cpu) * 1.5 +
-                        Math.abs(device.dpr - dpr) * 1;
+                    const ramDiff = Math.abs(device.ram - ram) / 8 * 100;
+                    const cpuDiff = Math.abs(device.cpu - cpu) / 8 * 100;
+                    const dprDiff = Math.abs(device.dpr - dpr) / 3 * 100;
+                    const devicePixels = parseInt(device.res.split('x')[0]) * parseInt(device.res.split('x')[1]);
+                    const resDiff = Math.abs(devicePixels - totalPixels) / 10000000 * 100;
 
+                    const score = ramDiff * 0.3 + cpuDiff * 0.2 + dprDiff * 0.2 + resDiff * 0.3;
                     if (score < bestScore) {
                         bestScore = score;
                         bestMatch = device;
@@ -1789,8 +1799,11 @@
                     selectedDevice = bestMatch;
                     isAutoDetect = true;
 
+                    // Show detected specs and confidence
+                    const confidence = Math.round(Math.max(0, 100 - bestScore));
                     document.getElementById('dpName').textContent = bestMatch.name;
-                    document.getElementById('dpSpecs').textContent = `${ram}GB RAM · ${cpu} Cores · ${res}`;
+                    document.getElementById('dpSpecs').textContent =
+                        `${ram}GB RAM · ${cpu} Cores · ${width}x${height} (${dpr}x) · Match: ${confidence}%`;
                     panel.classList.add('show');
 
                     renderAgeButtons('autoAgeGrid', 'autoAgeNote', 'auto');
@@ -1995,7 +2008,7 @@
         });
 
         // =========================================================
-        // 13. PHANTOM EFFECTS – Optimised
+        // 13. PHANTOM EFFECTS
         // =========================================================
         (function phantomEffects() {
             const layer = document.getElementById('effect-layer');
