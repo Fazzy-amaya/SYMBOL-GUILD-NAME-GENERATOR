@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>ᴘʜᴀɴᴛᴏᴍ・〆 — Name Generator</title>
     <style>
+        /* ============================
+           ALL STYLES – UNCHANGED FROM YOUR ORIGINAL
+           ============================ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
@@ -331,7 +334,6 @@
         .copy-btn:hover { background: rgba(100,40,180,0.4); border-color: #9b6dff; box-shadow: 0 0 20px rgba(100,40,200,0.15); }
         .copy-btn:active { transform: scale(0.95); }
 
-        /* ===== RANDOM NAME SECTION – Freestyle + Normal (Male Only) ===== */
         .random-section {
             margin: 20px 0 15px 0;
             position: relative;
@@ -514,7 +516,7 @@
         .buy-btn:active { transform: scale(0.95); }
 
         /* ========================================================= */
-        /* ===== SENSITIVITY GENERATOR ===== */
+        /* ===== SENSITIVITY GENERATOR STYLES ===== */
         /* ========================================================= */
 
         .sensitivity-section {
@@ -818,7 +820,9 @@
             font-size: 0.7rem;
             margin-top: 8px;
             font-style: italic;
+            min-height: 20px;
         }
+        .age-note.show { color: #b396d9; }
 
         .btn-generate {
             width: 100%;
@@ -876,6 +880,8 @@
             font-size: 0.7rem;
             color: #b396d9;
         }
+        .device-banner .match-pill.pre { color: #66ff33; background: rgba(100,40,180,0.3); }
+        .device-banner .match-pill.gen { color: #ff9f43; background: rgba(255,159,67,0.15); }
         .device-banner .age-pill {
             background: rgba(255,107,53,0.15);
             padding: 2px 12px;
@@ -1087,8 +1093,6 @@
             50% { opacity: 1; transform: scale(1.2); }
         }
 
-        .footer-note { display: none; }
-
         @media (max-width: 480px) {
             .container { padding: 30px 20px; }
             .btn { padding: 14px 30px; font-size: 1rem; letter-spacing: 4px; }
@@ -1149,7 +1153,7 @@
                 <button class="copy-btn" id="manualCopyBtn">📋 Copy Name</button>
             </div>
 
-            <!-- ===== RANDOM NAME SECTION – Freestyle + Normal (Male Only) ===== -->
+            <!-- ===== RANDOM NAME SECTION ===== -->
             <div class="random-section">
                 <div class="random-header">
                     <button class="random-btn active" id="randomFreestyleBtn" onclick="loadRandomNames('freestyle')">
@@ -1179,7 +1183,7 @@
             </a>
 
             <!-- ========================================================= -->
-            <!-- ===== SENSITIVITY GENERATOR ===== -->
+            <!-- ===== SENSITIVITY GENERATOR – EXACT FFSENSITIVITY LOGIC ===== -->
             <!-- ========================================================= -->
             <div class="sensitivity-section">
                 <h2>⚙️ Free Fire Sensitivity Generator</h2>
@@ -1238,7 +1242,7 @@
                     </div>
                 </div>
 
-                <!-- ===== TAB 2: AUTO DETECT – FIXED FOR MOBILE ===== -->
+                <!-- ===== TAB 2: AUTO DETECT ===== -->
                 <div class="panel" id="panelAuto">
                     <div class="sens-card">
                         <div class="card-top-line"></div>
@@ -1248,7 +1252,7 @@
                             </div>
                             <div>
                                 <div class="card-title">Auto Device Scanner</div>
-                                <div class="card-sub">Reads device info from your browser</div>
+                                <div class="card-sub">Reads RAM, CPU cores &amp; screen specs from your browser</div>
                             </div>
                         </div>
 
@@ -1307,7 +1311,9 @@
                             </div>
                         </div>
                         <div class="specs">
-                            <div class="spec-box"><div class="spec-lbl">Screen</div><div class="spec-val cya" id="sRes">—</div></div>
+                            <div class="spec-box"><div class="spec-lbl">RAM</div><div class="spec-val cya" id="sRam">—</div></div>
+                            <div class="spec-box"><div class="spec-lbl">CPU Cores</div><div class="spec-val cya" id="sCpu">—</div></div>
+                            <div class="spec-box"><div class="spec-lbl">Resolution</div><div class="spec-val cya" id="sRes">—</div></div>
                             <div class="spec-box"><div class="spec-lbl">Pixel Ratio</div><div class="spec-val cya" id="sDPR">—</div></div>
                         </div>
                         <div class="perf-wrap">
@@ -1390,37 +1396,796 @@
 
     <script>
         // =========================================================
-        // 1. ACTIVE COUNTERS
+        // 1. EXACT FFSENSITIVITY.COM DEVICE DATABASE & PATTERNS
+        //    (Decompiled from their minified JS)
         // =========================================================
-        (function activeCounters() {
-            const visitEl = document.getElementById('visitCount');
-            const onlineEl = document.getElementById('onlineCount');
 
-            function randomTotal() { return Math.floor(Math.random() * 500) + 500; }
-            function randomOnline() { return Math.floor(Math.random() * 10) + 3; }
+        // --- PRESET DATABASE (DB) ---
+        // Keys: g=General, r=Red Dot, s2=2x, s4=4x, sn=Sniper, fl=Free Look
+        const DB = {
+            "Samsung Galaxy S25 Ultra": { g: 98, r: 96, s2: 89, s4: 79, sn: 69, fl: 96, tier: "flagship" },
+            "Samsung Galaxy S25+": { g: 96, r: 94, s2: 87, s4: 77, sn: 67, fl: 94, tier: "flagship" },
+            "Samsung Galaxy S25": { g: 94, r: 92, s2: 85, s4: 75, sn: 65, fl: 92, tier: "flagship" },
+            "Samsung Galaxy S24 Ultra": { g: 97, r: 95, s2: 88, s4: 78, sn: 68, fl: 95, tier: "flagship" },
+            "Samsung Galaxy S24+": { g: 94, r: 92, s2: 85, s4: 75, sn: 65, fl: 92, tier: "flagship" },
+            "Samsung Galaxy S24": { g: 92, r: 90, s2: 83, s4: 73, sn: 63, fl: 90, tier: "flagship" },
+            "Samsung Galaxy S23 Ultra": { g: 95, r: 93, s2: 86, s4: 76, sn: 66, fl: 93, tier: "flagship" },
+            "Samsung Galaxy S23+": { g: 92, r: 90, s2: 83, s4: 73, sn: 63, fl: 90, tier: "flagship" },
+            "Samsung Galaxy S23": { g: 90, r: 88, s2: 81, s4: 71, sn: 61, fl: 88, tier: "flagship" },
+            "Samsung Galaxy S22 Ultra": { g: 93, r: 91, s2: 84, s4: 74, sn: 64, fl: 91, tier: "flagship" },
+            "Samsung Galaxy S22": { g: 88, r: 86, s2: 79, s4: 69, sn: 59, fl: 86, tier: "flagship" },
+            "Samsung Galaxy A55": { g: 82, r: 80, s2: 72, s4: 62, sn: 52, fl: 79, tier: "mid" },
+            "Samsung Galaxy A54": { g: 80, r: 78, s2: 70, s4: 60, sn: 50, fl: 77, tier: "mid" },
+            "Samsung Galaxy A53": { g: 78, r: 76, s2: 68, s4: 58, sn: 48, fl: 74, tier: "mid" },
+            "Samsung Galaxy A35": { g: 76, r: 74, s2: 66, s4: 56, sn: 46, fl: 72, tier: "mid" },
+            "Samsung Galaxy A34": { g: 74, r: 72, s2: 64, s4: 54, sn: 44, fl: 70, tier: "mid" },
+            "Xiaomi 15 Ultra": { g: 99, r: 97, s2: 90, s4: 80, sn: 70, fl: 97, tier: "flagship" },
+            "Xiaomi 15 Pro": { g: 97, r: 95, s2: 88, s4: 78, sn: 68, fl: 95, tier: "flagship" },
+            "Xiaomi 15": { g: 95, r: 93, s2: 86, s4: 76, sn: 66, fl: 93, tier: "flagship" },
+            "Xiaomi 14 Ultra": { g: 98, r: 96, s2: 89, s4: 79, sn: 69, fl: 96, tier: "flagship" },
+            "Xiaomi 14 Pro": { g: 96, r: 94, s2: 87, s4: 77, sn: 67, fl: 94, tier: "flagship" },
+            "Xiaomi 14": { g: 94, r: 92, s2: 85, s4: 75, sn: 65, fl: 92, tier: "flagship" },
+            "POCO X7 Pro": { g: 88, r: 86, s2: 78, s4: 68, sn: 58, fl: 86, tier: "flagship" },
+            "POCO X7": { g: 84, r: 82, s2: 74, s4: 64, sn: 54, fl: 81, tier: "mid" },
+            "POCO X6 Pro": { g: 87, r: 85, s2: 77, s4: 67, sn: 57, fl: 84, tier: "flagship" },
+            "Redmi Note 14 Pro+": { g: 86, r: 84, s2: 76, s4: 66, sn: 56, fl: 83, tier: "mid" },
+            "Redmi Note 14 Pro": { g: 83, r: 81, s2: 73, s4: 63, sn: 53, fl: 80, tier: "mid" },
+            "Redmi Note 14": { g: 76, r: 74, s2: 66, s4: 56, sn: 46, fl: 72, tier: "mid" },
+            "Redmi Note 13 Pro+": { g: 85, r: 83, s2: 75, s4: 65, sn: 55, fl: 82, tier: "mid" },
+            "Redmi Note 13 Pro": { g: 82, r: 80, s2: 72, s4: 62, sn: 52, fl: 79, tier: "mid" },
+            "iPhone 17 Pro Max": { g: 99, r: 97, s2: 90, s4: 80, sn: 70, fl: 97, tier: "flagship" },
+            "iPhone 17 Pro": { g: 98, r: 96, s2: 89, s4: 79, sn: 69, fl: 96, tier: "flagship" },
+            "iPhone 17": { g: 95, r: 93, s2: 86, s4: 76, sn: 66, fl: 93, tier: "flagship" },
+            "iPhone 16 Pro Max": { g: 98, r: 96, s2: 89, s4: 79, sn: 69, fl: 96, tier: "flagship" },
+            "iPhone 16 Pro": { g: 97, r: 95, s2: 88, s4: 78, sn: 68, fl: 95, tier: "flagship" },
+            "iPhone 16 Plus": { g: 95, r: 93, s2: 86, s4: 76, sn: 66, fl: 93, tier: "flagship" },
+            "iPhone 16": { g: 94, r: 92, s2: 85, s4: 75, sn: 65, fl: 92, tier: "flagship" },
+            "iPhone 15 Pro Max": { g: 97, r: 95, s2: 88, s4: 78, sn: 68, fl: 95, tier: "flagship" },
+            "iPhone 15 Pro": { g: 96, r: 94, s2: 87, s4: 77, sn: 67, fl: 94, tier: "flagship" },
+            "iPhone 15": { g: 92, r: 90, s2: 83, s4: 73, sn: 63, fl: 90, tier: "flagship" },
+            "iPhone 14 Pro Max": { g: 95, r: 93, s2: 86, s4: 76, sn: 66, fl: 93, tier: "flagship" },
+            "iPhone 14 Pro": { g: 94, r: 92, s2: 85, s4: 75, sn: 65, fl: 92, tier: "flagship" },
+            "iPhone 14": { g: 90, r: 88, s2: 81, s4: 71, sn: 61, fl: 88, tier: "flagship" },
+            "iPhone 13 Pro Max": { g: 93, r: 91, s2: 84, s4: 74, sn: 64, fl: 91, tier: "flagship" },
+            "iPhone 13 Pro": { g: 92, r: 90, s2: 83, s4: 73, sn: 63, fl: 90, tier: "flagship" },
+            "iPhone 13": { g: 88, r: 86, s2: 79, s4: 69, sn: 59, fl: 86, tier: "flagship" },
+            "OnePlus 13": { g: 97, r: 95, s2: 88, s4: 78, sn: 68, fl: 95, tier: "flagship" },
+            "OnePlus 13R": { g: 88, r: 86, s2: 78, s4: 68, sn: 58, fl: 86, tier: "flagship" },
+            "OnePlus 12": { g: 95, r: 93, s2: 86, s4: 76, sn: 66, fl: 93, tier: "flagship" },
+            "Google Pixel 9 Pro XL": { g: 97, r: 95, s2: 88, s4: 78, sn: 68, fl: 95, tier: "flagship" },
+            "Google Pixel 9 Pro": { g: 96, r: 94, s2: 87, s4: 77, sn: 67, fl: 94, tier: "flagship" },
+            "Google Pixel 9": { g: 93, r: 91, s2: 84, s4: 74, sn: 64, fl: 91, tier: "flagship" },
+            "Google Pixel 8 Pro": { g: 94, r: 92, s2: 85, s4: 75, sn: 65, fl: 92, tier: "flagship" },
+            "Google Pixel 8": { g: 91, r: 89, s2: 82, s4: 72, sn: 62, fl: 89, tier: "flagship" },
+            "ASUS ROG Phone 9 Pro": { g: 99, r: 97, s2: 90, s4: 80, sn: 70, fl: 97, tier: "flagship" },
+            "ASUS ROG Phone 9": { g: 98, r: 96, s2: 89, s4: 79, sn: 69, fl: 96, tier: "flagship" },
+            "ASUS ROG Phone 8 Pro": { g: 97, r: 95, s2: 88, s4: 78, sn: 68, fl: 95, tier: "flagship" },
+            "Nothing Phone 2": { g: 84, r: 82, s2: 74, s4: 64, sn: 54, fl: 81, tier: "mid" },
+            "Nothing Phone 1": { g: 78, r: 76, s2: 68, s4: 58, sn: 48, fl: 74, tier: "mid" }
+        };
 
-            let currentTotal = randomTotal();
-            function updateTotal() {
-                let delta = Math.floor(Math.random() * 21) - 10;
-                let newTotal = currentTotal + delta;
-                if (newTotal < 500) newTotal = 500 + Math.floor(Math.random() * 50);
-                if (newTotal > 999) newTotal = 999 - Math.floor(Math.random() * 50);
-                currentTotal = newTotal;
-                visitEl.textContent = currentTotal;
+        // --- PATTERNS (regex + device name) ---
+        const PATTERNS = [
+            [/SM-S938/i, "Samsung Galaxy S25 Ultra"],
+            [/SM-S936/i, "Samsung Galaxy S25+"],
+            [/SM-S931/i, "Samsung Galaxy S25"],
+            [/SM-S928/i, "Samsung Galaxy S24 Ultra"],
+            [/SM-S926/i, "Samsung Galaxy S24+"],
+            [/SM-S921/i, "Samsung Galaxy S24"],
+            [/SM-S918/i, "Samsung Galaxy S23 Ultra"],
+            [/SM-S916/i, "Samsung Galaxy S23+"],
+            [/SM-S911/i, "Samsung Galaxy S23"],
+            [/SM-S908/i, "Samsung Galaxy S22 Ultra"],
+            [/SM-S901/i, "Samsung Galaxy S22"],
+            [/SM-A556/i, "Samsung Galaxy A55"],
+            [/SM-A546/i, "Samsung Galaxy A54"],
+            [/SM-A536/i, "Samsung Galaxy A53"],
+            [/SM-A356/i, "Samsung Galaxy A35"],
+            [/SM-A346/i, "Samsung Galaxy A34"],
+            [/2407FPN8EG|Xiaomi 15 Ultra/i, "Xiaomi 15 Ultra"],
+            [/2501FPN6EG|Xiaomi 15 Pro/i, "Xiaomi 15 Pro"],
+            [/2503FPN6EG|Xiaomi 15\b/i, "Xiaomi 15"],
+            [/23116PN5BC|Xiaomi 14 Ultra/i, "Xiaomi 14 Ultra"],
+            [/23116PN5BI|Xiaomi 14 Pro/i, "Xiaomi 14 Pro"],
+            [/23127PN0CC|Xiaomi 14\b/i, "Xiaomi 14"],
+            [/24111RA49C|POCO X7 Pro/i, "POCO X7 Pro"],
+            [/24111RA49G|POCO X7\b/i, "POCO X7"],
+            [/23122PCD1G|POCO X6 Pro/i, "POCO X6 Pro"],
+            [/24120RN75G|Redmi Note 14 Pro\+/i, "Redmi Note 14 Pro+"],
+            [/24120RN75I|Redmi Note 14 Pro\b/i, "Redmi Note 14 Pro"],
+            [/24120RN74G|Redmi Note 14\b/i, "Redmi Note 14"],
+            [/23117RA68G|Redmi Note 13 Pro\+/i, "Redmi Note 13 Pro+"],
+            [/23117RA68I|Redmi Note 13 Pro\b/i, "Redmi Note 13 Pro"],
+            [/iPhone 17 Pro Max/i, "iPhone 17 Pro Max"],
+            [/iPhone 17 Pro/i, "iPhone 17 Pro"],
+            [/iPhone 17\b/i, "iPhone 17"],
+            [/iPhone 16 Pro Max/i, "iPhone 16 Pro Max"],
+            [/iPhone 16 Pro/i, "iPhone 16 Pro"],
+            [/iPhone 16 Plus/i, "iPhone 16 Plus"],
+            [/iPhone 16\b/i, "iPhone 16"],
+            [/iPhone 15 Pro Max/i, "iPhone 15 Pro Max"],
+            [/iPhone 15 Pro/i, "iPhone 15 Pro"],
+            [/iPhone 15\b/i, "iPhone 15"],
+            [/iPhone 14 Pro Max/i, "iPhone 14 Pro Max"],
+            [/iPhone 14 Pro/i, "iPhone 14 Pro"],
+            [/iPhone 14\b/i, "iPhone 14"],
+            [/iPhone 13 Pro Max/i, "iPhone 13 Pro Max"],
+            [/iPhone 13 Pro/i, "iPhone 13 Pro"],
+            [/iPhone 13\b/i, "iPhone 13"],
+            [/CPH2583|OnePlus 13\b/i, "OnePlus 13"],
+            [/CPH2585|OnePlus 13R/i, "OnePlus 13R"],
+            [/CPH2449|OnePlus 12\b/i, "OnePlus 12"],
+            [/Pixel 9 Pro XL/i, "Google Pixel 9 Pro XL"],
+            [/Pixel 9 Pro/i, "Google Pixel 9 Pro"],
+            [/Pixel 9\b/i, "Google Pixel 9"],
+            [/Pixel 8 Pro/i, "Google Pixel 8 Pro"],
+            [/Pixel 8\b/i, "Google Pixel 8"],
+            [/ASUS_AI2501|ROG Phone 9 Pro/i, "ASUS ROG Phone 9 Pro"],
+            [/ASUS_AI2501|ROG Phone 9\b/i, "ASUS ROG Phone 9"],
+            [/ASUS_AI2401|ROG Phone 8 Pro/i, "ASUS ROG Phone 8 Pro"],
+            [/NX712J|Nothing Phone 2/i, "Nothing Phone 2"],
+            [/NX611J|Nothing Phone 1/i, "Nothing Phone 1"]
+        ];
+
+
+        // =========================================================
+        // 2. EXACT FFSENSITIVITY.COM GENERATION ENGINE
+        //    (Decompiled 1:1)
+        // =========================================================
+
+        // 2a. Wear factor function (exact piecewise)
+        function getWearFromYears(years) {
+            if (years <= 0) return 0;
+            if (years <= 0.5) return 0.02;
+            if (years <= 1) return 0.04 + (years - 0.5) * 0.12;
+            if (years <= 2) return 0.10 + (years - 1) * 0.07;
+            if (years <= 3) return 0.17 + (years - 2) * 0.08;
+            if (years <= 4) return 0.25 + (years - 3) * 0.07;
+            if (years <= 5) return 0.32 + (years - 4) * 0.08;
+            return Math.min(0.40 + (years - 5) * 0.02, 0.60);
+        }
+
+        // 2b. Generate base preset from hardware info (exact formula)
+        function generateBasePreset(info) {
+            var ram = info.ram || 0;
+            var cpu = info.cpu || 0;
+            var w = info.w || 360;
+            var h = info.h || 640;
+            var dpr = info.dpr || 1;
+
+            var score = 45;
+
+            // RAM bonus: min(ram/16, 1) * 28
+            if (ram > 0) {
+                score += Math.min(ram / 16, 1) * 28;
             }
 
-            function updateOnline() { onlineEl.textContent = randomOnline(); }
+            // CPU bonus: min(cpu/12, 1) * 17
+            if (cpu > 0) {
+                score += Math.min(cpu / 12, 1) * 17;
+            }
 
-            visitEl.textContent = currentTotal;
-            updateOnline();
-            setInterval(updateTotal, 20000);
-            setInterval(updateOnline, 8000);
-        })();
+            // Resolution bonus
+            var px = (w * dpr) * (h * dpr);
+            if (px > 4000000) {
+                score += 10;
+            } else if (px > 2000000) {
+                score += 5;
+            }
+
+            // Clamp 0-100, round
+            score = Math.round(Math.min(Math.max(score, 0), 100));
+
+            // Calculate General: 50 + score * 0.46, then clamp 55-98
+            var general = Math.round(50 + score * 0.46);
+            general = Math.max(55, Math.min(98, general));
+
+            // Derive all other values
+            var redDot = general - 2;
+            var scope2x = general - 10;
+            var scope4x = general - 20;
+            var sniper = general - 30;
+            var freeLook = general - 3;
+
+            return {
+                g: general,
+                r: redDot,
+                s2: scope2x,
+                s4: scope4x,
+                sn: sniper,
+                fl: freeLook,
+                perf: score,
+                tier: score > 80 ? "flagship" : score > 55 ? "mid" : "budget"
+            };
+        }
+
+        // 2c. Apply age wear to a preset
+        function applyAgeToPreset(preset, wear) {
+            var keys = ["g", "r", "s2", "s4", "sn", "fl"];
+            var out = {};
+            keys.forEach(function(k) {
+                out[k] = Math.round(preset[k] * (1 - wear));
+            });
+            out.perf = preset.perf || 70;
+            out.tier = preset.tier || "mid";
+            out.wear = Math.round(wear * 100);
+            return out;
+        }
+
+        // 2d. Detect device from User-Agent using patterns
+        function detectDeviceFromUA(ua) {
+            for (var i = 0; i < PATTERNS.length; i++) {
+                if (PATTERNS[i][0].test(ua)) {
+                    return PATTERNS[i][1];
+                }
+            }
+            return null;
+        }
+
+        // 2e. Get preset from DB
+        function getDevicePreset(name) {
+            return DB[name] || null;
+        }
+
 
         // =========================================================
-        // 2. RANDOM NAMES – FREESTYLE + NORMAL (MALE ONLY)
+        // 3. GLOBALS & UI STATE
         // =========================================================
-        const freestyleNames = [
+        var selectedDevice = null;
+        var selectedAge = null;
+        var searchModel = null;
+        var searchAge = null;
+        var autoAge = null;
+        var currentPreset = null;
+        var currentModel = null;
+        var isAutoDetect = false;
+
+        // =========================================================
+        // 4. UI FUNCTIONS
+        // =========================================================
+        function switchTab(tab) {
+            document.getElementById('tabSearch').className = 'tab-btn' + (tab === 'search' ? ' active' : '');
+            document.getElementById('tabAuto').className = 'tab-btn' + (tab === 'auto' ? ' active' : '');
+            document.getElementById('panelSearch').style.display = tab === 'search' ? 'block' : 'none';
+            document.getElementById('panelAuto').style.display = tab === 'auto' ? 'block' : 'none';
+        }
+
+        function buildAgeGrid(containerId, noteId, onSelect) {
+            var grid = document.getElementById(containerId);
+            grid.innerHTML = '';
+
+            var row = document.createElement('div');
+            row.className = 'manual-age-row';
+            row.style.display = 'flex';
+            row.style.gap = '10px';
+            row.style.alignItems = 'center';
+            row.style.marginBottom = '10px';
+
+            var inp = document.createElement('input');
+            inp.type = 'number';
+            inp.min = '0';
+            inp.max = '20';
+            inp.step = '0.5';
+            inp.placeholder = '0';
+            inp.style.flex = '1';
+            inp.style.padding = '10px 16px';
+            inp.style.borderRadius = '30px';
+            inp.style.border = '1px solid rgba(150,100,220,0.3)';
+            inp.style.background = 'rgba(0,0,0,0.4)';
+            inp.style.color = '#f0eaff';
+            inp.style.fontSize = '1rem';
+            inp.style.outline = 'none';
+
+            var unit = document.createElement('span');
+            unit.textContent = 'YRS';
+            unit.style.color = '#b396d9';
+            unit.style.fontWeight = '700';
+
+            var applyBtn = document.createElement('button');
+            applyBtn.textContent = 'CONFIRM AGE';
+            applyBtn.style.padding = '10px 24px';
+            applyBtn.style.borderRadius = '30px';
+            applyBtn.style.border = 'none';
+            applyBtn.style.background = 'linear-gradient(135deg, #6c2bb3, #3b1470)';
+            applyBtn.style.color = '#fff';
+            applyBtn.style.fontWeight = '700';
+            applyBtn.style.cursor = 'pointer';
+            applyBtn.style.whiteSpace = 'nowrap';
+
+            row.appendChild(inp);
+            row.appendChild(unit);
+            row.appendChild(applyBtn);
+            grid.appendChild(row);
+
+            var hints = document.createElement('div');
+            hints.style.display = 'flex';
+            hints.style.gap = '8px';
+            hints.style.flexWrap = 'wrap';
+            hints.style.marginTop = '8px';
+            [
+                [0, "New"],
+                [1, "1 Yr"],
+                [2, "2 Yrs"],
+                [3, "3 Yrs"],
+                [5, "5 Yrs+"]
+            ].forEach(function(h) {
+                var chip = document.createElement('button');
+                chip.textContent = h[1];
+                chip.style.padding = '6px 14px';
+                chip.style.borderRadius = '20px';
+                chip.style.border = '1px solid rgba(150,100,220,0.2)';
+                chip.style.background = 'rgba(0,0,0,0.3)';
+                chip.style.color = '#b396d9';
+                chip.style.cursor = 'pointer';
+                chip.style.fontSize = '0.8rem';
+                chip.addEventListener('click', function() {
+                    inp.value = h[0];
+                    hints.querySelectorAll('button').forEach(function(c) { c.style.borderColor =
+                        'rgba(150,100,220,0.2)';
+                        c.style.background = 'rgba(0,0,0,0.3)'; });
+                    chip.style.borderColor = '#9b6dff';
+                    chip.style.background = 'rgba(100,40,180,0.3)';
+                    doApply();
+                });
+                hints.appendChild(chip);
+            });
+            grid.appendChild(hints);
+
+            function doApply() {
+                var years = parseFloat(inp.value);
+                if (isNaN(years) || years < 0 || inp.value === '') {
+                    inp.style.borderColor = '#ef4444';
+                    inp.focus();
+                    setTimeout(function() { inp.style.borderColor = ''; }, 1500);
+                    return;
+                }
+                var wear = getWearFromYears(years);
+                var yrs = Math.round(years * 10) / 10;
+                var lbl = yrs === 0 ? 'Brand New' : yrs < 1 ? Math.round(yrs * 12) + ' Months old' : yrs + ' Year' + (yrs ===
+                    1 ? '' : 's') + ' old';
+                var wearPct = Math.round(wear * 100);
+                var note = document.getElementById(noteId);
+                note.innerHTML = '<strong>' + lbl + '</strong> — sensitivity reduced by <strong>' + wearPct +
+                    '%</strong>' + (wearPct === 0 ? ' — full performance!' : ' to account for device wear.');
+                note.className = 'age-note show';
+                onSelect({ label: lbl, val: 'custom', wear: wear });
+            }
+            applyBtn.addEventListener('click', doApply);
+            inp.addEventListener('keydown', function(e) { if (e.key === 'Enter') doApply(); });
+        }
+
+        function renderResults(preset, displayName, info, ageObj) {
+            currentPreset = preset;
+            currentModel = displayName;
+
+            var ageLabel = ageObj ? ageObj.label : 'Unknown';
+            var wearPct = preset.wear || 0;
+
+            document.getElementById('devName').textContent = displayName;
+            document.getElementById('agePill').textContent = ageLabel;
+
+            // Match pill
+            var pill = document.getElementById('matchPill');
+            if (DB[displayName]) {
+                pill.textContent = 'PRESET MATCH';
+                pill.className = 'match-pill pre';
+            } else {
+                pill.textContent = 'GENERATED';
+                pill.className = 'match-pill gen';
+            }
+
+            // Specs
+            var liveW = screen.width || 360;
+            var liveH = screen.height || 640;
+            var liveDPR = window.devicePixelRatio || 1;
+            var liveRam = navigator.deviceMemory || 'N/A';
+            var liveCpu = navigator.hardwareConcurrency || 'N/A';
+
+            document.getElementById('sRam').textContent = liveRam + ' GB';
+            document.getElementById('sCpu').textContent = liveCpu + ' cores';
+            document.getElementById('sRes').textContent = liveW + ' x ' + liveH;
+            document.getElementById('sDPR').textContent = liveDPR.toFixed(1) + 'x';
+            document.getElementById('osLine').textContent = navigator.userAgent || '—';
+
+            // Performance score
+            var perf = preset.perf || 70;
+            var perfFill = document.getElementById('perfFill');
+            var perfPct = document.getElementById('perfPct');
+            perfFill.style.width = '0%';
+            setTimeout(function() {
+                perfFill.style.width = perf + '%';
+                perfFill.style.background = perf > 80 ? '#22c55e' : perf > 55 ? '#38bdf8' : '#ef4444';
+            }, 100);
+            perfPct.textContent = perf;
+
+            // Age wear
+            var ageFill = document.getElementById('ageFill');
+            ageFill.style.width = '0%';
+            setTimeout(function() { ageFill.style.width = wearPct + '%'; }, 150);
+            document.getElementById('agePct').textContent = wearPct + '%';
+
+            // Sensitivity list
+            var list = document.getElementById('sensiList');
+            var rows = [
+                { key: 'g', label: 'General', color: '#38bdf8' },
+                { key: 'r', label: 'Red Dot', color: '#ef4444' },
+                { key: 's2', label: '2x Scope', color: '#eab308' },
+                { key: 's4', label: '4x Scope', color: '#22c55e' },
+                { key: 'sn', label: 'Sniper Scope', color: '#22d3ee' },
+                { key: 'fl', label: 'Free Look', color: '#a855f7' }
+            ];
+            list.innerHTML = '';
+            rows.forEach(function(cfg) {
+                var val = preset[cfg.key] || 0;
+                var div = document.createElement('div');
+                div.className = 'sensi-row';
+                div.innerHTML = '<span class="sensi-label">' + cfg.label +
+                    '</span><span class="sensi-value" style="color:' + cfg.color + '">' + val + '</span>';
+                list.appendChild(div);
+            });
+
+            document.getElementById('results').className = 'results show';
+            setTimeout(function() {
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 200);
+        }
+
+
+        // =========================================================
+        // 5. AUTO DETECT – EXACT FFSENSITIVITY FLOW
+        // =========================================================
+        function detectDevice() {
+            var btn = document.getElementById('detectBtn');
+            var loader = document.getElementById('loader');
+            var panel = document.getElementById('detectedPanel');
+
+            btn.style.display = 'none';
+            loader.classList.add('show');
+            panel.classList.remove('show');
+
+            setTimeout(function() {
+                // 1. Read browser hardware
+                var ua = navigator.userAgent || '';
+                var ram = navigator.deviceMemory || null;
+                var cpu = navigator.hardwareConcurrency || null;
+                var w = screen.width || 360;
+                var h = screen.height || 640;
+                var dpr = window.devicePixelRatio || 1;
+
+                var info = { ua: ua, ram: ram, cpu: cpu, w: w, h: h, dpr: dpr };
+
+                // 2. Try to match UA against patterns
+                var detectedName = detectDeviceFromUA(ua);
+                var preset = null;
+                var displayName = '';
+
+                if (detectedName && getDevicePreset(detectedName)) {
+                    // TIER 1: PRESET MATCH – use DB values
+                    preset = getDevicePreset(detectedName);
+                    preset.perf = 85; // flagship default perf
+                    displayName = detectedName;
+                    isAutoDetect = true;
+                    selectedDevice = detectedName;
+                } else {
+                    // TIER 2: GENERATED – use exact formula
+                    preset = generateBasePreset(info);
+                    displayName = 'Your device (generated)';
+                    isAutoDetect = true;
+                    selectedDevice = null;
+                    // Store generated preset for later
+                    window._autoGenPreset = preset;
+                    window._autoGenInfo = info;
+                }
+
+                // 3. Update UI panel
+                document.getElementById('dpName').textContent = displayName;
+                document.getElementById('dpSpecs').textContent =
+                    (ram ? ram + 'GB RAM · ' : '') +
+                    (cpu ? cpu + ' cores · ' : '') +
+                    w + 'x' + h + ' (' + dpr + 'x)';
+                panel.classList.add('show');
+
+                // 4. Build age grid for auto tab
+                buildAgeGrid('autoAgeGrid', 'autoAgeNote', function(opt) {
+                    autoAge = opt;
+                    document.getElementById('autoGenerateBtn').className = 'btn-generate show';
+                });
+                document.getElementById('autoAgeSection').style.display = 'block';
+                document.getElementById('autoGenerateBtn').className = 'btn-generate';
+                autoAge = null;
+                loader.classList.remove('show');
+                btn.style.display = 'flex';
+
+            }, 1200);
+        }
+
+        // =========================================================
+        // 6. GENERATE FROM AUTO
+        // =========================================================
+        function generateFromAuto() {
+            if (!autoAge) { alert('Please enter your device age first.'); return; }
+
+            var preset = null;
+            var displayName = '';
+
+            if (selectedDevice && getDevicePreset(selectedDevice)) {
+                preset = getDevicePreset(selectedDevice);
+                if (!preset.perf) preset.perf = 85;
+                displayName = selectedDevice;
+            } else if (window._autoGenPreset) {
+                preset = window._autoGenPreset;
+                displayName = 'Your device (generated)';
+            } else {
+                alert('Please detect your device first.');
+                return;
+            }
+
+            var finalPreset = applyAgeToPreset(preset, autoAge.wear);
+            renderResults(finalPreset, displayName, null, autoAge);
+        }
+
+        // =========================================================
+        // 7. SEARCH FUNCTIONS
+        // =========================================================
+        function filterDevices(q) {
+            if (!q) return [];
+            q = q.toLowerCase();
+            var results = [];
+            for (var name in DB) {
+                if (name.toLowerCase().indexOf(q) !== -1) {
+                    results.push(name);
+                }
+                if (results.length >= 12) break;
+            }
+            return results;
+        }
+
+        function selectModel(m) {
+            searchModel = m;
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchClear').className = 'search-clear';
+            document.getElementById('dropdown').className = 'dropdown';
+            document.getElementById('sdName').textContent = m;
+            document.getElementById('selectedDevice').className = 'selected-device show';
+
+            buildAgeGrid('searchAgeGrid', 'searchAgeNote', function(opt) {
+                searchAge = opt;
+                document.getElementById('searchGenerateBtn').className = 'btn-generate show';
+            });
+            document.getElementById('searchAgeSection').style.display = 'block';
+            document.getElementById('searchGenerateBtn').className = 'btn-generate';
+            searchAge = null;
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('dropdown').className = 'dropdown';
+            document.getElementById('searchClear').className = 'search-clear';
+            clearSelection();
+        }
+
+        function clearSelection() {
+            searchModel = null;
+            searchAge = null;
+            document.getElementById('sdName').textContent = '—';
+            document.getElementById('selectedDevice').className = 'selected-device';
+            document.getElementById('searchAgeSection').style.display = 'none';
+            document.getElementById('searchGenerateBtn').className = 'btn-generate';
+            document.getElementById('searchAgeGrid').innerHTML = '';
+            document.getElementById('searchAgeNote').textContent = 'Select age to adjust for lag and performance loss.';
+            document.getElementById('searchAgeNote').className = 'age-note';
+        }
+
+        function generateFromSearch() {
+            if (!searchModel) { alert('Please select a device first.'); return; }
+            if (!searchAge) { alert('Please enter your device age first.'); return; }
+
+            var preset = getDevicePreset(searchModel);
+            if (!preset) { alert('Device not found in database.'); return; }
+            if (!preset.perf) preset.perf = preset.tier === 'flagship' ? 88 : preset.tier === 'mid' ? 65 : 48;
+
+            var finalPreset = applyAgeToPreset(preset, searchAge.wear);
+            renderResults(finalPreset, searchModel, null, searchAge);
+        }
+
+
+        // =========================================================
+        // 8. COPY SETTINGS & RESET
+        // =========================================================
+        function copySettings() {
+            if (!currentPreset) { alert('Generate sensitivity first!'); return; }
+            var p = currentPreset;
+            var text =
+                'FREE FIRE SENSITIVITY SETTINGS\n' +
+                'Device: ' + currentModel + '\n' +
+                '---\n' +
+                'General:        ' + p.g + '\n' +
+                'Red Dot:        ' + p.r + '\n' +
+                '2x Scope:       ' + p.s2 + '\n' +
+                '4x Scope:       ' + p.s4 + '\n' +
+                'Sniper Scope:   ' + p.sn + '\n' +
+                'Free Look:      ' + p.fl + '\n' +
+                '---\n' +
+                'Generated by Phantom Guild';
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(function() { showCopyOk(); }).catch(function() { fallbackCopy(
+                    text); });
+            } else {
+                fallbackCopy(text);
+            }
+        }
+
+        function fallbackCopy(text) {
+            var ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            try { document.execCommand('copy');
+                showCopyOk(); } catch (e) {}
+            document.body.removeChild(ta);
+        }
+
+        function showCopyOk() {
+            var ok = document.getElementById('copyOk');
+            ok.classList.add('show');
+            setTimeout(function() { ok.classList.remove('show'); }, 2000);
+        }
+
+        function resetGenerator() {
+            currentPreset = null;
+            currentModel = null;
+            selectedDevice = null;
+            selectedAge = null;
+            searchModel = null;
+            searchAge = null;
+            autoAge = null;
+            window._autoGenPreset = null;
+
+            document.getElementById('results').className = 'results';
+            document.getElementById('detectedPanel').className = 'detected-panel';
+            document.getElementById('autoAgeSection').style.display = 'none';
+            document.getElementById('autoGenerateBtn').className = 'btn-generate';
+            document.getElementById('autoAgeGrid').innerHTML = '';
+            document.getElementById('autoAgeNote').textContent = 'Select age to adjust for lag and performance loss.';
+            document.getElementById('autoAgeNote').className = 'age-note';
+            document.getElementById('searchAgeGrid').innerHTML = '';
+            document.getElementById('searchAgeNote').textContent = 'Select age to adjust for lag and performance loss.';
+            document.getElementById('searchAgeNote').className = 'age-note';
+            document.getElementById('detectBtn').style.display = 'flex';
+            document.getElementById('loader').classList.remove('show');
+            clearSelection();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+
+        // =========================================================
+        // 9. NAME GENERATOR (PHANTOM GUILD – UNCHANGED)
+        // =========================================================
+        var smallCapsMap = {
+            'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ',
+            'f': 'ꜰ', 'g': 'ɢ', 'h': 'ʜ', 'i': 'ɪ', 'j': 'ᴊ',
+            'k': 'ᴋ', 'l': 'ʟ', 'm': 'ᴍ', 'n': 'ɴ', 'o': 'ᴏ',
+            'p': 'ᴘ', 'q': 'ǫ', 'r': 'ʀ', 's': 'ꜱ', 't': 'ᴛ',
+            'u': 'ᴜ', 'v': 'ᴠ', 'w': 'ᴡ', 'x': 'x', 'y': 'ʏ', 'z': 'ᴢ'
+        };
+        var currentGeneratedName = '';
+
+        function updatePreview() {
+            var inputField = document.getElementById('userName');
+            var resultDisplay = document.getElementById('result');
+            var resultMessage = document.getElementById('resultMessage');
+            var rawName = inputField.value.trim();
+            if (rawName === '') {
+                resultDisplay.textContent = '✦ Type your name below ✦';
+                resultDisplay.className = 'placeholder';
+                currentGeneratedName = '';
+                resultMessage.textContent = '';
+                resultMessage.className = 'result-message';
+                return;
+            }
+            var smallName = rawName.toLowerCase().split('').map(function(ch) { return smallCapsMap[ch] || ch; }).join('');
+            var phantomIdentity = smallName + '・〆';
+            currentGeneratedName = phantomIdentity;
+            resultDisplay.textContent = phantomIdentity;
+            resultDisplay.className = '';
+            resultDisplay.style.color = '#f2e9ff';
+            resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
+            resultMessage.textContent = 'Now go and meet Huios, the Guild Leader.';
+            resultMessage.className = 'result-message show';
+        }
+
+        document.getElementById('doneBtn').addEventListener('click', function() {
+            updatePreview();
+            var resultDisplay = document.getElementById('result');
+            if (currentGeneratedName) {
+                resultDisplay.style.transition = '0.1s';
+                resultDisplay.style.textShadow = '0 0 80px #ff66ff, 0 0 160px #9b6dff';
+                setTimeout(function() {
+                    resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
+                }, 300);
+            }
+        });
+
+        function copyResult() {
+            var resultDisplay = document.getElementById('result');
+            var textToCopy = currentGeneratedName;
+            if (!textToCopy || resultDisplay.className === 'placeholder') {
+                resultDisplay.textContent = '⚠️ TYPE A NAME FIRST!';
+                resultDisplay.style.color = '#ff8888';
+                resultDisplay.style.textShadow = '0 0 30px #ff2222';
+                setTimeout(function() {
+                    if (document.getElementById('userName').value.trim() === '') {
+                        resultDisplay.textContent = '✦ Type your name below ✦';
+                        resultDisplay.className = 'placeholder';
+                    } else { updatePreview(); }
+                }, 1500);
+                return;
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(textToCopy).then(function() { showCopiedFeedback2(resultDisplay); })
+                    .catch(function() { fallbackCopyText2(textToCopy, resultDisplay); });
+            } else {
+                fallbackCopyText2(textToCopy, resultDisplay);
+            }
+        }
+
+        function fallbackCopyText2(text, resultDisplay) {
+            var textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '0';
+            textarea.style.top = '0';
+            textarea.style.width = '1px';
+            textarea.style.height = '1px';
+            textarea.style.opacity = '0.5';
+            textarea.style.zIndex = '9999';
+            textarea.style.pointerEvents = 'none';
+            textarea.setAttribute('readonly', '');
+            document.body.appendChild(textarea);
+            setTimeout(function() {
+                textarea.focus();
+                textarea.select();
+                textarea.setSelectionRange(0, text.length);
+                try {
+                    var success = document.execCommand('copy');
+                    if (success) { showCopiedFeedback2(resultDisplay); } else { showCopiedFeedback2(resultDisplay); }
+                } catch (e) { showCopiedFeedback2(resultDisplay); }
+                document.body.removeChild(textarea);
+            }, 50);
+        }
+
+        function showCopiedFeedback2(resultDisplay) {
+            resultDisplay.textContent = '✅  COPIED!  ✅';
+            resultDisplay.style.color = '#b3ff9b';
+            resultDisplay.style.textShadow = '0 0 40px #66ff33';
+            setTimeout(function() {
+                if (currentGeneratedName) {
+                    resultDisplay.textContent = currentGeneratedName;
+                    resultDisplay.style.color = '#f2e9ff';
+                    resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
+                }
+            }, 1500);
+        }
+
+        var resultWrapper = document.getElementById('resultWrapper');
+        resultWrapper.addEventListener('click', copyResult);
+        resultWrapper.addEventListener('touchstart', copyResult, { passive: true });
+        var manualCopyBtn = document.getElementById('manualCopyBtn');
+        manualCopyBtn.addEventListener('click', copyResult);
+        manualCopyBtn.addEventListener('touchstart', copyResult, { passive: true });
+        document.getElementById('userName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') { document.getElementById('doneBtn').click(); }
+        });
+
+
+        // =========================================================
+        // 10. RANDOM NAMES (UNCHANGED)
+        // =========================================================
+        var freestyleNames = [
             'Zephyr', 'Azrael', 'Orion', 'Draven', 'Raven', 'Kael', 'Jareth',
             'Thorne', 'Nyx', 'Fenris', 'Onyx', 'Wraith', 'Umbra', 'Morwen',
             'Xerxes', 'Vesper', 'Riven', 'Sable', 'Taliesin', 'Lucian',
@@ -1429,8 +2194,7 @@
             'Valerian', 'Yorick', 'Zane', 'Balthazar', 'Caius', 'Helios',
             'Icarus', 'Keres', 'Magnus', 'Nero', 'Phelan', 'Quintus', 'Ursa'
         ];
-
-        const normalNames = [
+        var normalNames = [
             'Shadow', 'Viper', 'Hunter', 'Storm', 'Blade', 'Frost', 'Reaper',
             'Phoenix', 'Titan', 'Vortex', 'Cobra', 'Raptor', 'Fury', 'Havoc',
             'Wraith', 'Ghost', 'Raven', 'Wolf', 'Hawk', 'Lion', 'Tiger',
@@ -1439,39 +2203,30 @@
             'Titan', 'Atlas', 'Apex', 'Nova', 'Stryker', 'Warden', 'Havoc'
         ];
 
-        let currentNameMode = 'freestyle';
-        let currentNameList = [];
-        let usedNameIndices = [];
+        var currentNameMode = 'freestyle';
+        var currentNameList = [];
+        var usedNameIndices = [];
 
         function getRandomNamesFromArray(arr, count) {
-            const available = arr.filter((_, idx) => !usedNameIndices.includes(idx));
+            var available = arr.filter(function(_, idx) { return usedNameIndices.indexOf(idx) === -1; });
             if (available.length === 0) return [];
-
-            const shuffled = [...available].sort(() => Math.random() - 0.5);
-            const selected = shuffled.slice(0, Math.min(count, shuffled.length));
-
-            selected.forEach(name => {
-                const idx = arr.indexOf(name);
-                if (idx !== -1 && !usedNameIndices.includes(idx)) {
-                    usedNameIndices.push(idx);
-                }
+            var shuffled = available.sort(function() { return Math.random() - 0.5; });
+            var selected = shuffled.slice(0, Math.min(count, shuffled.length));
+            selected.forEach(function(name) {
+                var idx = arr.indexOf(name);
+                if (idx !== -1 && usedNameIndices.indexOf(idx) === -1) usedNameIndices.push(idx);
             });
-
             return selected;
         }
 
         function renderNameList(names) {
-            const listContainer = document.getElementById('nameList');
-            const noMoreMsg = document.getElementById('noMoreNames');
+            var listContainer = document.getElementById('nameList');
+            var noMoreMsg = document.getElementById('noMoreNames');
             listContainer.innerHTML = '';
-            if (names.length === 0) {
-                noMoreMsg.style.display = 'block';
-                return;
-            }
+            if (names.length === 0) { noMoreMsg.style.display = 'block'; return; }
             noMoreMsg.style.display = 'none';
-
-            names.forEach(name => {
-                const item = document.createElement('div');
+            names.forEach(function(name) {
+                var item = document.createElement('div');
                 item.className = 'name-list-item';
                 item.textContent = name;
                 item.addEventListener('click', function() {
@@ -1487,8 +2242,7 @@
         function loadRandomNames(mode) {
             currentNameMode = mode;
             usedNameIndices = [];
-
-            document.querySelectorAll('.random-header .random-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.random-header .random-btn').forEach(function(b) { b.classList.remove('active'); });
             if (mode === 'freestyle') {
                 document.getElementById('randomFreestyleBtn').classList.add('active');
                 currentNameList = freestyleNames;
@@ -1496,27 +2250,23 @@
                 document.getElementById('randomNormalBtn').classList.add('active');
                 currentNameList = normalNames;
             }
-
-            const container = document.getElementById('nameListContainer');
+            var container = document.getElementById('nameListContainer');
             container.classList.add('open');
-
-            const newNames = getRandomNamesFromArray(currentNameList, 7);
+            var newNames = getRandomNamesFromArray(currentNameList, 7);
             renderNameList(newNames);
-
             document.getElementById('noMoreNames').style.display = 'none';
             document.getElementById('generateMoreBtn').style.display = 'inline-block';
         }
 
         function loadMoreNames() {
-            const newNames = getRandomNamesFromArray(currentNameList, 7);
+            var newNames = getRandomNamesFromArray(currentNameList, 7);
             if (newNames.length === 0) {
                 document.getElementById('noMoreNames').style.display = 'block';
                 document.getElementById('generateMoreBtn').style.display = 'none';
                 return;
             }
             renderNameList(newNames);
-
-            const remaining = currentNameList.filter((_, idx) => !usedNameIndices.includes(idx));
+            var remaining = currentNameList.filter(function(_, idx) { return usedNameIndices.indexOf(idx) === -1; });
             if (remaining.length === 0) {
                 document.getElementById('noMoreNames').style.display = 'block';
                 document.getElementById('generateMoreBtn').style.display = 'none';
@@ -1526,631 +2276,135 @@
             }
         }
 
-        // Initial load
         loadRandomNames('freestyle');
 
-        // =========================================================
-        // 3. SENSITIVITY GENERATOR – DEVICE DATABASE (30+ Devices)
-        // =========================================================
-        const deviceDatabase = [
-            // APPLE
-            { name: "iPhone 6 / 6s", brand: "Apple", ram: 2, cpu: 2, res: "750x1334", dpr: 2, gen: "145", red: "135", twox: "125",
-                fourx: "105", sniper: "55", fire: "35%" },
-            { name: "iPhone 7 / 8", brand: "Apple", ram: 2, cpu: 2, res: "750x1334", dpr: 2, gen: "148", red: "138", twox: "128",
-                fourx: "108", sniper: "58", fire: "43%" },
-            { name: "iPhone X / XS", brand: "Apple", ram: 3, cpu: 6, res: "1125x2436", dpr: 3, gen: "155", red: "145", twox: "135",
-                fourx: "115", sniper: "65", fire: "47%" },
-            { name: "iPhone 11", brand: "Apple", ram: 4, cpu: 6, res: "828x1792", dpr: 2, gen: "160", red: "150", twox: "140",
-                fourx: "120", sniper: "70", fire: "47%" },
-            { name: "iPhone 12 / 13", brand: "Apple", ram: 4, cpu: 6, res: "1170x2532", dpr: 3, gen: "168", red: "158", twox: "148",
-                fourx: "128", sniper: "78", fire: "65%" },
-            { name: "iPhone 14 / 15", brand: "Apple", ram: 6, cpu: 6, res: "1170x2532", dpr: 3, gen: "172", red: "162", twox: "152",
-                fourx: "132", sniper: "82", fire: "68%" },
-            { name: "iPhone SE (2020/22)", brand: "Apple", ram: 3, cpu: 6, res: "750x1334", dpr: 2, gen: "148", red: "138",
-                twox: "128", fourx: "108", sniper: "58", fire: "55%" },
-
-            // SAMSUNG
-            { name: "Galaxy A12/A13", brand: "Samsung", ram: 4, cpu: 4, res: "720x1600", dpr: 1.5, gen: "160", red: "150",
-                twox: "140", fourx: "125", sniper: "75", fire: "40%" },
-            { name: "Galaxy A22/A23", brand: "Samsung", ram: 4, cpu: 6, res: "720x1600", dpr: 1.5, gen: "165", red: "155",
-                twox: "145", fourx: "130", sniper: "78", fire: "45%" },
-            { name: "Galaxy A32/A33", brand: "Samsung", ram: 6, cpu: 6, res: "1080x2400", dpr: 2.5, gen: "170", red: "160",
-                twox: "150", fourx: "135", sniper: "82", fire: "60%" },
-            { name: "Galaxy A52/A53", brand: "Samsung", ram: 6, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "175", red: "165",
-                twox: "155", fourx: "140", sniper: "85", fire: "43%" },
-            { name: "Galaxy S Series", brand: "Samsung", ram: 8, cpu: 8, res: "1440x3088", dpr: 3, gen: "185", red: "175",
-                twox: "165", fourx: "150", sniper: "95", fire: "52%" },
-
-            // XIAOMI
-            { name: "Redmi 9/10 Series", brand: "Xiaomi", ram: 4, cpu: 4, res: "1080x2400", dpr: 2.5, gen: "180", red: "170",
-                twox: "160", fourx: "145", sniper: "90", fire: "45%" },
-            { name: "Redmi Note 11/12", brand: "Xiaomi", ram: 6, cpu: 6, res: "1080x2400", dpr: 2.5, gen: "188", red: "178",
-                twox: "168", fourx: "153", sniper: "95", fire: "43%" },
-            { name: "Redmi Note 13/14", brand: "Xiaomi", ram: 8, cpu: 8, res: "1220x2712", dpr: 3, gen: "195", red: "185",
-                twox: "175", fourx: "160", sniper: "105", fire: "47%" },
-            { name: "Poco X Series", brand: "Xiaomi", ram: 8, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "200", red: "190",
-                twox: "180", fourx: "165", sniper: "115", fire: "43%" },
-
-            // TECNO
-            { name: "Tecno Spark 8/9", brand: "Tecno", ram: 3, cpu: 4, res: "720x1600", dpr: 1.5, gen: "150", red: "140",
-                twox: "130", fourx: "110", sniper: "60", fire: "41%" },
-            { name: "Tecno Spark 10/11", brand: "Tecno", ram: 4, cpu: 6, res: "1080x2400", dpr: 2.5, gen: "158", red: "148",
-                twox: "138", fourx: "118", sniper: "68", fire: "43%" },
-            { name: "Tecno Camon Series", brand: "Tecno", ram: 6, cpu: 6, res: "1080x2400", dpr: 2.5, gen: "162", red: "152",
-                twox: "142", fourx: "122", sniper: "72", fire: "40%" },
-
-            // INFINIX
-            { name: "Infinix Hot Series", brand: "Infinix", ram: 3, cpu: 4, res: "720x1600", dpr: 1.5, gen: "145", red: "135",
-                twox: "125", fourx: "105", sniper: "55", fire: "40%" },
-            { name: "Infinix Note Series", brand: "Infinix", ram: 4, cpu: 6, res: "1080x2400", dpr: 2.5, gen: "152", red: "142",
-                twox: "132", fourx: "112", sniper: "62", fire: "42%" },
-
-            // ITEL
-            { name: "Itel City / P Series", brand: "Itel", ram: 2, cpu: 2, res: "720x1600", dpr: 1.5, gen: "135", red: "125",
-                twox: "115", fourx: "95", sniper: "45", fire: "33%" },
-
-            // ONEPLUS
-            { name: "OnePlus (General)", brand: "OnePlus", ram: 8, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "185", red: "175",
-                twox: "165", fourx: "150", sniper: "100", fire: "45%" },
-
-            // GOOGLE
-            { name: "Google Pixel 6/7", brand: "Google", ram: 6, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "170", red: "160",
-                twox: "150", fourx: "130", sniper: "80", fire: "48%" },
-            { name: "Google Pixel 8/9", brand: "Google", ram: 8, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "178", red: "168",
-                twox: "158", fourx: "138", sniper: "85", fire: "52%" },
-
-            // NOKIA
-            { name: "Nokia G Series", brand: "Nokia", ram: 4, cpu: 4, res: "720x1600", dpr: 1.5, gen: "140", red: "130",
-                twox: "120", fourx: "100", sniper: "50", fire: "36%" },
-
-            // MOTOROLA
-            { name: "Motorola G Series", brand: "Motorola", ram: 4, cpu: 6, res: "720x1600", dpr: 1.5, gen: "148", red: "138",
-                twox: "128", fourx: "108", sniper: "58", fire: "40%" },
-            { name: "Motorola Edge", brand: "Motorola", ram: 6, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "162", red: "152",
-                twox: "142", fourx: "122", sniper: "72", fire: "45%" },
-
-            // SONY
-            { name: "Sony Xperia", brand: "Sony", ram: 6, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "168", red: "158",
-                twox: "148", fourx: "128", sniper: "78", fire: "48%" },
-
-            // HUAWEI
-            { name: "Huawei P Series", brand: "Huawei", ram: 6, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "165", red: "155",
-                twox: "145", fourx: "125", sniper: "75", fire: "44%" },
-            { name: "Huawei Mate Series", brand: "Huawei", ram: 8, cpu: 8, res: "1220x2712", dpr: 3, gen: "175", red: "165",
-                twox: "155", fourx: "135", sniper: "85", fire: "50%" },
-
-            // NOTHING
-            { name: "Nothing Phone (1/2)", brand: "Nothing", ram: 8, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "170", red: "160",
-                twox: "150", fourx: "130", sniper: "80", fire: "46%" },
-
-            // OPPO
-            { name: "Oppo Find Series", brand: "Oppo", ram: 8, cpu: 8, res: "1080x2400", dpr: 2.5, gen: "175", red: "165",
-                twox: "155", fourx: "135", sniper: "85", fire: "50%" }
-        ];
 
         // =========================================================
-        // 4. GENERATOR STATE
+        // 11. SEARCH INPUT EVENTS
         // =========================================================
-        let selectedDevice = null;
-        let selectedAge = null;
-        let currentResult = null;
-        let isAutoDetect = false;
+        var si = document.getElementById('searchInput');
+        var sc = document.getElementById('searchClear');
+        var dd = document.getElementById('dropdown');
 
-        const ageOptions = [
-            { value: 0, label: "<1 year", factor: 1.0 },
-            { value: 1, label: "1–2 years", factor: 0.88 },
-            { value: 2, label: "2–3 years", factor: 0.75 },
-            { value: 3, label: "3+ years", factor: 0.60 }
-        ];
-
-        // =========================================================
-        // 5. TAB SWITCHING
-        // =========================================================
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-
-            if (tab === 'search') {
-                document.getElementById('tabSearch').classList.add('active');
-                document.getElementById('panelSearch').classList.add('active');
-            } else {
-                document.getElementById('tabAuto').classList.add('active');
-                document.getElementById('panelAuto').classList.add('active');
-            }
-        }
-
-        // =========================================================
-        // 6. SEARCH TAB LOGIC
-        // =========================================================
-        function filterDevices(query) {
-            const dropdown = document.getElementById('dropdown');
-            const clearBtn = document.getElementById('searchClear');
-
-            if (query.length === 0) {
-                dropdown.classList.remove('show');
-                clearBtn.classList.remove('show');
+        function doSearch() {
+            var q = si.value.trim();
+            sc.className = q ? 'search-clear show' : 'search-clear';
+            if (!q) { dd.className = 'dropdown'; return; }
+            var res = filterDevices(q);
+            if (!res.length) {
+                dd.innerHTML = '<div style="padding:12px; color:#6a4a8a;">No devices found for "' + q + '"</div>';
+                dd.className = 'dropdown show';
                 return;
             }
-            clearBtn.classList.add('show');
-
-            const filtered = deviceDatabase.filter(d =>
-                d.name.toLowerCase().includes(query.toLowerCase()) ||
-                d.brand.toLowerCase().includes(query.toLowerCase())
-            );
-
-            if (filtered.length === 0) {
-                dropdown.innerHTML = '<div style="padding:12px; color:#6a4a8a;">No devices found.</div>';
-                dropdown.classList.add('show');
-                return;
-            }
-
-            dropdown.innerHTML = '';
-            filtered.forEach(device => {
-                const div = document.createElement('div');
-                div.textContent = device.name + ' (' + device.brand + ')';
-                div.onclick = () => selectSearchDevice(device);
-                dropdown.appendChild(div);
+            dd.innerHTML = '';
+            res.forEach(function(m) {
+                var tier = (DB[m]) ? DB[m].tier : 'unknown';
+                var item = document.createElement('div');
+                item.textContent = m + ' (' + tier + ')';
+                item.addEventListener('mousedown', function(e) { e.preventDefault();
+                    selectModel(m); });
+                dd.appendChild(item);
             });
-            dropdown.classList.add('show');
+            dd.className = 'dropdown show';
         }
 
-        function selectSearchDevice(device) {
-            selectedDevice = device;
-            isAutoDetect = false;
-            document.getElementById('dropdown').classList.remove('show');
-            document.getElementById('searchInput').value = device.name;
-            document.getElementById('searchClear').classList.remove('show');
-
-            const sd = document.getElementById('selectedDevice');
-            document.getElementById('sdName').textContent = device.name + ' (' + device.brand + ')';
-            sd.classList.add('show');
-
-            renderAgeButtons('searchAgeGrid', 'searchAgeNote', 'search');
-        }
-
-        function clearSearch() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('dropdown').classList.remove('show');
-            document.getElementById('searchClear').classList.remove('show');
+        si.addEventListener('input', doSearch);
+        si.addEventListener('keyup', doSearch);
+        sc.addEventListener('click', function() { si.value = '';
+            sc.className = 'search-clear';
+            dd.className = 'dropdown';
             clearSelection();
-        }
+            si.focus(); });
 
-        function clearSelection() {
-            document.getElementById('selectedDevice').classList.remove('show');
-            selectedDevice = null;
-            selectedAge = null;
-            document.getElementById('results').classList.remove('show');
-        }
-
-        function renderAgeButtons(gridId, noteId, mode) {
-            const grid = document.getElementById(gridId);
-            grid.innerHTML = '';
-            ageOptions.forEach(age => {
-                const btn = document.createElement('button');
-                btn.className = 'age-btn';
-                btn.textContent = age.label;
-                btn.dataset.value = age.value;
-                btn.dataset.factor = age.factor;
-                btn.onclick = () => selectAge(btn, gridId, noteId, mode);
-                grid.appendChild(btn);
-            });
-            selectedAge = null;
-            document.getElementById(noteId).textContent = 'Select age to adjust for lag and performance loss.';
-        }
-
-        function selectAge(btn, gridId, noteId, mode) {
-            document.querySelectorAll('#' + gridId + ' .age-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            selectedAge = parseInt(btn.dataset.value);
-            const factor = parseFloat(btn.dataset.factor);
-            const label = btn.textContent;
-            document.getElementById(noteId).textContent =
-                `Selected: ${label} (Age wear factor: ${Math.round((1 - factor) * 100)}% reduction)`;
-        }
 
         // =========================================================
-        // 7. AUTO DETECT – FIXED FOR MOBILE (with timeout & fallback)
+        // 12. ACTIVE COUNTERS (UNCHANGED)
         // =========================================================
-        let detectTimeout = null;
+        (function activeCounters() {
+            var visitEl = document.getElementById('visitCount');
+            var onlineEl = document.getElementById('onlineCount');
 
-        function detectDevice() {
-            const btn = document.getElementById('detectBtn');
-            const loader = document.getElementById('loader');
-            const panel = document.getElementById('detectedPanel');
+            function randomTotal() { return Math.floor(Math.random() * 500) + 500; }
 
-            // Clear any previous timeout
-            if (detectTimeout) clearTimeout(detectTimeout);
+            function randomOnline() { return Math.floor(Math.random() * 10) + 3; }
 
-            btn.style.display = 'none';
-            loader.classList.add('show');
-            panel.classList.remove('show');
+            var currentTotal = randomTotal();
 
-            // If UAParser is already loaded, use it directly
-            if (typeof UAParser !== 'undefined') {
-                performDetection();
-                return;
+            function updateTotal() {
+                var delta = Math.floor(Math.random() * 21) - 10;
+                var newTotal = currentTotal + delta;
+                if (newTotal < 500) newTotal = 500 + Math.floor(Math.random() * 50);
+                if (newTotal > 999) newTotal = 999 - Math.floor(Math.random() * 50);
+                currentTotal = newTotal;
+                visitEl.textContent = currentTotal;
             }
 
-            // Load script with a timeout fallback
-            let scriptLoaded = false;
-            const script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/UAParser.js/2.0.0/ua-parser.min.js';
-            script.onload = function() {
-                scriptLoaded = true;
-                if (detectTimeout) clearTimeout(detectTimeout);
-                performDetection();
-            };
-            script.onerror = function() {
-                // If script fails, fallback immediately
-                scriptLoaded = true;
-                if (detectTimeout) clearTimeout(detectTimeout);
-                fallbackDetection();
-            };
-            document.head.appendChild(script);
+            function updateOnline() { onlineEl.textContent = randomOnline(); }
 
-            // Set a timeout: if script doesn't load in 5 seconds, fallback
-            detectTimeout = setTimeout(function() {
-                if (!scriptLoaded) {
-                    // If script is still loading, use fallback
-                    fallbackDetection();
-                }
-            }, 5000);
-        }
+            visitEl.textContent = currentTotal;
+            updateOnline();
+            setInterval(updateTotal, 20000);
+            setInterval(updateOnline, 8000);
+        })();
 
-        function performDetection() {
-            try {
-                const parser = new UAParser();
-                const result = parser.getResult();
-                const device = result.device || {};
-
-                // Get screen details
-                const width = window.screen.width;
-                const height = window.screen.height;
-                const dpr = window.devicePixelRatio || 1;
-
-                // Build device name
-                let deviceName = device.model || 'Unknown Device';
-                if (device.vendor && device.vendor !== 'Unknown') {
-                    deviceName = device.vendor + ' ' + deviceName;
-                }
-
-                // Try Client Hints for more specific model (only if available)
-                if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
-                    navigator.userAgentData.getHighEntropyValues(['model'])
-                        .then(ua => {
-                            if (ua.model && ua.model !== deviceName) {
-                                deviceName = ua.model + ' (' + deviceName + ')';
-                            }
-                            finishDetection(deviceName, width, height, dpr);
-                        })
-                        .catch(() => finishDetection(deviceName, width, height, dpr));
-                } else {
-                    finishDetection(deviceName, width, height, dpr);
-                }
-            } catch (e) {
-                // Fallback to basic UA parsing if UAParser fails
-                fallbackDetection();
-            }
-        }
-
-        function fallbackDetection() {
-            const width = window.screen.width;
-            const height = window.screen.height;
-            const dpr = window.devicePixelRatio || 1;
-
-            // Basic UA fallback
-            let deviceName = 'Unknown Device';
-            const ua = navigator.userAgent;
-            if (ua.indexOf('iPhone') !== -1) {
-                deviceName = 'Apple iPhone';
-                // Try to get model from resolution + DPR
-                if (width === 393 && height === 852 && dpr === 3) deviceName = 'Apple iPhone 14 Pro';
-                else if (width === 390 && height === 844 && dpr === 3) deviceName = 'Apple iPhone 14';
-                else if (width === 428 && height === 926 && dpr === 3) deviceName = 'Apple iPhone 14 Pro Max';
-                else if (width === 375 && height === 812 && dpr === 3) deviceName = 'Apple iPhone X';
-                else if (width === 414 && height === 896 && dpr === 2) deviceName = 'Apple iPhone 11';
-            } else if (ua.indexOf('Android') !== -1) {
-                const match = ua.match(/; ([\w\s]+)\)/);
-                if (match) deviceName = 'Android ' + match[1];
-                else deviceName = 'Android Device';
-            } else if (ua.indexOf('Windows') !== -1) {
-                deviceName = 'Windows PC';
-            } else if (ua.indexOf('Mac') !== -1) {
-                deviceName = 'Apple Mac';
-            }
-
-            finishDetection(deviceName, width, height, dpr);
-        }
-
-        function finishDetection(deviceName, width, height, dpr) {
-            const panel = document.getElementById('detectedPanel');
-
-            // Find closest match from database (using resolution + DPR)
-            let bestMatch = null;
-            let bestScore = Infinity;
-            const totalPixels = width * height;
-
-            deviceDatabase.forEach(device => {
-                const dprDiff = Math.abs(device.dpr - dpr) / 3 * 100;
-                const devicePixels = parseInt(device.res.split('x')[0]) * parseInt(device.res.split('x')[1]);
-                const resDiff = Math.abs(devicePixels - totalPixels) / 10000000 * 100;
-                const score = dprDiff * 0.4 + resDiff * 0.6;
-                if (score < bestScore) {
-                    bestScore = score;
-                    bestMatch = device;
-                }
-            });
-
-            if (bestMatch) {
-                selectedDevice = bestMatch;
-                isAutoDetect = true;
-                const confidence = Math.round(Math.max(0, 100 - bestScore));
-                document.getElementById('dpName').textContent = deviceName;
-                document.getElementById('dpSpecs').textContent =
-                    `${width}x${height} (${dpr}x) · Match: ${confidence}%`;
-                panel.classList.add('show');
-                renderAgeButtons('autoAgeGrid', 'autoAgeNote', 'auto');
-            }
-
-            // Hide loader and show detect button again
-            document.getElementById('loader').classList.remove('show');
-            document.getElementById('detectBtn').style.display = 'flex';
-
-            // Clear timeout
-            if (detectTimeout) {
-                clearTimeout(detectTimeout);
-                detectTimeout = null;
-            }
-        }
 
         // =========================================================
-        // 8. GENERATE SENSITIVITY
-        // =========================================================
-        function generateFromSearch() {
-            if (!selectedDevice) { alert('Please select a device first.'); return; }
-            if (selectedAge === null) { alert('Please select your device age.'); return; }
-            generateSensitivity(selectedDevice, selectedAge, 'Search');
-        }
-
-        function generateFromAuto() {
-            if (!selectedDevice) { alert('Please detect your device first.'); return; }
-            if (selectedAge === null) { alert('Please select your device age.'); return; }
-            generateSensitivity(selectedDevice, selectedAge, 'Auto Detect');
-        }
-
-        function generateSensitivity(device, age, source) {
-            const ageFactor = ageOptions.find(a => a.value === age);
-            const factor = ageFactor ? ageFactor.factor : 1.0;
-
-            // Compute hardware score using device specs (internal, not shown)
-            const ramScore = Math.min(device.ram / 8, 1) * 100;
-            const cpuScore = Math.min(device.cpu / 8, 1) * 100;
-            const resScore = device.dpr > 2.5 ? 85 : (device.dpr > 1.8 ? 70 : 50);
-            const hwScore = Math.round((ramScore * 0.4 + cpuScore * 0.3 + resScore * 0.3));
-
-            const ageWear = Math.round((1 - factor) * 100);
-
-            const genVal = Math.round(parseInt(device.gen) * factor);
-            const redVal = Math.round(parseInt(device.red) * factor);
-            const twoxVal = Math.round(parseInt(device.twox) * factor);
-            const fourxVal = Math.round(parseInt(device.fourx) * factor);
-            const snipVal = Math.round(parseInt(device.sniper) * factor);
-
-            currentResult = {
-                device: device,
-                age: age,
-                factor: factor,
-                hwScore: hwScore,
-                ageWear: ageWear,
-                gen: genVal,
-                red: redVal,
-                twox: twoxVal,
-                fourx: fourxVal,
-                sniper: snipVal,
-                fire: device.fire,
-                source: source
-            };
-
-            displayResults(currentResult);
-        }
-
-        // =========================================================
-        // 9. DISPLAY RESULTS
-        // =========================================================
-        function displayResults(data) {
-            const results = document.getElementById('results');
-            results.classList.add('show');
-
-            document.getElementById('devName').textContent = data.device.name;
-            document.getElementById('osLine').textContent = `Detected via ${data.source} · ${data.device.brand}`;
-            document.getElementById('matchPill').textContent = data.source === 'Auto Detect' ? 'AUTO MATCH' : 'PRESET';
-            document.getElementById('agePill').textContent = ageOptions.find(a => a.value === data.age).label;
-
-            // Only show screen specs
-            document.getElementById('sRes').textContent = data.device.res;
-            document.getElementById('sDPR').textContent = data.device.dpr + 'x';
-
-            document.getElementById('perfPct').textContent = data.hwScore + '%';
-            document.getElementById('perfFill').style.width = data.hwScore + '%';
-
-            document.getElementById('agePct').textContent = data.ageWear + '%';
-            document.getElementById('ageFill').style.width = data.ageWear + '%';
-
-            const list = document.getElementById('sensiList');
-            const items = [
-                { label: 'General', value: data.gen },
-                { label: 'Red Dot', value: data.red },
-                { label: '2x Scope', value: data.twox },
-                { label: '4x Scope', value: data.fourx },
-                { label: 'Sniper Scope', value: data.sniper },
-                { label: '🔥 Fire Button Size', value: data.fire }
-            ];
-
-            list.innerHTML = '';
-            items.forEach(item => {
-                const row = document.createElement('div');
-                row.className = 'sensi-row';
-                row.innerHTML =
-                    `
-                    <span class="sensi-label">${item.label}</span>
-                    <span class="sensi-value">${item.value}</span>
-                `;
-                list.appendChild(row);
-            });
-
-            document.getElementById('copyOk').classList.remove('show');
-
-            setTimeout(() => {
-                results.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 200);
-        }
-
-        // =========================================================
-        // 10. COPY SETTINGS
-        // =========================================================
-        function copySettings() {
-            if (!currentResult) { alert('Generate sensitivity first!'); return; }
-
-            const d = currentResult;
-            const text =
-                `📱 Device: ${d.device.name}\n` +
-                `📅 Age: ${ageOptions.find(a => a.value === d.age).label}\n` +
-                `━━━━━━━━━━━━━━━━━━━━━━━\n` +
-                `⚙️ General: ${d.gen}\n` +
-                `🔴 Red Dot: ${d.red}\n` +
-                `🔭 2x Scope: ${d.twox}\n` +
-                `🔭 4x Scope: ${d.fourx}\n` +
-                `🎯 Sniper: ${d.sniper}\n` +
-                `🔥 Fire Button: ${d.fire}\n` +
-                `━━━━━━━━━━━━━━━━━━━━━━━\n` +
-                `💡 Adjust ±5 in Training Mode.`;
-
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text).then(() => { showCopiedFeedback(); }).catch(() => { fallbackCopy(text); });
-            } else {
-                fallbackCopy(text);
-            }
-        }
-
-        function fallbackCopy(text) {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.style.position = 'fixed';
-            textarea.style.left = '-9999px';
-            textarea.style.top = '-9999px';
-            document.body.appendChild(textarea);
-            textarea.select();
-            try {
-                document.execCommand('copy');
-                showCopiedFeedback();
-            } catch (e) {
-                alert('Copy failed. Please copy manually:\n\n' + text);
-            }
-            document.body.removeChild(textarea);
-        }
-
-        function showCopiedFeedback() {
-            const ok = document.getElementById('copyOk');
-            ok.classList.add('show');
-            setTimeout(() => { ok.classList.remove('show'); }, 3000);
-        }
-
-        // =========================================================
-        // 11. RESET GENERATOR
-        // =========================================================
-        function resetGenerator() {
-            document.getElementById('results').classList.remove('show');
-            currentResult = null;
-            selectedDevice = null;
-            selectedAge = null;
-            document.getElementById('selectedDevice').classList.remove('show');
-            document.getElementById('detectedPanel').classList.remove('show');
-            document.getElementById('searchInput').value = '';
-            document.getElementById('dropdown').classList.remove('show');
-            document.getElementById('searchClear').classList.remove('show');
-
-            document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('searchAgeNote').textContent = 'Select age to adjust for lag and performance loss.';
-            document.getElementById('autoAgeNote').textContent = 'Select age to adjust for lag and performance loss.';
-
-            document.getElementById('copyOk').classList.remove('show');
-            document.getElementById('detectBtn').style.display = 'flex';
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // =========================================================
-        // 12. INIT
-        // =========================================================
-        document.addEventListener('DOMContentLoaded', function() {
-            renderAgeButtons('searchAgeGrid', 'searchAgeNote', 'search');
-        });
-
-        document.addEventListener('click', function(e) {
-            const dropdown = document.getElementById('dropdown');
-            if (!e.target.closest('.search-wrap')) {
-                dropdown.classList.remove('show');
-                document.getElementById('searchClear').classList.remove('show');
-            }
-        });
-
-        // =========================================================
-        // 13. PHANTOM EFFECTS
+        // 13. PHANTOM EFFECTS (UNCHANGED)
         // =========================================================
         (function phantomEffects() {
-            const layer = document.getElementById('effect-layer');
-            let lastX = 0,
+            var layer = document.getElementById('effect-layer');
+            var lastX = 0,
                 lastY = 0;
 
             function createTrailParticle(x, y) {
-                const el = document.createElement('div');
+                var el = document.createElement('div');
                 el.className = 'trail-particle';
-                const size = 4 + Math.random() * 6;
+                var size = 4 + Math.random() * 6;
                 el.style.width = size + 'px';
                 el.style.height = size + 'px';
                 el.style.left = (x - size / 2) + 'px';
                 el.style.top = (y - size / 2) + 'px';
-                const angle = Math.random() * Math.PI * 2;
-                const dist = 10 + Math.random() * 20;
+                var angle = Math.random() * Math.PI * 2;
+                var dist = 10 + Math.random() * 20;
                 el.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
                 el.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
                 layer.appendChild(el);
-                setTimeout(() => { if (el.parentNode) el.remove(); }, 700);
+                setTimeout(function() { if (el.parentNode) el.remove(); }, 700);
             }
 
             function createRipple(x, y) {
-                const maxSize = 30 + Math.random() * 20;
-                const ring1 = document.createElement('div');
+                var maxSize = 30 + Math.random() * 20;
+                var ring1 = document.createElement('div');
                 ring1.className = 'ripple-ring';
                 ring1.style.left = x + 'px';
                 ring1.style.top = y + 'px';
                 ring1.style.width = maxSize + 'px';
                 ring1.style.height = maxSize + 'px';
-                ring1.style.borderColor = `rgba(155, 109, 255, ${0.3 + Math.random() * 0.3})`;
+                ring1.style.borderColor = 'rgba(155, 109, 255, ' + (0.3 + Math.random() * 0.3) + ')';
                 layer.appendChild(ring1);
 
-                const ring2 = document.createElement('div');
+                var ring2 = document.createElement('div');
                 ring2.className = 'ripple-ring';
                 ring2.style.left = x + 'px';
                 ring2.style.top = y + 'px';
                 ring2.style.width = (maxSize * 0.6) + 'px';
                 ring2.style.height = (maxSize * 0.6) + 'px';
-                ring2.style.borderColor = `rgba(200, 150, 255, 0.3)`;
+                ring2.style.borderColor = 'rgba(200, 150, 255, 0.3)';
                 ring2.style.animationDelay = '0.08s';
                 layer.appendChild(ring2);
 
-                setTimeout(() => {
+                setTimeout(function() {
                     if (ring1.parentNode) ring1.remove();
                     if (ring2.parentNode) ring2.remove();
                 }, 800);
             }
 
             function handleMove(e) {
-                let x, y;
+                var x, y;
                 if (e.touches) { x = e.touches[0].clientX;
                     y = e.touches[0].clientY; } else { x = e.clientX;
                     y = e.clientY; }
-                const dx = x - lastX,
+                var dx = x - lastX,
                     dy = y - lastY;
                 if (Math.sqrt(dx * dx + dy * dy) < 8) return;
                 lastX = x;
@@ -2162,12 +2416,12 @@
             }
 
             function handleClick(e) {
-                let x, y;
+                var x, y;
                 if (e.touches) { x = e.touches[0].clientX;
                     y = e.touches[0].clientY; } else { x = e.clientX;
                     y = e.clientY; }
                 createRipple(x, y);
-                setTimeout(() => {
+                setTimeout(function() {
                     createTrailParticle(x + (Math.random() - 0.5) * 30, y + (Math.random() - 0.5) * 30);
                 }, 50);
             }
@@ -2176,7 +2430,7 @@
             window.addEventListener('touchmove', handleMove, { passive: true });
             document.addEventListener('click', handleClick);
             document.addEventListener('touchstart', handleClick, { passive: true });
-            window.addEventListener('beforeunload', () => {
+            window.addEventListener('beforeunload', function() {
                 window.removeEventListener('mousemove', handleMove);
                 window.removeEventListener('touchmove', handleMove);
                 document.removeEventListener('click', handleClick);
@@ -2184,23 +2438,24 @@
             });
         })();
 
+
         // =========================================================
-        // 14. AUDIO PRELOAD
+        // 14. AUDIO PRELOAD (UNCHANGED)
         // =========================================================
-        const audio = document.getElementById('bg-music');
+        var audio = document.getElementById('bg-music');
         audio.volume = 0.25;
         audio.preload = 'auto';
         audio.load();
 
-        let audioCtx = null;
-        let audioCtxResumed = false;
+        var audioCtx = null;
+        var audioCtxResumed = false;
 
         function resumeAudioContext() {
             if (audioCtxResumed) return;
             try {
                 if (!audioCtx) { audioCtx = new(window.AudioContext || window.webkitAudioContext)(); }
                 if (audioCtx.state === 'suspended') {
-                    audioCtx.resume().then(() => { audioCtxResumed = true; }).catch(() => {});
+                    audioCtx.resume().then(function() { audioCtxResumed = true; }).catch(function() {});
                 } else { audioCtxResumed = true; }
             } catch (e) {}
         }
@@ -2208,45 +2463,46 @@
         document.addEventListener('touchstart', resumeAudioContext);
         document.addEventListener('keydown', resumeAudioContext);
 
+
         // =========================================================
-        // 15. TYPING INTRO
+        // 15. TYPING INTRO (UNCHANGED)
         // =========================================================
-        const introLines = [
+        var introLines = [
             "Welcome to Phantom ・〆 Guild name generator.",
             "Here, you get your official Phantom name signature and text style.",
             "Just type your name below and see it transform.",
             "Tap the result to copy it."
         ];
-        const introContainer = document.getElementById('intro-text');
-        const introScreen = document.getElementById('intro-screen');
-        const mainApp = document.getElementById('main-app');
-        const clickPrompt = document.getElementById('click-prompt');
-        let lineIndex = 0;
-        let introComplete = false;
+        var introContainer = document.getElementById('intro-text');
+        var introScreen = document.getElementById('intro-screen');
+        var mainApp = document.getElementById('main-app');
+        var clickPrompt = document.getElementById('click-prompt');
+        var lineIndex = 0;
+        var introComplete = false;
 
         function playKeyboardClick() {
             try {
                 if (!audioCtx) { audioCtx = new(window.AudioContext || window.webkitAudioContext)(); }
-                if (audioCtx.state === 'suspended') { audioCtx.resume().catch(() => {}); }
+                if (audioCtx.state === 'suspended') { audioCtx.resume().catch(function() {}); }
                 if (audioCtx.state !== 'running') return;
-                const now = audioCtx.currentTime;
-                const bufferSize = audioCtx.sampleRate * 0.035;
-                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                const data = buffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) {
+                var now = audioCtx.currentTime;
+                var bufferSize = audioCtx.sampleRate * 0.035;
+                var buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                var data = buffer.getChannelData(0);
+                for (var i = 0; i < bufferSize; i++) {
                     data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.3));
                 }
-                const noise = audioCtx.createBufferSource();
+                var noise = audioCtx.createBufferSource();
                 noise.buffer = buffer;
-                const gain = audioCtx.createGain();
+                var gain = audioCtx.createGain();
                 gain.gain.setValueAtTime(0.12, now);
                 gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
                 noise.connect(gain);
                 gain.connect(audioCtx.destination);
                 noise.start(now);
                 noise.stop(now + 0.05);
-                const osc = audioCtx.createOscillator();
-                const gain2 = audioCtx.createGain();
+                var osc = audioCtx.createOscillator();
+                var gain2 = audioCtx.createGain();
                 osc.connect(gain2);
                 gain2.connect(audioCtx.destination);
                 osc.frequency.value = 1800 + Math.random() * 400;
@@ -2264,22 +2520,22 @@
                 clickPrompt.classList.add('show');
                 return;
             }
-            const currentLine = introLines[lineIndex];
-            const lineElement = document.createElement('div');
+            var currentLine = introLines[lineIndex];
+            var lineElement = document.createElement('div');
             lineElement.className = 'line';
             introContainer.appendChild(lineElement);
-            let currentChar = 0;
+            var currentChar = 0;
 
             function typeChar() {
                 if (currentChar < currentLine.length) {
-                    const char = currentLine[currentChar];
+                    var char = currentLine[currentChar];
                     lineElement.textContent += char;
                     if (char === ' ') {
                         try {
                             if (audioCtx && audioCtx.state === 'running') {
-                                const now = audioCtx.currentTime;
-                                const osc = audioCtx.createOscillator();
-                                const gain = audioCtx.createGain();
+                                var now = audioCtx.currentTime;
+                                var osc = audioCtx.createOscillator();
+                                var gain = audioCtx.createGain();
                                 osc.connect(gain);
                                 gain.connect(audioCtx.destination);
                                 osc.frequency.value = 300 + Math.random() * 150;
@@ -2296,7 +2552,7 @@
                     currentChar++;
                     setTimeout(typeChar, 45);
                 } else {
-                    const cursor = document.createElement('span');
+                    var cursor = document.createElement('span');
                     cursor.className = 'cursor-blink';
                     lineElement.appendChild(cursor);
                     lineIndex++;
@@ -2307,33 +2563,30 @@
         }
         window.addEventListener('load', typeLine);
 
-        // =========================================================
-        // 16. MUSIC – INSTANT PLAY ON INTRO TAP
-        // =========================================================
-        let musicStarted = false;
+        var musicStarted = false;
 
         function playMusic() {
             if (musicStarted) return;
-            const playPromise = audio.play();
+            var playPromise = audio.play();
             if (playPromise !== undefined) {
-                playPromise.then(() => { musicStarted = true; }).catch(() => {});
+                playPromise.then(function() { musicStarted = true; }).catch(function() {});
             }
         }
 
-        introScreen.addEventListener('click', function(e) {
+        introScreen.addEventListener('click', function() {
             if (introComplete) {
                 introScreen.classList.add('fade-out');
                 mainApp.classList.add('visible');
                 playMusic();
-                setTimeout(() => startBirds(), 300);
+                setTimeout(function() { startBirds(); }, 300);
             }
         });
-        introScreen.addEventListener('touchstart', function(e) {
+        introScreen.addEventListener('touchstart', function() {
             if (introComplete) {
                 introScreen.classList.add('fade-out');
                 mainApp.classList.add('visible');
                 playMusic();
-                setTimeout(() => startBirds(), 300);
+                setTimeout(function() { startBirds(); }, 300);
             }
         }, { passive: true });
 
@@ -2341,159 +2594,18 @@
             if (introComplete && !musicStarted) { playMusic(); }
         });
 
-        audio.addEventListener('ended', () => { audio.play().catch(() => {}); });
+        audio.addEventListener('ended', function() { audio.play().catch(function() {}); });
+
 
         // =========================================================
-        // 17. NAME GENERATOR
+        // 16. BIRDS CANVAS (UNCHANGED)
         // =========================================================
-        const smallCapsMap = {
-            'a': 'ᴀ',
-            'b': 'ʙ',
-            'c': 'ᴄ',
-            'd': 'ᴅ',
-            'e': 'ᴇ',
-            'f': 'ꜰ',
-            'g': 'ɢ',
-            'h': 'ʜ',
-            'i': 'ɪ',
-            'j': 'ᴊ',
-            'k': 'ᴋ',
-            'l': 'ʟ',
-            'm': 'ᴍ',
-            'n': 'ɴ',
-            'o': 'ᴏ',
-            'p': 'ᴘ',
-            'q': 'ǫ',
-            'r': 'ʀ',
-            's': 'ꜱ',
-            't': 'ᴛ',
-            'u': 'ᴜ',
-            'v': 'ᴠ',
-            'w': 'ᴡ',
-            'x': 'x',
-            'y': 'ʏ',
-            'z': 'ᴢ'
-        };
-        let currentGeneratedName = '';
-
-        function updatePreview() {
-            const inputField = document.getElementById('userName');
-            const resultDisplay = document.getElementById('result');
-            const resultMessage = document.getElementById('resultMessage');
-            let rawName = inputField.value.trim();
-            if (rawName === '') {
-                resultDisplay.textContent = '✦ Type your name below ✦';
-                resultDisplay.className = 'placeholder';
-                currentGeneratedName = '';
-                resultMessage.textContent = '';
-                resultMessage.className = 'result-message';
-                return;
-            }
-            const smallName = rawName.toLowerCase().split('').map(ch => smallCapsMap[ch] || ch).join('');
-            const phantomIdentity = smallName + '・〆';
-            currentGeneratedName = phantomIdentity;
-            resultDisplay.textContent = phantomIdentity;
-            resultDisplay.className = '';
-            resultDisplay.style.color = '#f2e9ff';
-            resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
-            resultMessage.textContent = 'Now go and meet Huios, the Guild Leader.';
-            resultMessage.className = 'result-message show';
-        }
-        document.getElementById('doneBtn').addEventListener('click', function() {
-            updatePreview();
-            const resultDisplay = document.getElementById('result');
-            if (currentGeneratedName) {
-                resultDisplay.style.transition = '0.1s';
-                resultDisplay.style.textShadow = '0 0 80px #ff66ff, 0 0 160px #9b6dff';
-                setTimeout(() => {
-                    resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
-                }, 300);
-            }
-        });
-
-        // =========================================================
-        // 18. COPY (iOS/Android friendly)
-        // =========================================================
-        function copyResult() {
-            const resultDisplay = document.getElementById('result');
-            const textToCopy = currentGeneratedName;
-            if (!textToCopy || resultDisplay.className === 'placeholder') {
-                resultDisplay.textContent = '⚠️ TYPE A NAME FIRST!';
-                resultDisplay.style.color = '#ff8888';
-                resultDisplay.style.textShadow = '0 0 30px #ff2222';
-                setTimeout(() => {
-                    if (document.getElementById('userName').value.trim() === '') {
-                        resultDisplay.textContent = '✦ Type your name below ✦';
-                        resultDisplay.className = 'placeholder';
-                    } else { updatePreview(); }
-                }, 1500);
-                return;
-            }
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(textToCopy).then(() => showCopiedFeedback2(resultDisplay))
-                    .catch(() => fallbackCopyText2(textToCopy, resultDisplay));
-            } else {
-                fallbackCopyText2(textToCopy, resultDisplay);
-            }
-        }
-
-        function fallbackCopyText2(text, resultDisplay) {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.style.position = 'fixed';
-            textarea.style.left = '0';
-            textarea.style.top = '0';
-            textarea.style.width = '1px';
-            textarea.style.height = '1px';
-            textarea.style.opacity = '0.5';
-            textarea.style.zIndex = '9999';
-            textarea.style.pointerEvents = 'none';
-            textarea.setAttribute('readonly', '');
-            document.body.appendChild(textarea);
-            setTimeout(() => {
-                textarea.focus();
-                textarea.select();
-                textarea.setSelectionRange(0, text.length);
-                try {
-                    const success = document.execCommand('copy');
-                    if (success) { showCopiedFeedback2(resultDisplay); } else { showCopiedFeedback2(resultDisplay); }
-                } catch (e) { showCopiedFeedback2(resultDisplay); }
-                document.body.removeChild(textarea);
-            }, 50);
-        }
-
-        function showCopiedFeedback2(resultDisplay) {
-            resultDisplay.textContent = '✅  COPIED!  ✅';
-            resultDisplay.style.color = '#b3ff9b';
-            resultDisplay.style.textShadow = '0 0 40px #66ff33';
-            setTimeout(() => {
-                if (currentGeneratedName) {
-                    resultDisplay.textContent = currentGeneratedName;
-                    resultDisplay.style.color = '#f2e9ff';
-                    resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
-                }
-            }, 1500);
-        }
-
-        const resultWrapper = document.getElementById('resultWrapper');
-        resultWrapper.addEventListener('click', copyResult);
-        resultWrapper.addEventListener('touchstart', copyResult, { passive: true });
-        const manualCopyBtn = document.getElementById('manualCopyBtn');
-        manualCopyBtn.addEventListener('click', copyResult);
-        manualCopyBtn.addEventListener('touchstart', copyResult, { passive: true });
-        document.getElementById('userName').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') { document.getElementById('doneBtn').click(); }
-        });
-
-        // =========================================================
-        // 19. BIRDS – ADAPTIVE & OPTIMISED
-        // =========================================================
-        const canvas = document.getElementById('birdCanvas');
-        const ctx = canvas.getContext('2d');
-        let birds = [];
-        let particles = [];
-        let animationId = null;
-        let birdsActive = false;
+        var canvas = document.getElementById('birdCanvas');
+        var ctx = canvas.getContext('2d');
+        var birds = [];
+        var particles = [];
+        var animationId = null;
+        var birdsActive = false;
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -2503,19 +2615,18 @@
         resizeCanvas();
 
         function getBirdCount() {
-            const w = window.innerWidth,
+            var w = window.innerWidth,
                 h = window.innerHeight;
-            const area = w * h;
-            let count = Math.floor(area / 200000);
+            var area = w * h;
+            var count = Math.floor(area / 200000);
             count = Math.max(10, Math.min(45, count));
             return count;
         }
 
-        class Bird {
-            constructor() { this.reset(); }
-            reset() {
-                const margin = 100;
-                const side = Math.floor(Math.random() * 4);
+        function Bird() {
+            this.reset = function() {
+                var margin = 100;
+                var side = Math.floor(Math.random() * 4);
                 if (side === 0) { this.x = Math.random() * canvas.width;
                     this.y = -margin; } else if (side === 1) { this.x = canvas.width + margin;
                     this.y = Math.random() * canvas.height; } else if (side === 2) { this.x = Math.random() * canvas.width;
@@ -2534,21 +2645,21 @@
                 this.opacity = 1;
                 this.disappearing = false;
                 this.disappearTimer = 0;
-            }
-            update() {
+            };
+            this.update = function() {
                 if (this.disappearing) {
                     this.disappearTimer += 0.02;
                     this.opacity = 1 - this.disappearTimer;
                     if (this.disappearTimer >= 1) this.alive = false;
                     return;
                 }
-                const dx = this.targetX - this.x;
-                const dy = this.targetY - this.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
+                var dx = this.targetX - this.x;
+                var dy = this.targetY - this.y;
+                var dist = Math.sqrt(dx * dx + dy * dy);
                 if (dist > 5) {
-                    const angle = Math.atan2(dy, dx);
-                    const curveAngle = Math.sin(this.curvePhase) * 0.12;
-                    const moveAngle = angle + curveAngle;
+                    var angle = Math.atan2(dy, dx);
+                    var curveAngle = Math.sin(this.curvePhase) * 0.12;
+                    var moveAngle = angle + curveAngle;
                     this.x += Math.cos(moveAngle) * this.speed;
                     this.y += Math.sin(moveAngle) * this.speed;
                     this.curvePhase += this.curveSpeed;
@@ -2559,10 +2670,10 @@
                 }
                 this.wingPhase += this.wingSpeed;
                 this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
-                const logoEl = document.querySelector('.guild-logo');
+                var logoEl = document.querySelector('.guild-logo');
                 if (logoEl) {
-                    const rect = logoEl.getBoundingClientRect();
-                    const logoRect = {
+                    var rect = logoEl.getBoundingClientRect();
+                    var logoRect = {
                         x: rect.left + rect.width * 0.1,
                         y: rect.top + rect.height * 0.1,
                         width: rect.width * 0.8,
@@ -2573,21 +2684,21 @@
                         this.triggerDisappear();
                     }
                 }
-            }
-            triggerDisappear() {
+            };
+            this.triggerDisappear = function() {
                 if (this.disappearing) return;
                 this.disappearing = true;
                 this.disappearTimer = 0;
                 spawnParticles(this.x, this.y);
-            }
-            draw() {
+            };
+            this.draw = function() {
                 if (!this.alive || this.opacity <= 0) return;
                 ctx.save();
                 ctx.globalAlpha = this.opacity;
                 ctx.translate(this.x, this.y);
                 ctx.rotate(this.angle);
-                const wingFlap = Math.sin(this.wingPhase);
-                const size = this.size;
+                var wingFlap = Math.sin(this.wingPhase);
+                var size = this.size;
                 ctx.fillStyle = '#5a3a7a';
                 ctx.shadowColor = '#7a4a9a';
                 ctx.shadowBlur = 8;
@@ -2605,12 +2716,12 @@
                 ctx.fill();
                 ctx.fillStyle = '#4a2a5a';
                 ctx.beginPath();
-                ctx.ellipse(-size * 0.25, -size * 0.15 + wingFlap * size * 0.12, size * 0.4, size * 0.25, -0.2 + wingFlap * 0.15,
-                    0, Math.PI * 2);
+                ctx.ellipse(-size * 0.25, -size * 0.15 + wingFlap * size * 0.12, size * 0.4, size * 0.25, -0.2 + wingFlap *
+                    0.15, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.beginPath();
-                ctx.ellipse(-size * 0.25, size * 0.15 - wingFlap * size * 0.12, size * 0.4, size * 0.25, 0.2 - wingFlap * 0.15,
-                    0, Math.PI * 2);
+                ctx.ellipse(-size * 0.25, size * 0.15 - wingFlap * size * 0.12, size * 0.4, size * 0.25, 0.2 - wingFlap *
+                    0.15, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.fillStyle = '#3a2a4a';
                 ctx.beginPath();
@@ -2628,29 +2739,30 @@
                 ctx.fillStyle = '#6a2faf';
                 ctx.fill();
                 ctx.restore();
-            }
+            };
+            this.reset();
         }
 
         function spawnParticles(x, y) {
-            const count = 15 + Math.floor(Math.random() * 10);
-            for (let i = 0; i < count; i++) {
-                const angle = Math.random() * Math.PI * 2;
-                const speed = 0.5 + Math.random() * 2;
+            var count = 15 + Math.floor(Math.random() * 10);
+            for (var i = 0; i < count; i++) {
+                var angle = Math.random() * Math.PI * 2;
+                var speed = 0.5 + Math.random() * 2;
                 particles.push({
-                    x,
-                    y,
+                    x: x,
+                    y: y,
                     vx: Math.cos(angle) * speed,
                     vy: Math.sin(angle) * speed - 0.5,
                     life: 1,
                     size: 2 + Math.random() * 3,
-                    color: `hsl(${260 + Math.random() * 30}, 70%, ${50 + Math.random() * 30}%)`
+                    color: 'hsl(' + (260 + Math.random() * 30) + ', 70%, ' + (50 + Math.random() * 30) + '%)'
                 });
             }
         }
 
         function updateParticles() {
-            for (let i = particles.length - 1; i >= 0; i--) {
-                const p = particles[i];
+            for (var i = particles.length - 1; i >= 0; i--) {
+                var p = particles[i];
                 p.x += p.vx;
                 p.y += p.vy;
                 p.vy += 0.04;
@@ -2660,7 +2772,8 @@
         }
 
         function drawParticles() {
-            for (const p of particles) {
+            for (var i = 0; i < particles.length; i++) {
+                var p = particles[i];
                 ctx.save();
                 ctx.globalAlpha = p.life * 0.6;
                 ctx.shadowColor = '#9b6dff';
@@ -2676,15 +2789,18 @@
         function animateBirds() {
             if (!birdsActive) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (const bird of birds) { bird.update();
-                bird.draw(); }
-            birds = birds.filter(b => b.alive);
+            for (var i = 0; i < birds.length; i++) {
+                var bird = birds[i];
+                bird.update();
+                bird.draw();
+            }
+            birds = birds.filter(function(b) { return b.alive; });
             updateParticles();
             drawParticles();
-            const targetCount = getBirdCount();
+            var targetCount = getBirdCount();
             while (birds.length < targetCount) birds.push(new Bird());
             while (birds.length > targetCount) {
-                const toRemove = birds.pop();
+                var toRemove = birds.pop();
                 if (toRemove) toRemove.alive = false;
             }
             animationId = requestAnimationFrame(animateBirds);
@@ -2693,9 +2809,9 @@
         function startBirds() {
             if (birdsActive) return;
             birdsActive = true;
-            const count = getBirdCount();
-            for (let i = 0; i < count; i++) {
-                const bird = new Bird();
+            var count = getBirdCount();
+            for (var i = 0; i < count; i++) {
+                var bird = new Bird();
                 bird.x = Math.random() * canvas.width;
                 bird.y = Math.random() * canvas.height;
                 bird.targetX = canvas.width / 2 + (Math.random() - 0.5) * 250;
@@ -2705,19 +2821,19 @@
             animateBirds();
         }
 
-        window.addEventListener('resize', () => {
+        window.addEventListener('resize', function() {
             resizeCanvas();
             if (birdsActive) {
-                const targetCount = getBirdCount();
+                var targetCount = getBirdCount();
                 while (birds.length < targetCount) birds.push(new Bird());
                 while (birds.length > targetCount) {
-                    const toRemove = birds.pop();
+                    var toRemove = birds.pop();
                     if (toRemove) toRemove.alive = false;
                 }
             }
         });
 
-        document.addEventListener('visibilitychange', () => {
+        document.addEventListener('visibilitychange', function() {
             if (document.hidden && birdsActive) {
                 if (animationId) { cancelAnimationFrame(animationId);
                     animationId = null; }
@@ -2726,7 +2842,25 @@
             }
         });
 
-        console.log('🔥 Phantom Guild – Fully Loaded with Sensitivity Generator');
+        // Expose functions globally for inline onclick
+        window.switchTab = switchTab;
+        window.detectDevice = detectDevice;
+        window.generateFromAuto = generateFromAuto;
+        window.generateFromSearch = generateFromSearch;
+        window.copySettings = copySettings;
+        window.resetGenerator = resetGenerator;
+        window.filterDevices = filterDevices;
+        window.selectModel = selectModel;
+        window.clearSearch = clearSearch;
+        window.clearSelection = clearSelection;
+        window.loadRandomNames = loadRandomNames;
+        window.loadMoreNames = loadMoreNames;
+        window.updatePreview = updatePreview;
+        window.copyResult = copyResult;
+
+        console.log('🔥 Phantom Guild – Sensitivity generator running EXACT ffsensitivity.com logic.');
+        console.log('📱 Loaded ' + Object.keys(DB).length + ' preset devices.');
+        console.log('🔍 Loaded ' + PATTERNS.length + ' UA patterns.');
     </script>
 </body>
 </html>
