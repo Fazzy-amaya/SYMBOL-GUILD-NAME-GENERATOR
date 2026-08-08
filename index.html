@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>ᴘʜᴀɴᴛᴏᴍ・〆 — Name Generator</title>
     <style>
-        /* ===== ALL STYLES (SAME AS BEFORE – COMPLETE) ===== */
+        /* ============================
+           ALL STYLES – FIXED FOR MOBILE
+           ============================ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
             min-height: 100vh;
             display: flex;
@@ -19,6 +22,7 @@
             background: radial-gradient(circle at center, #12081a, #07020a);
             -webkit-overflow-scrolling: touch;
         }
+
         #birdCanvas {
             position: fixed;
             top: 0;
@@ -29,6 +33,7 @@
             pointer-events: none;
             isolation: isolate;
         }
+
         #watermark {
             position: fixed;
             bottom: 25px;
@@ -57,6 +62,7 @@
             0% { text-shadow: 0 0 30px rgba(155,109,255,0.6), 0 0 60px rgba(155,109,255,0.3), 0 0 100px rgba(100,40,180,0.2); border-color: rgba(155,109,255,0.25); }
             100% { text-shadow: 0 0 50px rgba(155,109,255,1), 0 0 100px rgba(155,109,255,0.5), 0 0 150px rgba(100,40,180,0.3); border-color: rgba(155,109,255,0.5); }
         }
+
         #effect-layer {
             position: fixed;
             top: 0;
@@ -98,6 +104,7 @@
             border-color: rgba(200,150,255,0.3);
             border-width: 1px;
         }
+
         #intro-screen {
             position: fixed;
             inset: 0;
@@ -116,6 +123,7 @@
             overflow-y: auto;
         }
         #intro-screen.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
+
         #intro-text {
             max-width: 750px;
             width: 100%;
@@ -162,6 +170,7 @@
             0%,100% { text-shadow: 0 0 10px #6a2faf; }
             50% { text-shadow: 0 0 30px #9b6dff, 0 0 60px #4a1a7a; }
         }
+
         #main-app {
             opacity: 0;
             transition: opacity 1.5s ease;
@@ -175,6 +184,7 @@
             z-index: 2;
         }
         #main-app.visible { opacity: 1; pointer-events: all; }
+
         .container {
             background: rgba(20,10,30,0.5);
             backdrop-filter: blur(12px) saturate(1.2);
@@ -188,6 +198,7 @@
             position: relative;
             overflow: hidden;
         }
+
         .logo-wrapper {
             position: relative;
             display: block;
@@ -225,6 +236,7 @@
             background: #32104F;
             filter: drop-shadow(0 0 20px rgba(123,46,255,0.15));
         }
+
         .sub-title {
             font-size: 1rem;
             color: #b396d9;
@@ -240,6 +252,7 @@
             position: relative;
             z-index: 3;
         }
+
         .result-wrapper {
             background: rgba(0,0,0,0.3);
             backdrop-filter: blur(4px);
@@ -256,6 +269,7 @@
         }
         .result-wrapper:hover { border-color: #9b6dff; box-shadow: 0 0 30px rgba(100,40,200,0.15); }
         .result-wrapper:active { transform: scale(0.98); }
+
         #result {
             font-size: clamp(2.2rem, 7vw, 4rem);
             font-weight: 400;
@@ -277,6 +291,7 @@
             letter-spacing: 4px;
             font-weight: 300;
         }
+
         .result-message {
             font-size: 0.85rem;
             color: #b396d9;
@@ -287,6 +302,7 @@
             font-family: 'Segoe UI', sans-serif;
         }
         .result-message.show { opacity: 1; }
+
         .copy-hint {
             font-size: 0.75rem;
             color: #7a5a9a;
@@ -294,6 +310,7 @@
             margin-top: 8px;
             pointer-events: none;
         }
+
         .copy-btn-container {
             margin: 10px 0 20px 0;
             position: relative;
@@ -316,11 +333,13 @@
         }
         .copy-btn:hover { background: rgba(100,40,180,0.4); border-color: #9b6dff; box-shadow: 0 0 20px rgba(100,40,200,0.15); }
         .copy-btn:active { transform: scale(0.95); }
+
         .random-section {
             margin: 20px 0 15px 0;
             position: relative;
             z-index: 3;
         }
+
         .random-section .random-header {
             display: flex;
             gap: 10px;
@@ -328,6 +347,7 @@
             flex-wrap: wrap;
             margin-bottom: 12px;
         }
+
         .random-section .random-header .random-btn {
             background: rgba(100,40,180,0.15);
             border: 1px solid rgba(150,100,220,0.2);
@@ -353,6 +373,7 @@
             color: #f2e9ff;
             box-shadow: 0 0 20px rgba(100,40,200,0.15);
         }
+
         .random-section .name-list-container {
             margin-top: 12px;
             max-height: 0;
@@ -364,12 +385,14 @@
             max-height: 600px;
             opacity: 1;
         }
+
         .random-section .name-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 8px;
             padding: 10px 0;
         }
+
         .random-section .name-list-item {
             background: rgba(100,40,180,0.1);
             border: 1px solid rgba(150,100,220,0.15);
@@ -389,6 +412,7 @@
             transform: scale(1.02);
         }
         .random-section .name-list-item:active { transform: scale(0.95); }
+
         .random-section .generate-more-btn {
             background: rgba(100,40,180,0.1);
             border: 1px dashed rgba(150,100,220,0.25);
@@ -414,6 +438,7 @@
             font-style: italic;
             letter-spacing: 1px;
         }
+
         .input-area {
             position: relative;
             z-index: 3;
@@ -446,6 +471,7 @@
         }
         .input-area input::placeholder { color: #6a4a8a; font-size: 0.9rem; letter-spacing: 2px; }
         .input-area input:focus { border-color: #9b6dff; box-shadow: 0 0 25px rgba(120,60,220,0.2); background: rgba(10,5,20,0.6); }
+
         .btn {
             margin-top: 15px;
             padding: 16px 55px;
@@ -466,6 +492,7 @@
         }
         .btn:hover { transform: scale(1.03); background: linear-gradient(135deg, #8235d9, #4f1d8a); box-shadow: 0 0 40px rgba(130,50,220,0.4); }
         .btn:active { transform: scale(0.95); }
+
         .buy-btn {
             display: inline-block;
             margin-top: 20px;
@@ -488,7 +515,10 @@
         .buy-btn:hover { transform: scale(1.03); box-shadow: 0 0 40px rgba(255,107,53,0.5); }
         .buy-btn:active { transform: scale(0.95); }
 
-        /* ===== SENSITIVITY GENERATOR STYLES ===== */
+        /* ========================================================= */
+        /* ===== SENSITIVITY GENERATOR STYLES – FIXED FOR MOBILE ===== */
+        /* ========================================================= */
+
         .sensitivity-section {
             margin-top: 30px;
             padding-top: 20px;
@@ -507,6 +537,7 @@
             margin-bottom: 20px;
             font-size: 0.9rem;
         }
+
         .tab-switcher {
             display: flex;
             gap: 10px;
@@ -540,8 +571,10 @@
             vertical-align: middle;
             margin-right: 6px;
         }
+
         .panel { display: none; }
         .panel.active { display: block; }
+
         .sens-card {
             background: rgba(0,0,0,0.3);
             backdrop-filter: blur(4px);
@@ -585,6 +618,7 @@
             font-size: 0.8rem;
             color: #b396d9;
         }
+
         .search-wrap {
             position: relative;
             width: 100%;
@@ -626,6 +660,7 @@
         }
         .search-wrap .search-clear.show { display: block; }
         .search-wrap .search-clear:hover { color: #b396d9; }
+
         .dropdown {
             max-height: 200px;
             overflow-y: auto;
@@ -649,6 +684,7 @@
             transition: 0.2s;
         }
         .dropdown div:hover { background: rgba(100,40,180,0.2); }
+
         .selected-device {
             display: none;
             align-items: center;
@@ -673,6 +709,7 @@
             padding: 4px;
         }
         .selected-device .sd-clear:hover { color: #ff6b6b; }
+
         .btn-detect {
             width: 100%;
             padding: 16px;
@@ -708,6 +745,7 @@
             0%, 100% { opacity: 0.3; transform: scale(0.8); }
             50% { opacity: 1; transform: scale(1.2); }
         }
+
         .loader {
             display: none;
             text-align: center;
@@ -729,6 +767,7 @@
             font-size: 0.8rem;
             letter-spacing: 2px;
         }
+
         .detected-panel {
             display: none;
             background: rgba(100,40,180,0.1);
@@ -738,13 +777,14 @@
             margin-top: 15px;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
             flex-wrap: wrap;
+            gap: 10px;
         }
         .detected-panel.show { display: flex; }
-        .detected-panel .dp-name { color: #f2e9ff; font-weight: 600; word-break: break-word; }
-        .detected-panel .dp-specs { color: #b396d9; font-size: 0.8rem; word-break: break-word; }
-        .detected-panel .dp-check { color: #66ff33; font-size: 1.2rem; flex-shrink: 0; }
+        .detected-panel .dp-name { color: #f2e9ff; font-weight: 600; }
+        .detected-panel .dp-specs { color: #b396d9; font-size: 0.8rem; }
+        .detected-panel .dp-check { color: #66ff33; }
+
         .age-section {
             margin-top: 20px;
         }
@@ -756,27 +796,61 @@
         }
         .age-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-            gap: 10px;
+            grid-template-columns: 1fr;
+            gap: 12px;
         }
-        .age-btn {
-            padding: 10px 12px;
+        .manual-age-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .manual-age-input {
+            flex: 2;
+            min-width: 60px;
+            padding: 12px 16px;
             border-radius: 30px;
+            border: 1px solid rgba(150,100,220,0.3);
+            background: rgba(0,0,0,0.4);
+            color: #f0eaff;
+            font-size: 1rem;
+            outline: none;
+        }
+        .manual-age-input:focus { border-color: #9b6dff; }
+        .manual-age-unit {
+            color: #b396d9;
+            font-weight: 700;
+            padding: 0 6px;
+        }
+        .manual-age-apply {
+            padding: 12px 24px;
+            border-radius: 30px;
+            border: none;
+            background: linear-gradient(135deg, #6c2bb3, #3b1470);
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .manual-age-apply:hover { opacity: 0.9; }
+        .age-hints {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .age-chip {
+            padding: 6px 14px;
+            border-radius: 20px;
             border: 1px solid rgba(150,100,220,0.2);
             background: rgba(0,0,0,0.3);
             color: #b396d9;
             cursor: pointer;
-            transition: 0.3s;
             font-size: 0.8rem;
-            text-align: center;
         }
-        .age-btn:hover { border-color: #9b6dff; color: #f2e9ff; }
-        .age-btn.active {
-            background: rgba(100,40,180,0.3);
-            border-color: #9b6dff;
-            color: #f2e9ff;
-            box-shadow: 0 0 20px rgba(100,40,200,0.15);
-        }
+        .age-chip:hover { border-color: #9b6dff; }
+        .age-chip.selected { border-color: #9b6dff; background: rgba(100,40,180,0.3); }
+
         .age-note {
             color: #6a4a8a;
             font-size: 0.7rem;
@@ -785,6 +859,7 @@
             min-height: 20px;
         }
         .age-note.show { color: #b396d9; }
+
         .btn-generate {
             width: 100%;
             padding: 16px;
@@ -809,11 +884,13 @@
             box-shadow: 0 0 50px rgba(255,107,53,0.4);
         }
         .btn-generate:active { transform: scale(0.98); }
+
         .results {
             display: none;
             margin-top: 20px;
         }
         .results.show { display: block; }
+
         .device-banner {
             background: rgba(100,40,180,0.1);
             border-radius: 20px;
@@ -848,6 +925,7 @@
             font-size: 0.7rem;
             color: #ff6b35;
         }
+
         .specs {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
@@ -873,6 +951,7 @@
         }
         .spec-box .spec-val.ora { color: #ff9f43; }
         .spec-box .spec-val.cya { color: #00d2d3; }
+
         .perf-wrap, .age-impact {
             margin-bottom: 12px;
         }
@@ -909,6 +988,7 @@
             width: 0%;
             transition: width 0.6s ease;
         }
+
         .sensi-list {
             margin: 15px 0;
         }
@@ -927,6 +1007,7 @@
             font-weight: 700;
             font-size: 1.1rem;
         }
+
         .disclaimer {
             font-size: 0.7rem;
             color: #6a4a8a;
@@ -935,6 +1016,7 @@
             margin-top: 10px;
         }
         .disclaimer strong { color: #b396d9; }
+
         .actions {
             display: flex;
             gap: 10px;
@@ -971,6 +1053,7 @@
             border-color: #ff6b6b;
             color: #ff6b6b;
         }
+
         .copy-ok {
             display: none;
             color: #b3ff9b;
@@ -980,6 +1063,7 @@
             font-size: 0.9rem;
         }
         .copy-ok.show { display: block; }
+
         .tip-list {
             display: flex;
             flex-direction: column;
@@ -1009,6 +1093,7 @@
             line-height: 1.5;
         }
         .tip .tip-t strong { color: #f2e9ff; }
+
         .active-counters {
             margin-top: 20px;
             display: flex;
@@ -1043,71 +1128,6 @@
             0%, 100% { opacity: 0.3; transform: scale(0.8); }
             50% { opacity: 1; transform: scale(1.2); }
         }
-        .manual-age-row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .manual-age-row input {
-            flex: 1;
-            padding: 10px 16px;
-            border-radius: 30px;
-            border: 1px solid rgba(150,100,220,0.3);
-            background: rgba(0,0,0,0.4);
-            color: #f0eaff;
-            font-size: 1rem;
-            outline: none;
-            min-width: 80px;
-            -webkit-appearance: none;
-        }
-        .manual-age-row input:focus {
-            border-color: #9b6dff;
-        }
-        .manual-age-row .manual-age-unit {
-            color: #b396d9;
-            font-weight: 700;
-            padding: 0 4px;
-        }
-        .manual-age-row .manual-age-apply {
-            padding: 10px 24px;
-            border-radius: 30px;
-            border: none;
-            background: linear-gradient(135deg, #6c2bb3, #3b1470);
-            color: #fff;
-            font-weight: 700;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: 0.2s;
-        }
-        .manual-age-row .manual-age-apply:hover {
-            transform: scale(1.02);
-        }
-        .age-hints {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 8px;
-        }
-        .age-hints .age-chip {
-            padding: 6px 14px;
-            border-radius: 20px;
-            border: 1px solid rgba(150,100,220,0.2);
-            background: rgba(0,0,0,0.3);
-            color: #b396d9;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: 0.2s;
-        }
-        .age-hints .age-chip:hover {
-            border-color: #9b6dff;
-            background: rgba(100,40,180,0.2);
-        }
-        .age-hints .age-chip.selected {
-            border-color: #9b6dff;
-            background: rgba(100,40,180,0.3);
-            color: #f2e9ff;
-        }
 
         @media (max-width: 480px) {
             .container { padding: 30px 20px; }
@@ -1128,99 +1148,31 @@
             .sensi-row .sensi-value { font-size: 0.95rem; }
             .actions { flex-direction: column; }
             .btn-action { min-width: unset; }
-            .detected-panel {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 12px 16px;
-                gap: 6px;
-            }
-            .detected-panel .dp-check {
-                align-self: flex-end;
-            }
-            .manual-age-row {
-                flex-wrap: wrap;
-                gap: 8px;
-            }
-            .manual-age-row input {
-                flex: 1 1 100%;
-                min-width: 60px;
-            }
-            .manual-age-row .manual-age-apply {
-                flex: 1 1 100%;
-                padding: 12px;
-                text-align: center;
-            }
-            .manual-age-row .manual-age-unit {
-                margin: 0 4px;
-            }
-            .age-grid {
-                grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-            }
-            .age-hints {
-                gap: 6px;
-            }
-            .age-hints .age-chip {
-                padding: 5px 10px;
-                font-size: 0.7rem;
-            }
-            .sens-card .card-head {
-                gap: 10px;
-            }
-            .sens-card .card-title {
-                font-size: 1rem;
-            }
-            .device-banner .device-name {
-                font-size: 1rem;
-            }
-            .sensi-row .sensi-label {
-                font-size: 0.8rem;
-            }
-            .sensi-row .sensi-value {
-                font-size: 0.9rem;
-            }
-            .btn-generate {
-                font-size: 0.9rem;
-                padding: 14px;
-            }
-            .btn-detect {
-                font-size: 0.9rem;
-                padding: 14px;
-            }
-        }
-
-        @media (max-width: 380px) {
-            .container { padding: 20px 12px; }
-            .tab-btn { padding: 6px 12px; font-size: 0.7rem; }
-            .sens-card { padding: 14px 10px; }
-            .specs { grid-template-columns: repeat(auto-fit, minmax(50px, 1fr)); }
-            .spec-box { padding: 6px; }
-            .spec-box .spec-val { font-size: 0.8rem; }
-            .spec-box .spec-lbl { font-size: 0.5rem; }
-            .device-banner { padding: 10px 14px; }
-            .device-banner .device-name { font-size: 0.9rem; }
-            .btn-action { padding: 10px 12px; font-size: 0.8rem; min-width: 80px; }
-            .age-hints .age-chip { padding: 4px 8px; font-size: 0.65rem; }
+            .manual-age-row { flex-wrap: wrap; }
+            .manual-age-input { flex: 1 1 100%; }
+            .manual-age-apply { flex: 1 1 auto; }
+            .detected-panel { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== WATERMARK ===== -->
+    <!-- ====== WATERMARK ====== -->
     <div id="watermark">✦ FR4NX ✦</div>
 
-    <!-- ===== EFFECT LAYER ===== -->
+    <!-- ====== EFFECT LAYER ====== -->
     <div id="effect-layer"></div>
 
-    <!-- ===== BIRD CANVAS ===== -->
+    <!-- ====== BIRD CANVAS ====== -->
     <canvas id="birdCanvas"></canvas>
 
-    <!-- ===== INTRO SCREEN ===== -->
+    <!-- ====== INTRO SCREEN ====== -->
     <div id="intro-screen">
         <div id="intro-text"></div>
         <div id="click-prompt">✦ Click anywhere to enter ✦</div>
     </div>
 
-    <!-- ===== MAIN APP ===== -->
+    <!-- ====== MAIN APP ====== -->
     <div id="main-app">
         <div class="container">
 
@@ -1270,10 +1222,12 @@
                 🛒 Buy Free Fire Likes
             </a>
 
-            <!-- ===== SENSITIVITY GENERATOR ===== -->
+            <!-- ========================================================= -->
+            <!-- ===== SENSITIVITY GENERATOR – FIXED ===== -->
+            <!-- ========================================================= -->
             <div class="sensitivity-section">
                 <h2>⚙️ Free Fire Sensitivity Generator</h2>
-                <p class="sub-desc">Find the perfect sensitivity for your device – Max 200</p>
+                <p class="sub-desc">Optimized for your device – now with 200 max sensitivity.</p>
 
                 <div class="tab-switcher">
                     <button class="tab-btn active" id="tabSearch" onclick="switchTab('search')">
@@ -1319,7 +1273,7 @@
                         <div class="age-section" id="searchAgeSection">
                             <p class="age-section-title">📅 How old is your device?</p>
                             <div class="age-grid" id="searchAgeGrid"></div>
-                            <div class="age-note" id="searchAgeNote">Select age to boost sensitivity.</div>
+                            <div class="age-note" id="searchAgeNote">Enter age to boost sensitivity for older devices.</div>
                             <button class="btn-generate" id="searchGenerateBtn" onclick="generateFromSearch()">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                                 GENERATE SENSITIVITY
@@ -1365,7 +1319,7 @@
                         <div class="age-section" id="autoAgeSection">
                             <p class="age-section-title">📅 How old is your device?</p>
                             <div class="age-grid" id="autoAgeGrid"></div>
-                            <div class="age-note" id="autoAgeNote">Select age to boost sensitivity.</div>
+                            <div class="age-note" id="autoAgeNote">Enter age to boost sensitivity for older devices.</div>
                             <button class="btn-generate" id="autoGenerateBtn" onclick="generateFromAuto()">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                                 GENERATE SENSITIVITY
@@ -1420,12 +1374,12 @@
                             </div>
                             <div>
                                 <div class="card-title">Sensitivity Settings</div>
-                                <div class="card-sub">Apply in FF → Settings → Sensitivity (Max 200)</div>
+                                <div class="card-sub">Apply in FF → Settings → Sensitivity (max 200)</div>
                             </div>
                         </div>
                         <div class="sensi-list" id="sensiList"></div>
                         <div class="disclaimer">
-                            <strong>⚠️ Note:</strong> These are <strong>starting-point estimates</strong> based on device tier &amp; age. Use Training Mode to fine-tune.
+                            <strong>⚠️ Note:</strong> These are <strong>starting-point estimates</strong> – adjust in Training Mode.
                         </div>
                         <div class="actions">
                             <button class="btn-action btn-copy" id="copyBtn" onclick="copySettings()">
@@ -1454,7 +1408,7 @@
                         <div class="tip-list">
                             <div class="tip"><div class="tip-n">1</div><div class="tip-t"><strong>Apply in-game:</strong> Free Fire → Settings → Sensitivity and enter these values exactly.</div></div>
                             <div class="tip"><div class="tip-n">2</div><div class="tip-t"><strong>Test in Training Mode</strong> for 15+ minutes before ranked — your muscle memory needs to adjust.</div></div>
-                            <div class="tip"><div class="tip-n">3</div><div class="tip-t"><strong>Older devices get higher values</strong> — this compensates for lower touch response and input lag over time.</div></div>
+                            <div class="tip"><div class="tip-n">3</div><div class="tip-t"><strong>Older devices get higher sensitivity</strong> – this compensates for slower response over time.</div></div>
                             <div class="tip"><div class="tip-n">4</div><div class="tip-t"><strong>Tweak ±5 at a time.</strong> Too slow? Raise General by 5. Too shaky? Lower it by 5.</div></div>
                             <div class="tip"><div class="tip-n">5</div><div class="tip-t"><strong>These are not magic numbers.</strong> Pro players on the same phone use very different values — find what works for you.</div></div>
                         </div>
@@ -1482,9 +1436,11 @@
 
     <script>
         // =========================================================
-        // 1. EXACT FFSENSITIVITY.COM DEVICE DATABASE & PATTERNS
+        // 1. DEVICE DATABASE & PATTERNS (updated)
         // =========================================================
+
         const DB = {
+            // ... (same as before, keep all entries)
             "Samsung Galaxy S25 Ultra": { g: 98, r: 96, s2: 89, s4: 79, sn: 69, fl: 96, tier: "flagship" },
             "Samsung Galaxy S25+": { g: 96, r: 94, s2: 87, s4: 77, sn: 67, fl: 94, tier: "flagship" },
             "Samsung Galaxy S25": { g: 94, r: 92, s2: 85, s4: 75, sn: 65, fl: 92, tier: "flagship" },
@@ -1531,7 +1487,6 @@
             "iPhone 13 Pro Max": { g: 93, r: 91, s2: 84, s4: 74, sn: 64, fl: 91, tier: "flagship" },
             "iPhone 13 Pro": { g: 92, r: 90, s2: 83, s4: 73, sn: 63, fl: 90, tier: "flagship" },
             "iPhone 13": { g: 88, r: 86, s2: 79, s4: 69, sn: 59, fl: 86, tier: "flagship" },
-            "iPhone 6 / 6s": { g: 74, r: 72, s2: 64, s4: 54, sn: 44, fl: 70, tier: "mid" },
             "OnePlus 13": { g: 97, r: 95, s2: 88, s4: 78, sn: 68, fl: 95, tier: "flagship" },
             "OnePlus 13R": { g: 88, r: 86, s2: 78, s4: 68, sn: 58, fl: 86, tier: "flagship" },
             "OnePlus 12": { g: 95, r: 93, s2: 86, s4: 76, sn: 66, fl: 93, tier: "flagship" },
@@ -1548,6 +1503,7 @@
         };
 
         const PATTERNS = [
+            // Samsung
             [/SM-S938/i, "Samsung Galaxy S25 Ultra"],
             [/SM-S936/i, "Samsung Galaxy S25+"],
             [/SM-S931/i, "Samsung Galaxy S25"],
@@ -1564,20 +1520,24 @@
             [/SM-A536/i, "Samsung Galaxy A53"],
             [/SM-A356/i, "Samsung Galaxy A35"],
             [/SM-A346/i, "Samsung Galaxy A34"],
+            // Xiaomi
             [/2407FPN8EG|Xiaomi 15 Ultra/i, "Xiaomi 15 Ultra"],
             [/2501FPN6EG|Xiaomi 15 Pro/i, "Xiaomi 15 Pro"],
             [/2503FPN6EG|Xiaomi 15\b/i, "Xiaomi 15"],
             [/23116PN5BC|Xiaomi 14 Ultra/i, "Xiaomi 14 Ultra"],
             [/23116PN5BI|Xiaomi 14 Pro/i, "Xiaomi 14 Pro"],
             [/23127PN0CC|Xiaomi 14\b/i, "Xiaomi 14"],
+            // POCO
             [/24111RA49C|POCO X7 Pro/i, "POCO X7 Pro"],
             [/24111RA49G|POCO X7\b/i, "POCO X7"],
             [/23122PCD1G|POCO X6 Pro/i, "POCO X6 Pro"],
+            // Redmi
             [/24120RN75G|Redmi Note 14 Pro\+/i, "Redmi Note 14 Pro+"],
             [/24120RN75I|Redmi Note 14 Pro\b/i, "Redmi Note 14 Pro"],
             [/24120RN74G|Redmi Note 14\b/i, "Redmi Note 14"],
             [/23117RA68G|Redmi Note 13 Pro\+/i, "Redmi Note 13 Pro+"],
             [/23117RA68I|Redmi Note 13 Pro\b/i, "Redmi Note 13 Pro"],
+            // iPhone – only match if UA does NOT contain "Android"
             [/iPhone 17 Pro Max/i, "iPhone 17 Pro Max"],
             [/iPhone 17 Pro/i, "iPhone 17 Pro"],
             [/iPhone 17\b/i, "iPhone 17"],
@@ -1594,26 +1554,32 @@
             [/iPhone 13 Pro Max/i, "iPhone 13 Pro Max"],
             [/iPhone 13 Pro/i, "iPhone 13 Pro"],
             [/iPhone 13\b/i, "iPhone 13"],
-            [/iPhone 6 / 6s/i, "iPhone 6 / 6s"],
+            // OnePlus
             [/CPH2583|OnePlus 13\b/i, "OnePlus 13"],
             [/CPH2585|OnePlus 13R/i, "OnePlus 13R"],
             [/CPH2449|OnePlus 12\b/i, "OnePlus 12"],
+            // Google Pixel
             [/Pixel 9 Pro XL/i, "Google Pixel 9 Pro XL"],
             [/Pixel 9 Pro/i, "Google Pixel 9 Pro"],
             [/Pixel 9\b/i, "Google Pixel 9"],
             [/Pixel 8 Pro/i, "Google Pixel 8 Pro"],
             [/Pixel 8\b/i, "Google Pixel 8"],
+            // ASUS
             [/ASUS_AI2501|ROG Phone 9 Pro/i, "ASUS ROG Phone 9 Pro"],
             [/ASUS_AI2501|ROG Phone 9\b/i, "ASUS ROG Phone 9"],
             [/ASUS_AI2401|ROG Phone 8 Pro/i, "ASUS ROG Phone 8 Pro"],
+            // Nothing
             [/NX712J|Nothing Phone 2/i, "Nothing Phone 2"],
             [/NX611J|Nothing Phone 1/i, "Nothing Phone 1"]
         ];
 
+
         // =========================================================
-        // 2. GENERATION ENGINE (MAX 200)
+        // 2. GENERATION ENGINE – UPDATED
         // =========================================================
-        function getBoostFromYears(years) {
+
+        // Wear factor (same, but we'll use it as a boost instead of reduction)
+        function getWearFromYears(years) {
             if (years <= 0) return 0;
             if (years <= 0.5) return 0.02;
             if (years <= 1) return 0.04 + (years - 0.5) * 0.12;
@@ -1624,6 +1590,7 @@
             return Math.min(0.40 + (years - 5) * 0.02, 0.60);
         }
 
+        // Generate base preset – NEW formula: higher sensitivity for weaker devices
         function generateBasePreset(info) {
             var ram = info.ram || 0;
             var cpu = info.cpu || 0;
@@ -1632,64 +1599,94 @@
             var dpr = info.dpr || 1;
 
             var score = 45;
-            if (ram > 0) score += Math.min(ram / 16, 1) * 28;
-            if (cpu > 0) score += Math.min(cpu / 12, 1) * 17;
 
+            // RAM bonus (max +28)
+            if (ram > 0) {
+                score += Math.min(ram / 16, 1) * 28;
+            }
+            // CPU bonus (max +17)
+            if (cpu > 0) {
+                score += Math.min(cpu / 12, 1) * 17;
+            }
+            // Resolution bonus
             var px = (w * dpr) * (h * dpr);
-            if (px > 4000000) score += 10;
-            else if (px > 2000000) score += 5;
-
+            if (px > 4000000) {
+                score += 10;
+            } else if (px > 2000000) {
+                score += 5;
+            }
             score = Math.round(Math.min(Math.max(score, 0), 100));
 
-            // Inverted: weaker = higher
-            var general = Math.round(50 + (100 - score) * 0.5);
-            general = Math.max(60, Math.min(200, general));
+            // Invert: lower score → higher sensitivity, max 200
+            var general = Math.round(200 - (score * 0.9));
+            // Clamp between 50 and 200
+            general = Math.max(50, Math.min(200, general));
+
+            // Derive others, ensure they don't go below 0
+            var redDot = Math.max(0, general - 2);
+            var scope2x = Math.max(0, general - 10);
+            var scope4x = Math.max(0, general - 20);
+            var sniper = Math.max(0, general - 30);
+            var freeLook = Math.max(0, general - 3);
 
             return {
                 g: general,
-                r: general - 2,
-                s2: general - 10,
-                s4: general - 20,
-                sn: general - 30,
-                fl: general - 3,
+                r: redDot,
+                s2: scope2x,
+                s4: scope4x,
+                sn: sniper,
+                fl: freeLook,
                 perf: score,
                 tier: score > 80 ? "flagship" : score > 55 ? "mid" : "budget"
             };
         }
 
-        function applyAgeToPreset(preset, boost) {
+        // Apply age boost (multiply by (1 + wear), clamp at 200)
+        function applyAgeToPreset(preset, wear) {
             var keys = ["g", "r", "s2", "s4", "sn", "fl"];
             var out = {};
             keys.forEach(function(k) {
-                var val = Math.round(preset[k] * (1 + boost));
-                out[k] = Math.min(200, val);
+                var val = Math.round(preset[k] * (1 + wear));
+                out[k] = Math.min(200, Math.max(0, val));
             });
             out.perf = preset.perf || 70;
             out.tier = preset.tier || "mid";
-            out.boost = Math.round(boost * 100);
+            out.wear = Math.round(wear * 100);
             return out;
         }
 
+        // Detect device from UA – skip iPhone patterns if Android
         function detectDeviceFromUA(ua) {
+            var isAndroid = /Android/i.test(ua);
             for (var i = 0; i < PATTERNS.length; i++) {
-                if (PATTERNS[i][0].test(ua)) return PATTERNS[i][1];
+                var pattern = PATTERNS[i];
+                // If pattern is iPhone-related and UA is Android, skip
+                if (isAndroid && /iPhone/i.test(pattern[0].source)) {
+                    continue;
+                }
+                if (pattern[0].test(ua)) {
+                    return pattern[1];
+                }
             }
             return null;
         }
 
-        function getDevicePreset(name) { return DB[name] || null; }
+        function getDevicePreset(name) {
+            return DB[name] || null;
+        }
+
 
         // =========================================================
-        // 3. GLOBALS & UI FUNCTIONS
+        // 3. UI STATE & FUNCTIONS (unchanged, but adjusted labels)
         // =========================================================
-        var selectedDevice = null,
-            selectedAge = null,
-            searchModel = null,
-            searchAge = null,
-            autoAge = null;
-        var currentPreset = null,
-            currentModel = null,
-            isAutoDetect = false;
+        var selectedDevice = null;
+        var selectedAge = null;
+        var searchModel = null;
+        var searchAge = null;
+        var autoAge = null;
+        var currentPreset = null;
+        var currentModel = null;
+        var isAutoDetect = false;
 
         function switchTab(tab) {
             document.getElementById('tabSearch').className = 'tab-btn' + (tab === 'search' ? ' active' : '');
@@ -1704,22 +1701,19 @@
 
             var row = document.createElement('div');
             row.className = 'manual-age-row';
-
             var inp = document.createElement('input');
+            inp.className = 'manual-age-input';
             inp.type = 'number';
             inp.min = '0';
             inp.max = '20';
             inp.step = '0.5';
             inp.placeholder = '0';
-
             var unit = document.createElement('span');
             unit.className = 'manual-age-unit';
             unit.textContent = 'YRS';
-
             var applyBtn = document.createElement('button');
             applyBtn.className = 'manual-age-apply';
             applyBtn.textContent = 'CONFIRM AGE';
-
             row.appendChild(inp);
             row.appendChild(unit);
             row.appendChild(applyBtn);
@@ -1755,14 +1749,16 @@
                     setTimeout(function() { inp.style.borderColor = ''; }, 1500);
                     return;
                 }
-                var boost = getBoostFromYears(years);
+                var wear = getWearFromYears(years);
                 var yrs = Math.round(years * 10) / 10;
-                var lbl = yrs === 0 ? 'Brand New' : yrs < 1 ? Math.round(yrs * 12) + ' Months old' : yrs + ' Year' + (yrs === 1 ? '' : 's') + ' old';
-                var boostPct = Math.round(boost * 100);
+                var lbl = yrs === 0 ? 'Brand New' : yrs < 1 ? Math.round(yrs * 12) + ' Months old' : yrs + ' Year' + (yrs ===
+                    1 ? '' : 's') + ' old';
+                var wearPct = Math.round(wear * 100);
                 var note = document.getElementById(noteId);
-                note.innerHTML = '<strong>' + lbl + '</strong> — sensitivity <strong>INCREASED by ' + boostPct + '%</strong>' + (boostPct === 0 ? ' — base performance!' : ' to compensate for older hardware.');
+                note.innerHTML = '<strong>' + lbl + '</strong> — sensitivity boosted by <strong>' + wearPct +
+                    '%</strong>' + (wearPct === 0 ? ' — no boost applied.' : ' to compensate for aging hardware.');
                 note.className = 'age-note show';
-                onSelect({ label: lbl, val: 'custom', boost: boost });
+                onSelect({ label: lbl, val: 'custom', wear: wear });
             }
             applyBtn.addEventListener('click', doApply);
             inp.addEventListener('keydown', function(e) { if (e.key === 'Enter') doApply(); });
@@ -1773,7 +1769,7 @@
             currentModel = displayName;
 
             var ageLabel = ageObj ? ageObj.label : 'Unknown';
-            var boostPct = preset.boost || 0;
+            var wearPct = preset.wear || 0;
 
             document.getElementById('devName').textContent = displayName;
             document.getElementById('agePill').textContent = ageLabel;
@@ -1811,8 +1807,8 @@
 
             var ageFill = document.getElementById('ageFill');
             ageFill.style.width = '0%';
-            setTimeout(function() { ageFill.style.width = boostPct + '%'; }, 150);
-            document.getElementById('agePct').textContent = boostPct + '%';
+            setTimeout(function() { ageFill.style.width = wearPct + '%'; }, 150);
+            document.getElementById('agePct').textContent = wearPct + '%';
 
             var list = document.getElementById('sensiList');
             var rows = [
@@ -1828,7 +1824,8 @@
                 var val = preset[cfg.key] || 0;
                 var div = document.createElement('div');
                 div.className = 'sensi-row';
-                div.innerHTML = '<span class="sensi-label">' + cfg.label + '</span><span class="sensi-value" style="color:' + cfg.color + '">' + val + '</span>';
+                div.innerHTML = '<span class="sensi-label">' + cfg.label +
+                    '</span><span class="sensi-value" style="color:' + cfg.color + '">' + val + '</span>';
                 list.appendChild(div);
             });
 
@@ -1838,8 +1835,9 @@
             }, 200);
         }
 
+
         // =========================================================
-        // 4. AUTO DETECT (Android fix)
+        // 4. AUTO DETECT – FIXED
         // =========================================================
         function detectDevice() {
             var btn = document.getElementById('detectBtn');
@@ -1858,17 +1856,11 @@
                 var h = screen.height || 640;
                 var dpr = window.devicePixelRatio || 1;
 
-                var isAndroid = /android/i.test(ua);
+                var info = { ua: ua, ram: ram, cpu: cpu, w: w, h: h, dpr: dpr };
+
                 var detectedName = detectDeviceFromUA(ua);
-
-                // Android fix: ignore iPhone patterns
-                if (isAndroid && detectedName && /iPhone/i.test(detectedName)) {
-                    detectedName = null;
-                }
-
                 var preset = null;
                 var displayName = '';
-                var info = { ua: ua, ram: ram, cpu: cpu, w: w, h: h, dpr: dpr };
 
                 if (detectedName && getDevicePreset(detectedName)) {
                     preset = getDevicePreset(detectedName);
@@ -1905,6 +1897,10 @@
             }, 1200);
         }
 
+
+        // =========================================================
+        // 5. GENERATE FROM AUTO / SEARCH (using new logic)
+        // =========================================================
         function generateFromAuto() {
             if (!autoAge) { alert('Please enter your device age first.'); return; }
 
@@ -1923,12 +1919,25 @@
                 return;
             }
 
-            var finalPreset = applyAgeToPreset(preset, autoAge.boost);
+            var finalPreset = applyAgeToPreset(preset, autoAge.wear);
             renderResults(finalPreset, displayName, null, autoAge);
         }
 
+        function generateFromSearch() {
+            if (!searchModel) { alert('Please select a device first.'); return; }
+            if (!searchAge) { alert('Please enter your device age first.'); return; }
+
+            var preset = getDevicePreset(searchModel);
+            if (!preset) { alert('Device not found in database.'); return; }
+            if (!preset.perf) preset.perf = preset.tier === 'flagship' ? 88 : preset.tier === 'mid' ? 65 : 48;
+
+            var finalPreset = applyAgeToPreset(preset, searchAge.wear);
+            renderResults(finalPreset, searchModel, null, searchAge);
+        }
+
+
         // =========================================================
-        // 5. SEARCH FUNCTIONS
+        // 6. FILTER & SELECT (unchanged)
         // =========================================================
         function filterDevices(q) {
             if (!q) return [];
@@ -1975,24 +1984,12 @@
             document.getElementById('searchAgeSection').style.display = 'none';
             document.getElementById('searchGenerateBtn').className = 'btn-generate';
             document.getElementById('searchAgeGrid').innerHTML = '';
-            document.getElementById('searchAgeNote').textContent = 'Select age to boost sensitivity.';
+            document.getElementById('searchAgeNote').textContent = 'Enter age to boost sensitivity for older devices.';
             document.getElementById('searchAgeNote').className = 'age-note';
         }
 
-        function generateFromSearch() {
-            if (!searchModel) { alert('Please select a device first.'); return; }
-            if (!searchAge) { alert('Please enter your device age first.'); return; }
-
-            var preset = getDevicePreset(searchModel);
-            if (!preset) { alert('Device not found in database.'); return; }
-            if (!preset.perf) preset.perf = preset.tier === 'flagship' ? 88 : preset.tier === 'mid' ? 65 : 48;
-
-            var finalPreset = applyAgeToPreset(preset, searchAge.boost);
-            renderResults(finalPreset, searchModel, null, searchAge);
-        }
-
         // =========================================================
-        // 6. COPY, RESET, ETC.
+        // 7. COPY, RESET, ETC. (unchanged)
         // =========================================================
         function copySettings() {
             if (!currentPreset) { alert('Generate sensitivity first!'); return; }
@@ -2011,7 +2008,8 @@
                 'Generated by Phantom Guild';
 
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text).then(function() { showCopyOk(); }).catch(function() { fallbackCopy(text); });
+                navigator.clipboard.writeText(text).then(function() { showCopyOk(); }).catch(function() { fallbackCopy(
+                    text); });
             } else {
                 fallbackCopy(text);
             }
@@ -2051,10 +2049,10 @@
             document.getElementById('autoAgeSection').style.display = 'none';
             document.getElementById('autoGenerateBtn').className = 'btn-generate';
             document.getElementById('autoAgeGrid').innerHTML = '';
-            document.getElementById('autoAgeNote').textContent = 'Select age to boost sensitivity.';
+            document.getElementById('autoAgeNote').textContent = 'Enter age to boost sensitivity for older devices.';
             document.getElementById('autoAgeNote').className = 'age-note';
             document.getElementById('searchAgeGrid').innerHTML = '';
-            document.getElementById('searchAgeNote').textContent = 'Select age to boost sensitivity.';
+            document.getElementById('searchAgeNote').textContent = 'Enter age to boost sensitivity for older devices.';
             document.getElementById('searchAgeNote').className = 'age-note';
             document.getElementById('detectBtn').style.display = 'flex';
             document.getElementById('loader').classList.remove('show');
@@ -2062,8 +2060,9 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+
         // =========================================================
-        // 7. NAME GENERATOR (Phantom Guild – unchanged)
+        // 8. NAME GENERATOR (unchanged from previous)
         // =========================================================
         var smallCapsMap = {
             'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ',
@@ -2181,8 +2180,9 @@
             if (e.key === 'Enter') { document.getElementById('doneBtn').click(); }
         });
 
+
         // =========================================================
-        // 8. RANDOM NAMES (unchanged)
+        // 9. RANDOM NAMES (unchanged)
         // =========================================================
         var freestyleNames = [
             'Zephyr', 'Azrael', 'Orion', 'Draven', 'Raven', 'Kael', 'Jareth',
@@ -2277,8 +2277,9 @@
 
         loadRandomNames('freestyle');
 
+
         // =========================================================
-        // 9. SEARCH INPUT EVENTS
+        // 10. SEARCH INPUT EVENTS
         // =========================================================
         var si = document.getElementById('searchInput');
         var sc = document.getElementById('searchClear');
@@ -2314,8 +2315,9 @@
             clearSelection();
             si.focus(); });
 
+
         // =========================================================
-        // 10. ACTIVE COUNTERS
+        // 11. ACTIVE COUNTERS (unchanged)
         // =========================================================
         (function activeCounters() {
             var visitEl = document.getElementById('visitCount');
@@ -2344,8 +2346,9 @@
             setInterval(updateOnline, 8000);
         })();
 
+
         // =========================================================
-        // 11. PHANTOM EFFECTS (unchanged)
+        // 12. PHANTOM EFFECTS (unchanged)
         // =========================================================
         (function phantomEffects() {
             var layer = document.getElementById('effect-layer');
@@ -2434,8 +2437,9 @@
             });
         })();
 
+
         // =========================================================
-        // 12. AUDIO & INTRO (FIXED – ensures typing starts)
+        // 13. AUDIO PRELOAD, INTRO, BIRDS (unchanged)
         // =========================================================
         var audio = document.getElementById('bg-music');
         audio.volume = 0.25;
@@ -2458,7 +2462,6 @@
         document.addEventListener('touchstart', resumeAudioContext);
         document.addEventListener('keydown', resumeAudioContext);
 
-        // INTRO TYPING
         var introLines = [
             "Welcome to Phantom ・〆 Guild name generator.",
             "Here, you get your official Phantom name signature and text style.",
@@ -2553,26 +2556,7 @@
             }
             typeChar();
         }
-
-        // Ensure intro starts after page load
-        function startIntro() {
-            // If already typed, skip.
-            if (introContainer.children.length > 0) return;
-            typeLine();
-        }
-
-        // Fire on both DOMContentLoaded and window.load
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', startIntro);
-        } else {
-            startIntro();
-        }
-        window.addEventListener('load', function() {
-            // In case it didn't start yet, force it
-            if (introContainer.children.length === 0) {
-                typeLine();
-            }
-        });
+        window.addEventListener('load', typeLine);
 
         var musicStarted = false;
 
@@ -2608,7 +2592,7 @@
         audio.addEventListener('ended', function() { audio.play().catch(function() {}); });
 
         // =========================================================
-        // 13. BIRDS CANVAS (unchanged)
+        // 14. BIRDS (unchanged)
         // =========================================================
         var canvas = document.getElementById('birdCanvas');
         var ctx = canvas.getContext('2d');
@@ -2726,10 +2710,12 @@
                 ctx.fill();
                 ctx.fillStyle = '#4a2a5a';
                 ctx.beginPath();
-                ctx.ellipse(-size * 0.25, -size * 0.15 + wingFlap * size * 0.12, size * 0.4, size * 0.25, -0.2 + wingFlap * 0.15, 0, Math.PI * 2);
+                ctx.ellipse(-size * 0.25, -size * 0.15 + wingFlap * size * 0.12, size * 0.4, size * 0.25, -0.2 + wingFlap *
+                    0.15, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.beginPath();
-                ctx.ellipse(-size * 0.25, size * 0.15 - wingFlap * size * 0.12, size * 0.4, size * 0.25, 0.2 - wingFlap * 0.15, 0, Math.PI * 2);
+                ctx.ellipse(-size * 0.25, size * 0.15 - wingFlap * size * 0.12, size * 0.4, size * 0.25, 0.2 - wingFlap *
+                    0.15, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.fillStyle = '#3a2a4a';
                 ctx.beginPath();
@@ -2851,7 +2837,7 @@
         });
 
         // =========================================================
-        // 14. GLOBAL EXPOSURE FOR INLINE ONCLICK
+        // 15. GLOBAL EXPOSURE
         // =========================================================
         window.switchTab = switchTab;
         window.detectDevice = detectDevice;
@@ -2868,11 +2854,9 @@
         window.updatePreview = updatePreview;
         window.copyResult = copyResult;
 
-        console.log('🔥 Phantom Guild – Fully fixed and loaded (Max 200).');
+        console.log('🔥 Phantom Guild – Sensitivity generator with 200 max & age boost.');
         console.log('📱 Loaded ' + Object.keys(DB).length + ' preset devices.');
         console.log('🔍 Loaded ' + PATTERNS.length + ' UA patterns.');
-        console.log('⚡ Inverted score: weaker devices get HIGHER sensitivity.');
-        console.log('📈 Age BOOST: older devices get HIGHER sensitivity (capped at 200).');
     </script>
 </body>
 </html>
