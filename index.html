@@ -5,8 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>ᴘʜᴀɴᴛᴏᴍ・〆 — Name Generator</title>
     <style>
+        /* ===== ANTI-INSPECTION ===== */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        /* Allow input fields to be selectable */
+        input, textarea, .name-list-item, .result-wrapper {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
         /* ============================
-           ALL STYLES – FIXED FOR MOBILE
+           ALL STYLES – SAME AS BEFORE
            ============================ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -1223,7 +1237,7 @@
             </a>
 
             <!-- ========================================================= -->
-            <!-- ===== SENSITIVITY GENERATOR – FIXED ===== -->
+            <!-- ===== SENSITIVITY GENERATOR – UPDATED ===== -->
             <!-- ========================================================= -->
             <div class="sensitivity-section">
                 <h2>⚙️ Free Fire Sensitivity Generator</h2>
@@ -1436,11 +1450,62 @@
 
     <script>
         // =========================================================
-        // 1. DEVICE DATABASE & PATTERNS (updated)
+        // 0. ANTI-INSPECTION & ANTI-THEFT
+        // =========================================================
+        (function antiInspection() {
+            // Block right-click
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
+
+            // Block keyboard shortcuts: F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+Shift+C, Ctrl+Shift+K
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'F12' ||
+                    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'K' || e.key === 'C')) ||
+                    (e.ctrlKey && e.key === 'U')) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // Detect DevTools via console.log trick (triggers debugger when console is opened)
+            var devtools = /./;
+            devtools.toString = function() {
+                debugger;
+                return '';
+            };
+            setInterval(function() {
+                console.log('%c', devtools);
+            }, 3000);
+
+            // Detect DevTools via window size difference (docked DevTools)
+            var threshold = 100;
+            setInterval(function() {
+                var w = window.outerWidth - window.innerWidth;
+                var h = window.outerHeight - window.innerHeight;
+                if (w > threshold || h > threshold) {
+                    // Wipe page content
+                    document.body.innerHTML =
+                        '<h1 style="color:white;background:black;text-align:center;padding:50px;font-family:sans-serif;">Access Denied</h1>';
+                    // Optionally redirect
+                    // window.location.href = 'about:blank';
+                }
+            }, 3000);
+
+            // Override console methods to prevent logging
+            console.log = console.warn = console.error = console.info = function() {};
+
+            // Block selection and copy (except input fields)
+            document.addEventListener('selectstart', function(e) { e.preventDefault(); });
+            document.addEventListener('copy', function(e) { e.preventDefault(); });
+        })();
+
+        // =========================================================
+        // 1. DEVICE DATABASE & PATTERNS (same as before)
         // =========================================================
 
         const DB = {
-            // ... (same as before, keep all entries)
             "Samsung Galaxy S25 Ultra": { g: 98, r: 96, s2: 89, s4: 79, sn: 69, fl: 96, tier: "flagship" },
             "Samsung Galaxy S25+": { g: 96, r: 94, s2: 87, s4: 77, sn: 67, fl: 94, tier: "flagship" },
             "Samsung Galaxy S25": { g: 94, r: 92, s2: 85, s4: 75, sn: 65, fl: 92, tier: "flagship" },
@@ -1503,7 +1568,6 @@
         };
 
         const PATTERNS = [
-            // Samsung
             [/SM-S938/i, "Samsung Galaxy S25 Ultra"],
             [/SM-S936/i, "Samsung Galaxy S25+"],
             [/SM-S931/i, "Samsung Galaxy S25"],
@@ -1520,24 +1584,20 @@
             [/SM-A536/i, "Samsung Galaxy A53"],
             [/SM-A356/i, "Samsung Galaxy A35"],
             [/SM-A346/i, "Samsung Galaxy A34"],
-            // Xiaomi
             [/2407FPN8EG|Xiaomi 15 Ultra/i, "Xiaomi 15 Ultra"],
             [/2501FPN6EG|Xiaomi 15 Pro/i, "Xiaomi 15 Pro"],
             [/2503FPN6EG|Xiaomi 15\b/i, "Xiaomi 15"],
             [/23116PN5BC|Xiaomi 14 Ultra/i, "Xiaomi 14 Ultra"],
             [/23116PN5BI|Xiaomi 14 Pro/i, "Xiaomi 14 Pro"],
             [/23127PN0CC|Xiaomi 14\b/i, "Xiaomi 14"],
-            // POCO
             [/24111RA49C|POCO X7 Pro/i, "POCO X7 Pro"],
             [/24111RA49G|POCO X7\b/i, "POCO X7"],
             [/23122PCD1G|POCO X6 Pro/i, "POCO X6 Pro"],
-            // Redmi
             [/24120RN75G|Redmi Note 14 Pro\+/i, "Redmi Note 14 Pro+"],
             [/24120RN75I|Redmi Note 14 Pro\b/i, "Redmi Note 14 Pro"],
             [/24120RN74G|Redmi Note 14\b/i, "Redmi Note 14"],
             [/23117RA68G|Redmi Note 13 Pro\+/i, "Redmi Note 13 Pro+"],
             [/23117RA68I|Redmi Note 13 Pro\b/i, "Redmi Note 13 Pro"],
-            // iPhone – only match if UA does NOT contain "Android"
             [/iPhone 17 Pro Max/i, "iPhone 17 Pro Max"],
             [/iPhone 17 Pro/i, "iPhone 17 Pro"],
             [/iPhone 17\b/i, "iPhone 17"],
@@ -1554,31 +1614,24 @@
             [/iPhone 13 Pro Max/i, "iPhone 13 Pro Max"],
             [/iPhone 13 Pro/i, "iPhone 13 Pro"],
             [/iPhone 13\b/i, "iPhone 13"],
-            // OnePlus
             [/CPH2583|OnePlus 13\b/i, "OnePlus 13"],
             [/CPH2585|OnePlus 13R/i, "OnePlus 13R"],
             [/CPH2449|OnePlus 12\b/i, "OnePlus 12"],
-            // Google Pixel
             [/Pixel 9 Pro XL/i, "Google Pixel 9 Pro XL"],
             [/Pixel 9 Pro/i, "Google Pixel 9 Pro"],
             [/Pixel 9\b/i, "Google Pixel 9"],
             [/Pixel 8 Pro/i, "Google Pixel 8 Pro"],
             [/Pixel 8\b/i, "Google Pixel 8"],
-            // ASUS
             [/ASUS_AI2501|ROG Phone 9 Pro/i, "ASUS ROG Phone 9 Pro"],
             [/ASUS_AI2501|ROG Phone 9\b/i, "ASUS ROG Phone 9"],
             [/ASUS_AI2401|ROG Phone 8 Pro/i, "ASUS ROG Phone 8 Pro"],
-            // Nothing
             [/NX712J|Nothing Phone 2/i, "Nothing Phone 2"],
             [/NX611J|Nothing Phone 1/i, "Nothing Phone 1"]
         ];
 
-
         // =========================================================
-        // 2. GENERATION ENGINE – UPDATED
+        // 2. GENERATION ENGINE (same as fixed version)
         // =========================================================
-
-        // Wear factor (same, but we'll use it as a boost instead of reduction)
         function getWearFromYears(years) {
             if (years <= 0) return 0;
             if (years <= 0.5) return 0.02;
@@ -1590,7 +1643,6 @@
             return Math.min(0.40 + (years - 5) * 0.02, 0.60);
         }
 
-        // Generate base preset – NEW formula: higher sensitivity for weaker devices
         function generateBasePreset(info) {
             var ram = info.ram || 0;
             var cpu = info.cpu || 0;
@@ -1599,30 +1651,15 @@
             var dpr = info.dpr || 1;
 
             var score = 45;
-
-            // RAM bonus (max +28)
-            if (ram > 0) {
-                score += Math.min(ram / 16, 1) * 28;
-            }
-            // CPU bonus (max +17)
-            if (cpu > 0) {
-                score += Math.min(cpu / 12, 1) * 17;
-            }
-            // Resolution bonus
+            if (ram > 0) score += Math.min(ram / 16, 1) * 28;
+            if (cpu > 0) score += Math.min(cpu / 12, 1) * 17;
             var px = (w * dpr) * (h * dpr);
-            if (px > 4000000) {
-                score += 10;
-            } else if (px > 2000000) {
-                score += 5;
-            }
+            if (px > 4000000) score += 10;
+            else if (px > 2000000) score += 5;
             score = Math.round(Math.min(Math.max(score, 0), 100));
 
-            // Invert: lower score → higher sensitivity, max 200
             var general = Math.round(200 - (score * 0.9));
-            // Clamp between 50 and 200
             general = Math.max(50, Math.min(200, general));
-
-            // Derive others, ensure they don't go below 0
             var redDot = Math.max(0, general - 2);
             var scope2x = Math.max(0, general - 10);
             var scope4x = Math.max(0, general - 20);
@@ -1641,7 +1678,6 @@
             };
         }
 
-        // Apply age boost (multiply by (1 + wear), clamp at 200)
         function applyAgeToPreset(preset, wear) {
             var keys = ["g", "r", "s2", "s4", "sn", "fl"];
             var out = {};
@@ -1655,29 +1691,21 @@
             return out;
         }
 
-        // Detect device from UA – skip iPhone patterns if Android
         function detectDeviceFromUA(ua) {
             var isAndroid = /Android/i.test(ua);
             for (var i = 0; i < PATTERNS.length; i++) {
                 var pattern = PATTERNS[i];
-                // If pattern is iPhone-related and UA is Android, skip
-                if (isAndroid && /iPhone/i.test(pattern[0].source)) {
-                    continue;
-                }
-                if (pattern[0].test(ua)) {
-                    return pattern[1];
-                }
+                if (isAndroid && /iPhone/i.test(pattern[0].source)) continue;
+                if (pattern[0].test(ua)) return pattern[1];
             }
             return null;
         }
 
-        function getDevicePreset(name) {
-            return DB[name] || null;
-        }
+        function getDevicePreset(name) { return DB[name] || null; }
 
 
         // =========================================================
-        // 3. UI STATE & FUNCTIONS (unchanged, but adjusted labels)
+        // 3. UI STATE & FUNCTIONS
         // =========================================================
         var selectedDevice = null;
         var selectedAge = null;
@@ -1837,7 +1865,7 @@
 
 
         // =========================================================
-        // 4. AUTO DETECT – FIXED
+        // 4. AUTO DETECT
         // =========================================================
         function detectDevice() {
             var btn = document.getElementById('detectBtn');
@@ -1899,7 +1927,7 @@
 
 
         // =========================================================
-        // 5. GENERATE FROM AUTO / SEARCH (using new logic)
+        // 5. GENERATE FROM AUTO / SEARCH
         // =========================================================
         function generateFromAuto() {
             if (!autoAge) { alert('Please enter your device age first.'); return; }
@@ -1937,7 +1965,7 @@
 
 
         // =========================================================
-        // 6. FILTER & SELECT (unchanged)
+        // 6. FILTER & SELECT
         // =========================================================
         function filterDevices(q) {
             if (!q) return [];
@@ -1988,8 +2016,9 @@
             document.getElementById('searchAgeNote').className = 'age-note';
         }
 
+
         // =========================================================
-        // 7. COPY, RESET, ETC. (unchanged)
+        // 7. COPY, RESET, ETC.
         // =========================================================
         function copySettings() {
             if (!currentPreset) { alert('Generate sensitivity first!'); return; }
@@ -2062,7 +2091,7 @@
 
 
         // =========================================================
-        // 8. NAME GENERATOR (unchanged from previous)
+        // 8. NAME GENERATOR (unchanged)
         // =========================================================
         var smallCapsMap = {
             'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ',
@@ -2317,7 +2346,7 @@
 
 
         // =========================================================
-        // 11. ACTIVE COUNTERS (unchanged)
+        // 11. ACTIVE COUNTERS
         // =========================================================
         (function activeCounters() {
             var visitEl = document.getElementById('visitCount');
