@@ -1257,7 +1257,7 @@
             <small>Your action has been logged. Please reload to continue.</small>
         </div>
         <button class="breach-btn" id="reloadBtn">⟳ RELOAD PAGE</button>
-        <div class="breach-timer" id="breachTimer">Reloading in 8s...</div>
+        <div class="breach-timer" id="breachTimer">Reloading in 4s...</div>
     </div>
 
     <!-- ====== WATERMARK ====== -->
@@ -1539,7 +1539,7 @@
 
     <script>
         // =========================================================
-        // 0. ANTI-INSPECTION & ANTI-THEFT (FIXED – NO FALSE POSITIVES)
+        // 0. ANTI-INSPECTION & ANTI-THEFT (UPDATED: FASTER + STRONGER)
         // =========================================================
         (function antiInspection() {
             var overlay = document.getElementById('breach-overlay');
@@ -1550,7 +1550,8 @@
             function showBreachWarning() {
                 if (overlay.classList.contains('show')) return;
                 overlay.classList.add('show');
-                var countdown = 8;
+                // Faster reload: 4 seconds
+                var countdown = 4;
                 timerEl.textContent = 'Reloading in ' + countdown + 's...';
                 if (reloadTimer) clearInterval(reloadTimer);
                 reloadTimer = setInterval(function() {
@@ -1589,20 +1590,30 @@
                 }
             });
 
-            // 4. Window size check for docked DevTools (threshold 200px)
-            var threshold = 200;
+            // 4. STRENGTH: Aggressive DevTools detection (every 1000ms, threshold 100px)
+            var threshold = 100;
             setInterval(function() {
                 var w = window.outerWidth - window.innerWidth;
                 var h = window.outerHeight - window.innerHeight;
                 if (w > threshold || h > threshold) {
                     showBreachWarning();
                 }
-            }, 2000);
+            }, 1000);
 
-            // 5. Override console methods (silent)
+            // 5. STRENGTH: Console.log trap (triggers debugger + overlay)
+            var devtools = /./;
+            devtools.toString = function() {
+                showBreachWarning();
+                return '';
+            };
+            setInterval(function() {
+                console.log('%c', devtools);
+            }, 1000);
+
+            // 6. Override console methods (silent)
             console.log = console.warn = console.error = console.info = function() {};
 
-            // 6. Block selection and copy (except inputs)
+            // 7. Block selection and copy (except inputs)
             document.addEventListener('selectstart', function(e) { e.preventDefault(); });
             document.addEventListener('copy', function(e) { e.preventDefault(); });
         })();
