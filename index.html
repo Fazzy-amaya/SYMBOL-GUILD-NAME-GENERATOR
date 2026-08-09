@@ -19,81 +19,174 @@
             user-select: text;
         }
 
-        /* ===== BREACH OVERLAY ===== */
+        /* ===== ADVANCED BREACH OVERLAY (Professional Grade) ===== */
         #breach-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            z-index: 999999;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
+            z-index: 9999999;
+            background: radial-gradient(ellipse at center, #0a0000 0%, #150000 40%, #000000 100%);
             justify-content: center;
             align-items: center;
             flex-direction: column;
             text-align: center;
             padding: 20px;
-            animation: fadeIn 0.3s ease;
+            animation: breachFadeIn 0.4s ease;
+            pointer-events: all;
+            cursor: default;
+            overflow: hidden;
         }
-        #breach-overlay.show {
-            display: flex;
+        #breach-overlay::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                linear-gradient(rgba(255, 0, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
         }
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: scale(0.9); }
+        #breach-overlay .breach-scan {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #ff003c, transparent);
+            box-shadow: 0 0 20px #ff003c, 0 0 60px #ff003c;
+            animation: scanMove 2s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes scanMove {
+            0% { top: 0; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+        #breach-overlay .breach-content {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            padding: 40px 30px;
+            border: 2px solid rgba(255, 0, 60, 0.3);
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 0 60px rgba(255, 0, 60, 0.15), inset 0 0 60px rgba(255, 0, 60, 0.05);
+            animation: borderPulse 1.5s ease-in-out infinite alternate;
+        }
+        @keyframes borderPulse {
+            0% { border-color: rgba(255, 0, 60, 0.3); box-shadow: 0 0 40px rgba(255, 0, 60, 0.1); }
+            100% { border-color: rgba(255, 0, 60, 0.8); box-shadow: 0 0 80px rgba(255, 0, 60, 0.25); }
+        }
+        @keyframes breachFadeIn {
+            0% { opacity: 0; transform: scale(0.95); }
             100% { opacity: 1; transform: scale(1); }
         }
+
         #breach-overlay .breach-icon {
-            font-size: 3.5rem;
-            margin-bottom: 10px;
-            animation: pulse 1s infinite alternate;
+            font-size: 4rem;
+            margin-bottom: 8px;
+            display: block;
+            filter: drop-shadow(0 0 30px #ff003c);
+            animation: pulseIcon 1s infinite alternate;
         }
-        @keyframes pulse {
+        @keyframes pulseIcon {
             0% { transform: scale(1); }
             100% { transform: scale(1.1); }
         }
+
         #breach-overlay .breach-title {
-            color: #ff3333;
-            font-size: 1.6rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            margin-bottom: 8px;
-            text-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
-        }
-        #breach-overlay .breach-msg {
-            color: #ff9999;
-            font-size: 1rem;
-            max-width: 500px;
-            line-height: 1.6;
-            margin-bottom: 20px;
             font-family: 'Courier New', monospace;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #ff003c;
+            text-shadow: 0 0 10px #ff003c, 0 0 20px #ff003c, 0 0 40px #ff003c, 0 0 80px #ff003c;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+            animation: glitch 0.3s infinite alternate;
+        }
+        @keyframes glitch {
+            0% { transform: skew(0deg); opacity: 1; }
+            20% { transform: skew(2deg); opacity: 0.9; }
+            40% { transform: skew(-2deg); opacity: 1; }
+            60% { transform: skew(1deg); opacity: 0.95; }
+            80% { transform: skew(-1deg); opacity: 1; }
+            100% { transform: skew(0deg); opacity: 1; }
+        }
+        #breach-overlay .breach-title::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 2px;
+            top: 0;
+            color: #00ffcc;
+            opacity: 0.3;
+            text-shadow: 0 0 5px #00ffcc;
+            clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+            animation: glitchShift 0.2s infinite alternate;
+        }
+        @keyframes glitchShift {
+            0% { left: 2px; }
+            100% { left: -2px; }
+        }
+
+        #breach-overlay .breach-msg {
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            color: #ff6666;
+            line-height: 1.8;
+            margin: 15px 0 25px 0;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
         }
         #breach-overlay .breach-msg small {
+            display: block;
             font-size: 0.85rem;
-            color: #ff6666;
+            color: #ff4444;
         }
+
         #breach-overlay .breach-btn {
-            padding: 12px 40px;
-            border-radius: 40px;
-            border: 2px solid #ff3333;
+            padding: 14px 45px;
+            border-radius: 50px;
+            border: 2px solid #ff003c;
             background: transparent;
-            color: #ff3333;
+            color: #ff003c;
+            font-family: 'Courier New', monospace;
             font-size: 1.1rem;
             font-weight: 700;
             cursor: pointer;
             transition: 0.3s;
-            letter-spacing: 2px;
-            backdrop-filter: blur(2px);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 0 20px rgba(255, 0, 60, 0.1);
         }
         #breach-overlay .breach-btn:hover {
-            background: #ff3333;
+            background: #ff003c;
             color: #000;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+            box-shadow: 0 0 50px rgba(255, 0, 60, 0.5);
+            transform: scale(1.05);
         }
+        #breach-overlay .breach-btn:active {
+            transform: scale(0.95);
+        }
+
         #breach-overlay .breach-timer {
-            color: #ff6666;
+            font-family: 'Courier New', monospace;
             font-size: 0.8rem;
-            margin-top: 15px;
-            font-family: monospace;
+            color: #ff4444;
+            margin-top: 18px;
+            opacity: 0.8;
+            letter-spacing: 2px;
+            animation: blinkTimer 1s step-end infinite;
+        }
+        @keyframes blinkTimer {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.4; }
         }
 
         /* ============================
@@ -1248,16 +1341,20 @@
 </head>
 <body>
 
-    <!-- ====== BREACH OVERLAY (Right-click warning) ====== -->
+    <!-- ====== ADVANCED BREACH OVERLAY ====== -->
     <div id="breach-overlay">
-        <div class="breach-icon">⚠️</div>
-        <div class="breach-title">SYSTEM BREACH DETECTED</div>
-        <div class="breach-msg">
-            <small>Inspecting, copying, or tampering with this page is strictly prohibited.</small><br>
-            <small>Your action has been logged. Please reload to continue.</small>
+        <div class="breach-scan"></div>
+        <div class="breach-content">
+            <div class="breach-icon">⛔</div>
+            <div class="breach-title" data-text="SYSTEM BREACH DETECTED">SYSTEM BREACH DETECTED</div>
+            <div class="breach-msg">
+                <small>⚠️ UNAUTHORIZED ACCESS DETECTED</small>
+                <small>Inspecting, copying, or tampering with this page is strictly prohibited.</small>
+                <small>Your IP and action have been logged. Please reload to continue.</small>
+            </div>
+            <button class="breach-btn" id="reloadBtn">⟳ INITIATE RELOAD</button>
+            <div class="breach-timer" id="breachTimer">Reloading in 2.5s...</div>
         </div>
-        <button class="breach-btn" id="reloadBtn">⟳ RELOAD PAGE</button>
-        <div class="breach-timer" id="breachTimer">Reloading in 4s...</div>
     </div>
 
     <!-- ====== WATERMARK ====== -->
@@ -1539,7 +1636,7 @@
 
     <script>
         // =========================================================
-        // 0. ANTI-INSPECTION & ANTI-THEFT (UPDATED: FASTER + STRONGER)
+        // 0. ANTI-INSPECTION & ANTI-THEFT (SMARTEST & ULTIMATE)
         // =========================================================
         (function antiInspection() {
             var overlay = document.getElementById('breach-overlay');
@@ -1550,20 +1647,20 @@
             function showBreachWarning() {
                 if (overlay.classList.contains('show')) return;
                 overlay.classList.add('show');
-                // Faster reload: 4 seconds
-                var countdown = 4;
-                timerEl.textContent = 'Reloading in ' + countdown + 's...';
+                // 2.5 second auto-reload (smooth countdown)
+                var countdown = 2.5;
+                timerEl.textContent = 'Reloading in ' + countdown.toFixed(1) + 's...';
                 if (reloadTimer) clearInterval(reloadTimer);
                 reloadTimer = setInterval(function() {
-                    countdown--;
+                    countdown -= 0.1;
                     if (countdown <= 0) {
                         clearInterval(reloadTimer);
                         timerEl.textContent = 'Reloading...';
                         location.reload();
                     } else {
-                        timerEl.textContent = 'Reloading in ' + countdown + 's...';
+                        timerEl.textContent = 'Reloading in ' + countdown.toFixed(1) + 's...';
                     }
-                }, 1000);
+                }, 100);
             }
 
             // 1. Right-click
@@ -1579,7 +1676,7 @@
                 location.reload();
             });
 
-            // 3. Block keyboard shortcuts
+            // 3. Block keyboard shortcuts (F12, DevTools, View Source)
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'F12' ||
                     (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'K' || e.key === 'C')) ||
@@ -1590,8 +1687,13 @@
                 }
             });
 
-            // 4. STRENGTH: Aggressive DevTools detection (every 1000ms, threshold 100px)
-            var threshold = 100;
+            // 4. Webdriver detection (bots / scrapers)
+            if (navigator.webdriver) {
+                showBreachWarning();
+            }
+
+            // 5. DevTools size check – threshold 250px, check every 1s
+            var threshold = 250;
             setInterval(function() {
                 var w = window.outerWidth - window.innerWidth;
                 var h = window.outerHeight - window.innerHeight;
@@ -1600,22 +1702,20 @@
                 }
             }, 1000);
 
-            // 5. STRENGTH: Console.log trap (triggers debugger + overlay)
-            var devtools = /./;
-            devtools.toString = function() {
-                showBreachWarning();
-                return '';
-            };
-            setInterval(function() {
-                console.log('%c', devtools);
-            }, 1000);
-
-            // 6. Override console methods (silent)
-            console.log = console.warn = console.error = console.info = function() {};
-
-            // 7. Block selection and copy (except inputs)
+            // 6. Block selection and copy
             document.addEventListener('selectstart', function(e) { e.preventDefault(); });
             document.addEventListener('copy', function(e) { e.preventDefault(); });
+
+            // 7. Override console to prevent logging (silent)
+            console.log = console.warn = console.error = console.info = function() {};
+
+            // 8. Extra: Prevent `beforeunload` abuse and freeze background
+            // The overlay itself blocks interaction, but we also prevent scrolling
+            document.addEventListener('scroll', function(e) {
+                if (overlay.classList.contains('show')) {
+                    window.scrollTo(0, 0);
+                }
+            }, { passive: true });
         })();
 
         // =========================================================
