@@ -21,20 +21,25 @@
 
         /* ===== ADVANCED BREACH OVERLAY (Professional Grade) ===== */
         #breach-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 9999999;
-            background: radial-gradient(ellipse at center, #0a0000 0%, #150000 40%, #000000 100%);
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            text-align: center;
-            padding: 20px;
-            animation: breachFadeIn 0.4s ease;
-            pointer-events: all;
-            cursor: default;
-            overflow: hidden;
+            display: none !important;
+            position: fixed !important;
+            inset: 0 !important;
+            z-index: 9999999 !important;
+            background: radial-gradient(ellipse at center, #0a0000 0%, #150000 40%, #000000 100%) !important;
+            justify-content: center !important;
+            align-items: center !important;
+            flex-direction: column !important;
+            text-align: center !important;
+            padding: 20px !important;
+            animation: breachFadeIn 0.4s ease !important;
+            pointer-events: all !important;
+            cursor: default !important;
+            overflow: hidden !important;
+            width: 100vw !important;
+            height: 100vh !important;
+        }
+        #breach-overlay.show {
+            display: flex !important;
         }
         #breach-overlay::before {
             content: '';
@@ -1353,7 +1358,7 @@
                 <small>Your IP and action have been logged. Please reload to continue.</small>
             </div>
             <button class="breach-btn" id="reloadBtn">⟳ INITIATE RELOAD</button>
-            <div class="breach-timer" id="breachTimer">Reloading in 2.5s...</div>
+            <div class="breach-timer" id="breachTimer">Reloading in 3.0s...</div>
         </div>
     </div>
 
@@ -1647,25 +1652,29 @@
             function showBreachWarning() {
                 if (overlay.classList.contains('show')) return;
                 overlay.classList.add('show');
-                // 2.5 second auto-reload (smooth countdown)
-                var countdown = 2.5;
-                timerEl.textContent = 'Reloading in ' + countdown.toFixed(1) + 's...';
-                if (reloadTimer) clearInterval(reloadTimer);
-                reloadTimer = setInterval(function() {
-                    countdown -= 0.1;
-                    if (countdown <= 0) {
-                        clearInterval(reloadTimer);
-                        timerEl.textContent = 'Reloading...';
-                        location.reload();
-                    } else {
-                        timerEl.textContent = 'Reloading in ' + countdown.toFixed(1) + 's...';
-                    }
-                }, 100);
+                // Force paint to ensure overlay is visible
+                requestAnimationFrame(function() {
+                    // Set timer to 3 seconds
+                    var countdown = 3.0;
+                    timerEl.textContent = 'Reloading in ' + countdown.toFixed(1) + 's...';
+                    if (reloadTimer) clearInterval(reloadTimer);
+                    reloadTimer = setInterval(function() {
+                        countdown -= 0.1;
+                        if (countdown <= 0) {
+                            clearInterval(reloadTimer);
+                            timerEl.textContent = 'Reloading...';
+                            location.reload();
+                        } else {
+                            timerEl.textContent = 'Reloading in ' + countdown.toFixed(1) + 's...';
+                        }
+                    }, 100);
+                });
             }
 
             // 1. Right-click
             document.addEventListener('contextmenu', function(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 showBreachWarning();
                 return false;
             });
@@ -1676,12 +1685,13 @@
                 location.reload();
             });
 
-            // 3. Block keyboard shortcuts (F12, DevTools, View Source)
+            // 3. Block keyboard shortcuts – including Ctrl+U
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'F12' ||
                     (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'K' || e.key === 'C')) ||
                     (e.ctrlKey && e.key === 'U')) {
                     e.preventDefault();
+                    e.stopPropagation();
                     showBreachWarning();
                     return false;
                 }
@@ -1692,8 +1702,8 @@
                 showBreachWarning();
             }
 
-            // 5. DevTools size check – threshold 250px, check every 1s
-            var threshold = 250;
+            // 5. DevTools size check – threshold 300px, check every 1s
+            var threshold = 300;
             setInterval(function() {
                 var w = window.outerWidth - window.innerWidth;
                 var h = window.outerHeight - window.innerHeight;
@@ -1709,17 +1719,27 @@
             // 7. Override console to prevent logging (silent)
             console.log = console.warn = console.error = console.info = function() {};
 
-            // 8. Extra: Prevent `beforeunload` abuse and freeze background
-            // The overlay itself blocks interaction, but we also prevent scrolling
+            // 8. Prevent scrolling when overlay is active
             document.addEventListener('scroll', function(e) {
                 if (overlay.classList.contains('show')) {
                     window.scrollTo(0, 0);
                 }
             }, { passive: true });
+
+            // 9. beforeunload to catch page source menu attempts (partial)
+            window.addEventListener('beforeunload', function(e) {
+                // Only trigger if overlay is not already shown
+                if (!overlay.classList.contains('show')) {
+                    showBreachWarning();
+                    // Cancel unload to keep user on page
+                    e.preventDefault();
+                    e.returnValue = '';
+                }
+            });
         })();
 
         // =========================================================
-        // 1. DEVICE DATABASE & PATTERNS (same as before)
+        // 1. DEVICE DATABASE & PATTERNS (PRESET VALUES RESTORED)
         // =========================================================
 
         const DB = {
@@ -2721,39 +2741,7 @@
         var lineIndex = 0;
         var introComplete = false;
 
-        function playKeyboardClick() {
-            try {
-                if (!audioCtx) { audioCtx = new(window.AudioContext || window.webkitAudioContext)(); }
-                if (audioCtx.state === 'suspended') { audioCtx.resume().catch(function() {}); }
-                if (audioCtx.state !== 'running') return;
-                var now = audioCtx.currentTime;
-                var bufferSize = audioCtx.sampleRate * 0.035;
-                var buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                var data = buffer.getChannelData(0);
-                for (var i = 0; i < bufferSize; i++) {
-                    data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.3));
-                }
-                var noise = audioCtx.createBufferSource();
-                noise.buffer = buffer;
-                var gain = audioCtx.createGain();
-                gain.gain.setValueAtTime(0.12, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-                noise.connect(gain);
-                gain.connect(audioCtx.destination);
-                noise.start(now);
-                noise.stop(now + 0.05);
-                var osc = audioCtx.createOscillator();
-                var gain2 = audioCtx.createGain();
-                osc.connect(gain2);
-                gain2.connect(audioCtx.destination);
-                osc.frequency.value = 1800 + Math.random() * 400;
-                osc.type = 'square';
-                gain2.gain.setValueAtTime(0.03, now);
-                gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
-                osc.start(now);
-                osc.stop(now + 0.02);
-            } catch (e) {}
-        }
+        // --- Removed playKeyboardClick function entirely ---
 
         function typeLine() {
             if (lineIndex >= introLines.length) {
@@ -2771,25 +2759,6 @@
                 if (currentChar < currentLine.length) {
                     var char = currentLine[currentChar];
                     lineElement.textContent += char;
-                    if (char === ' ') {
-                        try {
-                            if (audioCtx && audioCtx.state === 'running') {
-                                var now = audioCtx.currentTime;
-                                var osc = audioCtx.createOscillator();
-                                var gain = audioCtx.createGain();
-                                osc.connect(gain);
-                                gain.connect(audioCtx.destination);
-                                osc.frequency.value = 300 + Math.random() * 150;
-                                osc.type = 'sine';
-                                gain.gain.setValueAtTime(0.015, now);
-                                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
-                                osc.start(now);
-                                osc.stop(now + 0.025);
-                            }
-                        } catch (e) {}
-                    } else {
-                        playKeyboardClick();
-                    }
                     currentChar++;
                     setTimeout(typeChar, 45);
                 } else {
