@@ -1,0 +1,3593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>ᴘʜᴀɴᴛᴏᴍ・〆 — Name Generator</title>
+    <style>
+        /* ===== ANTI-INSPECTION ===== */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        input, textarea, .name-list-item, .result-wrapper {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+
+        /* =========================================================
+           BREACH TERMINAL v3.0 – FULL OVERLAY
+           ========================================================= */
+        #breach-terminal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999999;
+            background: #0a0000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            animation: terminalFadeIn 0.3s ease;
+            padding: 30px 20px 60px 20px;
+        }
+        #breach-terminal.active {
+            display: flex;
+        }
+        @keyframes terminalFadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        #breach-terminal::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc0IiBudW1PY3RhdmVzPSIzIiAvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNmKSIgb3BhY2l0eT0iMC4wNSIgLz48L3N2Zz4=');
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 1;
+            background-size: 300px 300px;
+        }
+        .terminal-scan {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff003c, transparent);
+            box-shadow: 0 0 30px #ff003c, 0 0 60px #ff003c, 0 0 120px rgba(255, 0, 60, 0.2);
+            animation: scanDown 2.5s linear infinite;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .terminal-scan::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(180deg, rgba(255, 0, 60, 0.05), transparent);
+            pointer-events: none;
+        }
+        @keyframes scanDown {
+            0% { top: 0; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+        .terminal-grid {
+            position: absolute;
+            inset: 0;
+            background: 
+                linear-gradient(rgba(255,0,0,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,0,0,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .terminal-dot {
+            position: absolute;
+            top: 25px;
+            right: 30px;
+            width: 14px;
+            height: 14px;
+            background: #ff003c;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #ff003c, 0 0 60px #ff003c;
+            animation: dotBlink 0.8s step-end infinite;
+            z-index: 10;
+        }
+        @keyframes dotBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .terminal-watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-25deg) scale(1.2);
+            font-size: 10rem;
+            font-weight: 900;
+            color: rgba(255, 0, 60, 0.03);
+            text-shadow: 0 0 30px rgba(255, 0, 60, 0.05), 0 0 60px rgba(255, 0, 60, 0.02);
+            letter-spacing: 25px;
+            pointer-events: none;
+            white-space: nowrap;
+            user-select: none;
+            z-index: 0;
+            font-family: 'Arial Black', sans-serif;
+        }
+        .terminal-content {
+            position: relative;
+            z-index: 3;
+            max-width: 780px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.88);
+            border: 1px solid rgba(255, 0, 60, 0.25);
+            border-radius: 20px;
+            padding: 40px 35px 30px 35px;
+            box-shadow: 0 0 80px rgba(255, 0, 60, 0.08), inset 0 0 80px rgba(255, 0, 60, 0.02);
+            animation: contentPulse 2.5s ease-in-out infinite alternate;
+            backdrop-filter: blur(2px);
+        }
+        @keyframes contentPulse {
+            0% { border-color: rgba(255, 0, 60, 0.2); box-shadow: 0 0 40px rgba(255, 0, 60, 0.05); }
+            100% { border-color: rgba(255, 0, 60, 0.5); box-shadow: 0 0 100px rgba(255, 0, 60, 0.12); }
+        }
+        .terminal-stage { display: none; animation: typeIn 0.05s steps(1) forwards; }
+        .terminal-stage.show { display: block; }
+        @keyframes typeIn {
+            0% { opacity: 0; transform: translateY(8px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .terminal-stage .stage-icon { font-size: 3rem; display: block; text-align: center; margin-bottom: 8px; }
+        .terminal-stage .stage-title {
+            font-size: 2rem; font-weight: 700; text-align: center; letter-spacing: 4px;
+            text-transform: uppercase; margin-bottom: 12px;
+        }
+        .terminal-stage .stage-title.red { color: #ff003c; text-shadow: 0 0 30px #ff003c; }
+        .terminal-stage .stage-title.gold { color: #ffd700; text-shadow: 0 0 30px #ffd700; }
+        .terminal-stage .stage-title.green { color: #00ff66; text-shadow: 0 0 30px #00ff66; }
+        .terminal-stage .stage-msg {
+            color: #ffaaaa; font-size: 1.05rem; text-align: center; letter-spacing: 1px; line-height: 1.8;
+        }
+        .terminal-stage .stage-msg .highlight { color: #ff003c; font-weight: 700; }
+        .terminal-stage .stage-msg .typing-cursor {
+            display: inline-block; width: 2px; height: 1.1em; background: #ff003c;
+            margin-left: 4px; vertical-align: text-bottom;
+            animation: cursorBlink 0.6s step-end infinite;
+        }
+        @keyframes cursorBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .progress-bar {
+            width: 100%; height: 8px; background: rgba(255,255,255,0.04); border-radius: 10px;
+            margin: 18px 0 6px 0; overflow: hidden; border: 1px solid rgba(255,0,60,0.1);
+        }
+        .progress-fill {
+            height: 100%; width: 0%; background: linear-gradient(90deg, #ff003c, #ff6600);
+            border-radius: 10px; transition: width 0.04s linear; box-shadow: 0 0 20px rgba(255, 0, 60, 0.2);
+        }
+        .progress-label {
+            font-size: 0.8rem; color: #ff6666; text-align: center; margin-top: 4px; letter-spacing: 2px;
+        }
+        .log-dump {
+            background: rgba(0,0,0,0.6); border-radius: 12px; padding: 18px 22px; margin-top: 15px;
+            font-size: 0.85rem; color: #88ff88; line-height: 2.2; border-left: 3px solid #ff003c;
+            font-family: 'Courier New', monospace; position: relative; overflow: hidden;
+            box-shadow: inset 0 0 30px rgba(255,0,0,0.02);
+        }
+        .log-dump .log-line {
+            opacity: 0; animation: logReveal 0.3s forwards; position: relative; z-index: 1; margin-bottom: 2px;
+        }
+        .log-dump .log-line:nth-child(1) { animation-delay: 0.1s; }
+        .log-dump .log-line:nth-child(2) { animation-delay: 0.2s; }
+        .log-dump .log-line:nth-child(3) { animation-delay: 0.3s; }
+        .log-dump .log-line:nth-child(4) { animation-delay: 0.4s; }
+        .log-dump .log-line:nth-child(5) { animation-delay: 0.5s; }
+        .log-dump .log-line:nth-child(6) { animation-delay: 0.6s; }
+        .log-dump .log-line:nth-child(7) { animation-delay: 0.7s; }
+        .log-dump .log-line:nth-child(8) { animation-delay: 0.8s; }
+        .log-dump .log-line .key { color: #ff6666; font-weight: 600; }
+        .log-dump .log-line .val { color: #66ffcc; }
+        .log-dump .log-line .val-danger { color: #ff003c; font-weight: 700; }
+        @keyframes logReveal {
+            0% { opacity: 0; transform: translateX(-6px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+        .lockout-banner {
+            margin-top: 18px; padding: 12px 20px; background: rgba(255, 0, 60, 0.08);
+            border: 1px solid rgba(255, 0, 60, 0.3); border-radius: 10px; color: #ff003c;
+            font-size: 0.95rem; text-align: center; letter-spacing: 1.5px;
+            animation: bannerPulse 1.2s ease-in-out infinite alternate;
+            font-weight: 700; text-transform: uppercase; box-shadow: 0 0 30px rgba(255, 0, 60, 0.05);
+        }
+        @keyframes bannerPulse {
+            0% { background: rgba(255, 0, 60, 0.04); border-color: rgba(255, 0, 60, 0.15); }
+            100% { background: rgba(255, 0, 60, 0.12); border-color: rgba(255, 0, 60, 0.45); }
+        }
+        .override-timer {
+            margin-top: 18px; color: #ff8888; font-size: 0.9rem; letter-spacing: 2px;
+            font-family: 'Courier New', monospace; text-align: center;
+            opacity: 0; animation: fadeInOverride 0.6s forwards; animation-delay: 0.9s;
+        }
+        @keyframes fadeInOverride {
+            0% { opacity: 0; transform: translateY(8px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .override-timer .timer-num { color: #ff003c; font-weight: 700; font-size: 1.3rem; text-shadow: 0 0 20px rgba(255,0,60,0.3); }
+        .terminal-footer {
+            margin-top: 28px; padding-top: 18px; border-top: 1px solid rgba(255, 0, 60, 0.15);
+            display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;
+        }
+        .terminal-footer .grid-status {
+            font-family: 'Courier New', monospace; font-size: 0.85rem; color: #ff4444;
+            letter-spacing: 4px; text-transform: uppercase; font-weight: 700;
+            text-shadow: 0 0 20px rgba(255, 0, 60, 0.1);
+            display: flex; align-items: center; gap: 12px;
+        }
+        .terminal-footer .grid-status .grid-dot {
+            display: inline-block; width: 8px; height: 8px; background: #00ff66;
+            border-radius: 50%; box-shadow: 0 0 15px #00ff66; animation: dotBlink 1.2s step-end infinite;
+        }
+        .terminal-footer .grid-status .grid-divider { color: rgba(255,255,255,0.1); font-weight: 300; }
+        .terminal-footer .grid-status .grid-lock { color: #00ff66; font-size: 0.7rem; }
+        .terminal-reload-btn {
+            display: none; margin-top: 10px; padding: 14px 50px; border-radius: 50px;
+            border: 2px solid #ff003c; background: transparent; color: #ff003c;
+            font-family: 'Courier New', monospace; font-size: 1.1rem; font-weight: 700;
+            cursor: pointer; transition: 0.3s; letter-spacing: 3px; text-transform: uppercase;
+            box-shadow: 0 0 20px rgba(255, 0, 60, 0.05);
+        }
+        .terminal-reload-btn.show { display: inline-block; }
+        .terminal-reload-btn:hover {
+            background: #ff003c; color: #000; box-shadow: 0 0 50px rgba(255, 0, 60, 0.4); transform: scale(1.04);
+        }
+        @media (max-width: 480px) {
+            #breach-terminal { padding: 15px 10px 40px 10px; }
+            .terminal-content { padding: 25px 16px 20px 16px; }
+            .terminal-stage .stage-title { font-size: 1.4rem; letter-spacing: 2px; }
+            .terminal-stage .stage-msg { font-size: 0.85rem; }
+            .log-dump { font-size: 0.7rem; padding: 14px; line-height: 1.8; }
+            .lockout-banner { font-size: 0.75rem; padding: 10px 14px; }
+            .override-timer { font-size: 0.8rem; }
+            .terminal-watermark { font-size: 4rem; letter-spacing: 10px; }
+            .terminal-footer .grid-status { font-size: 0.7rem; letter-spacing: 2px; }
+            .terminal-reload-btn { padding: 12px 30px; font-size: 0.9rem; }
+        }
+
+        /* =========================================================
+           PHANTOM SHIELD HUD – ADVANCED FIXED VERSION
+           ========================================================= */
+        #shield-hud {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9998;
+            min-width: 210px;
+            max-width: 280px;
+            background: rgba(6, 0, 14, 0.8);
+            backdrop-filter: blur(18px) saturate(1.6);
+            -webkit-backdrop-filter: blur(18px) saturate(1.6);
+            border: 1px solid rgba(0, 255, 200, 0.2);
+            border-radius: 20px;
+            padding: 18px 22px 14px 22px;
+            font-family: 'Inter', 'Courier New', monospace;
+            box-shadow: 0 0 40px rgba(0, 255, 200, 0.05), inset 0 0 40px rgba(0, 255, 200, 0.02);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            user-select: none;
+            line-height: 1.5;
+            animation: hudGlow 3s ease-in-out infinite alternate;
+        }
+        @keyframes hudGlow {
+            0% { border-color: rgba(0, 255, 200, 0.15); box-shadow: 0 0 30px rgba(0, 255, 200, 0.02); }
+            100% { border-color: rgba(0, 255, 200, 0.35); box-shadow: 0 0 60px rgba(0, 255, 200, 0.07); }
+        }
+        .hud-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .hud-shield {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #66ffdd;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(0, 255, 200, 0.15);
+        }
+        .hud-shield .shield-icon { font-size: 1.1rem; filter: drop-shadow(0 0 8px rgba(0, 255, 200, 0.3)); }
+        .hud-shield .hud-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #66ffdd;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #66ffdd, 0 0 30px rgba(0, 255, 200, 0.3);
+            animation: dotBlink 1.2s step-end infinite;
+        }
+        .hud-uptime {
+            color: #aaffee;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            font-variant-numeric: tabular-nums;
+            background: rgba(0, 255, 200, 0.06);
+            padding: 2px 12px;
+            border-radius: 30px;
+            border: 1px solid rgba(0, 255, 200, 0.08);
+            text-shadow: 0 0 8px rgba(0, 255, 200, 0.1);
+        }
+        .hud-encryption {
+            color: #88ffcc;
+            font-size: 0.6rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border-top: 1px solid rgba(0, 255, 200, 0.06);
+            padding-top: 6px;
+            margin-top: 6px;
+            text-align: center;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .hud-encryption .lock-icon { font-size: 0.7rem; opacity: 0.9; filter: drop-shadow(0 0 6px rgba(0, 255, 200, 0.2)); }
+        .hud-threat-wrap {
+            overflow: hidden;
+            height: 22px;
+            margin-top: 6px;
+            border-top: 1px solid rgba(0, 255, 200, 0.05);
+            padding-top: 4px;
+            position: relative;
+        }
+        .hud-threat {
+            display: inline-block;
+            white-space: nowrap;
+            font-size: 0.62rem;
+            color: #88ccff;
+            letter-spacing: 1px;
+            font-weight: 400;
+            animation: threatScroll 18s linear infinite;
+            padding-left: 0;
+            will-change: transform;
+        }
+        @keyframes threatScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .hud-threat .threat-badge {
+            display: inline-block;
+            background: rgba(0, 255, 200, 0.08);
+            padding: 0 10px;
+            border-radius: 20px;
+            color: #66ffdd;
+            font-weight: 600;
+            margin-right: 6px;
+        }
+        .hud-threat .threat-divider { margin: 0 14px; opacity: 0.15; color: #66ffdd; }
+        .hud-threat .threat-badge.pass { color: #66ffdd; }
+        .hud-threat .threat-badge.warn { color: #ffcc44; }
+        .hud-threat .threat-badge.danger { color: #ff4466; }
+        .hud-live {
+            position: absolute;
+            bottom: 6px;
+            right: 16px;
+            font-size: 0.45rem;
+            color: rgba(0, 255, 200, 0.25);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .hud-live .live-dot {
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            background: #66ffdd;
+            border-radius: 50%;
+            animation: dotBlink 1s step-end infinite;
+        }
+        #shield-hud:hover {
+            border-color: rgba(0, 255, 200, 0.5);
+            box-shadow: 0 0 70px rgba(0, 255, 200, 0.1);
+        }
+        @media (max-width: 480px) {
+            #shield-hud {
+                top: 14px;
+                right: 14px;
+                padding: 12px 14px 10px 14px;
+                min-width: 150px;
+                max-width: 190px;
+                border-radius: 14px;
+            }
+            .hud-shield { font-size: 0.7rem; gap: 4px; }
+            .hud-shield .shield-icon { font-size: 0.9rem; }
+            .hud-uptime { font-size: 0.6rem; padding: 1px 8px; }
+            .hud-encryption { font-size: 0.5rem; padding-top: 4px; margin-top: 4px; }
+            .hud-threat-wrap { height: 18px; }
+            .hud-threat { font-size: 0.5rem; animation-duration: 14s; }
+            .hud-live { font-size: 0.4rem; bottom: 4px; right: 10px; }
+        }
+
+        /* ============================
+           ALL STYLES – SAME AS BEFORE
+           ============================ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            padding: 20px;
+            overflow-y: auto;
+            position: relative;
+            background: radial-gradient(circle at center, #12081a, #07020a);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #birdCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            pointer-events: none;
+            isolation: isolate;
+        }
+
+        #watermark {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #b396d9;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            opacity: 0.9;
+            pointer-events: none;
+            text-shadow: 0 0 30px rgba(155,109,255,0.6), 0 0 60px rgba(155,109,255,0.3), 0 0 100px rgba(100,40,180,0.2);
+            font-family: 'Segoe UI', sans-serif;
+            white-space: nowrap;
+            background: rgba(10,5,20,0.5);
+            padding: 8px 28px;
+            border-radius: 40px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(155,109,255,0.25);
+            animation: watermarkPulse 2.5s ease-in-out infinite alternate;
+        }
+        @keyframes watermarkPulse {
+            0% { text-shadow: 0 0 30px rgba(155,109,255,0.6), 0 0 60px rgba(155,109,255,0.3), 0 0 100px rgba(100,40,180,0.2); border-color: rgba(155,109,255,0.25); }
+            100% { text-shadow: 0 0 50px rgba(155,109,255,1), 0 0 100px rgba(155,109,255,0.5), 0 0 150px rgba(100,40,180,0.3); border-color: rgba(155,109,255,0.5); }
+        }
+
+        #effect-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 99999;
+            overflow: hidden;
+        }
+        .trail-particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            background: radial-gradient(circle, rgba(155,109,255,0.6), rgba(100,40,180,0.1));
+            box-shadow: 0 0 10px rgba(155,109,255,0.2);
+            animation: trailFade 0.7s ease-out forwards;
+            will-change: transform, opacity;
+        }
+        @keyframes trailFade {
+            0% { opacity: 0.8; transform: translate(0,0) scale(1); }
+            100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.4); }
+        }
+        .ripple-ring {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            border: 1px solid rgba(155,109,255,0.5);
+            box-shadow: 0 0 20px rgba(155,109,255,0.15);
+            animation: rippleExpand 0.8s ease-out forwards;
+            will-change: transform, opacity;
+        }
+        @keyframes rippleExpand {
+            0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+        }
+        .ripple-ring:nth-child(2) {
+            animation-delay: 0.08s;
+            border-color: rgba(200,150,255,0.3);
+            border-width: 1px;
+        }
+
+        #intro-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, #12081a, #07020a);
+            padding: 30px;
+            transition: opacity 1.2s ease, visibility 1.2s ease;
+            opacity: 1;
+            visibility: visible;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            overflow-y: auto;
+        }
+        #intro-screen.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
+
+        #intro-text {
+            max-width: 750px;
+            width: 100%;
+            text-align: left;
+            font-size: clamp(1.4rem, 4vw, 2.4rem);
+            font-weight: 300;
+            color: #e4d5ff;
+            text-shadow: 0 0 20px #6a2faf;
+            line-height: 1.8;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+            z-index: 2;
+            position: relative;
+        }
+        #intro-text .line { opacity: 0; transform: translateY(8px); animation: lineFadeIn 0.3s forwards; }
+        @keyframes lineFadeIn { to { opacity: 1; transform: translateY(0); } }
+        .cursor-blink {
+            display: inline-block;
+            width: 3px;
+            height: 1.2em;
+            background: #9b6dff;
+            margin-left: 4px;
+            vertical-align: text-bottom;
+            animation: blink 0.7s step-end infinite;
+        }
+        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+        #click-prompt {
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: #b396d9;
+            letter-spacing: 4px;
+            opacity: 0;
+            display: none;
+            font-family: 'Segoe UI', sans-serif;
+            z-index: 2;
+            position: relative;
+        }
+        #click-prompt.show {
+            display: block;
+            animation: fadeInPrompt 0.8s forwards, pulseGlow 1.5s ease-in-out infinite;
+        }
+        @keyframes fadeInPrompt { to { opacity: 1; } }
+        @keyframes pulseGlow {
+            0%,100% { text-shadow: 0 0 10px #6a2faf; }
+            50% { text-shadow: 0 0 30px #9b6dff, 0 0 60px #4a1a7a; }
+        }
+
+        #main-app {
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            width: 100%;
+            max-width: 700px;
+            pointer-events: none;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 5px;
+            position: relative;
+            z-index: 2;
+        }
+        #main-app.visible { opacity: 1; pointer-events: all; }
+
+        .container {
+            background: rgba(20,10,30,0.5);
+            backdrop-filter: blur(12px) saturate(1.2);
+            -webkit-backdrop-filter: blur(12px) saturate(1.2);
+            border: 1px solid rgba(180,130,255,0.25);
+            border-radius: 40px;
+            padding: 50px 40px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 60px rgba(100,40,180,0.2), inset 0 0 30px rgba(150,100,220,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-wrapper {
+            position: relative;
+            display: block;
+            width: 100%;
+            margin: 0 auto 15px auto;
+            z-index: 2;
+            padding: 0;
+            background: transparent;
+        }
+        .logo-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 95%;
+            height: 95%;
+            background: radial-gradient(circle at center, rgba(123,46,255,0.1), rgba(75,26,120,0.06) 40%, transparent 70%);
+            border-radius: 50%;
+            animation: breathGlow 3s ease-in-out infinite alternate;
+            z-index: 0;
+            pointer-events: none;
+        }
+        @keyframes breathGlow {
+            0% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.9); }
+            100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+        }
+        .guild-logo {
+            display: block;
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            position: relative;
+            z-index: 2;
+            background: #32104F;
+            filter: drop-shadow(0 0 20px rgba(123,46,255,0.15));
+        }
+
+        .sub-title {
+            font-size: 1rem;
+            color: #b396d9;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            border-top: 1px solid rgba(150,100,220,0.2);
+            border-bottom: 1px solid rgba(150,100,220,0.2);
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 30px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .result-wrapper {
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 30px;
+            border: 1px solid rgba(150,100,220,0.2);
+            padding: 25px 20px 15px 20px;
+            margin-bottom: 15px;
+            transition: 0.3s;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            position: relative;
+            z-index: 3;
+        }
+        .result-wrapper:hover { border-color: #9b6dff; box-shadow: 0 0 30px rgba(100,40,200,0.15); }
+        .result-wrapper:active { transform: scale(0.98); }
+
+        #result {
+            font-size: clamp(2.2rem, 7vw, 4rem);
+            font-weight: 400;
+            color: #f2e9ff;
+            text-shadow: 0 0 40px #9b6dff, 0 0 80px #4a1a7a;
+            letter-spacing: 2px;
+            word-break: break-word;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            transition: 0.3s;
+        }
+        #result.placeholder {
+            font-size: 1.1rem;
+            color: #6a4a8a;
+            text-shadow: none;
+            letter-spacing: 4px;
+            font-weight: 300;
+        }
+
+        .result-message {
+            font-size: 0.85rem;
+            color: #b396d9;
+            margin-top: 8px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            letter-spacing: 2px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .result-message.show { opacity: 1; }
+
+        .copy-hint {
+            font-size: 0.75rem;
+            color: #7a5a9a;
+            letter-spacing: 2px;
+            margin-top: 8px;
+            pointer-events: none;
+        }
+
+        .copy-btn-container {
+            margin: 10px 0 20px 0;
+            position: relative;
+            z-index: 3;
+        }
+        .copy-btn {
+            background: rgba(100,40,180,0.25);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(150,100,220,0.3);
+            color: #c4a8f0;
+            padding: 10px 30px;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            letter-spacing: 2px;
+            display: inline-block;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .copy-btn:hover { background: rgba(100,40,180,0.4); border-color: #9b6dff; box-shadow: 0 0 20px rgba(100,40,200,0.15); }
+        .copy-btn:active { transform: scale(0.95); }
+
+        .random-section {
+            margin: 20px 0 15px 0;
+            position: relative;
+            z-index: 3;
+        }
+
+        .random-section .random-header {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .random-section .random-header .random-btn {
+            background: rgba(100,40,180,0.15);
+            border: 1px solid rgba(150,100,220,0.2);
+            color: #c4a8f0;
+            padding: 8px 25px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.3s;
+            letter-spacing: 1px;
+            display: inline-block;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .random-section .random-header .random-btn:hover {
+            background: rgba(100,40,180,0.3);
+            border-color: #9b6dff;
+            box-shadow: 0 0 20px rgba(100,40,200,0.15);
+        }
+        .random-section .random-header .random-btn:active { transform: scale(0.95); }
+        .random-section .random-header .random-btn.active {
+            background: rgba(100,40,180,0.3);
+            border-color: #9b6dff;
+            color: #f2e9ff;
+            box-shadow: 0 0 20px rgba(100,40,200,0.15);
+        }
+
+        .random-section .name-list-container {
+            margin-top: 12px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, opacity 0.5s ease;
+            opacity: 0;
+        }
+        .random-section .name-list-container.open {
+            max-height: 600px;
+            opacity: 1;
+        }
+
+        .random-section .name-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 8px;
+            padding: 10px 0;
+        }
+
+        .random-section .name-list-item {
+            background: rgba(100,40,180,0.1);
+            border: 1px solid rgba(150,100,220,0.15);
+            border-radius: 20px;
+            padding: 8px 12px;
+            color: #d4c4f0;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+            letter-spacing: 1px;
+            font-family: 'Courier New', monospace;
+        }
+        .random-section .name-list-item:hover {
+            background: rgba(100,40,180,0.25);
+            border-color: #9b6dff;
+            transform: scale(1.02);
+        }
+        .random-section .name-list-item:active { transform: scale(0.95); }
+
+        .random-section .generate-more-btn {
+            background: rgba(100,40,180,0.1);
+            border: 1px dashed rgba(150,100,220,0.25);
+            color: #8a7aaa;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.3s;
+            letter-spacing: 2px;
+            margin-top: 5px;
+            display: inline-block;
+        }
+        .random-section .generate-more-btn:hover {
+            background: rgba(100,40,180,0.2);
+            border-color: #9b6dff;
+            color: #c4a8f0;
+        }
+        .random-section .no-more-names {
+            color: #6a4a8a;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            font-style: italic;
+            letter-spacing: 1px;
+        }
+
+        .input-area {
+            position: relative;
+            z-index: 3;
+        }
+        .input-area label {
+            display: block;
+            font-size: 0.9rem;
+            color: #c4a8f0;
+            letter-spacing: 3px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .input-area input {
+            width: 100%;
+            padding: 18px 25px;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(150,100,220,0.3);
+            border-radius: 60px;
+            font-size: 1.2rem;
+            color: #f0eaff;
+            text-align: center;
+            letter-spacing: 2px;
+            outline: none;
+            transition: 0.3s;
+            font-weight: 300;
+            -webkit-appearance: none;
+        }
+        .input-area input::placeholder { color: #6a4a8a; font-size: 0.9rem; letter-spacing: 2px; }
+        .input-area input:focus { border-color: #9b6dff; box-shadow: 0 0 25px rgba(120,60,220,0.2); background: rgba(10,5,20,0.6); }
+
+        .btn {
+            margin-top: 15px;
+            padding: 16px 55px;
+            background: linear-gradient(135deg, #6c2bb3, #3b1470);
+            border: none;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 6px;
+            color: #f5ecff;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 30px rgba(100,40,200,0.2);
+            text-transform: uppercase;
+            position: relative;
+            z-index: 3;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn:hover { transform: scale(1.03); background: linear-gradient(135deg, #8235d9, #4f1d8a); box-shadow: 0 0 40px rgba(130,50,220,0.4); }
+        .btn:active { transform: scale(0.95); }
+
+        .buy-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 14px 40px;
+            background: linear-gradient(135deg, #ff6b35, #e63946);
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            border-radius: 60px;
+            text-decoration: none;
+            box-shadow: 0 0 30px rgba(255,107,53,0.3);
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+            z-index: 3;
+            position: relative;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .buy-btn:hover { transform: scale(1.03); box-shadow: 0 0 40px rgba(255,107,53,0.5); }
+        .buy-btn:active { transform: scale(0.95); }
+
+        /* ========================================================= */
+        /* ===== SENSITIVITY GENERATOR STYLES – FIXED FOR MOBILE ===== */
+        /* ========================================================= */
+
+        .sensitivity-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(150,100,220,0.2);
+            position: relative;
+            z-index: 3;
+        }
+        .sensitivity-section h2 {
+            color: #e4d5ff;
+            text-shadow: 0 0 20px #8a4bff;
+            margin-bottom: 10px;
+            font-size: 1.6rem;
+        }
+        .sensitivity-section .sub-desc {
+            color: #b396d9;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .tab-switcher {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 10px 25px;
+            border-radius: 60px;
+            border: 1px solid rgba(150,100,220,0.2);
+            background: rgba(0,0,0,0.3);
+            color: #b396d9;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            font-weight: 600;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .tab-btn:hover { border-color: #9b6dff; color: #f2e9ff; }
+        .tab-btn.active {
+            background: rgba(100,40,180,0.3);
+            border-color: #9b6dff;
+            color: #f2e9ff;
+            box-shadow: 0 0 30px rgba(100,40,200,0.15);
+        }
+        .tab-btn svg {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+
+        .panel { display: none; }
+        .panel.active { display: block; }
+
+        .sens-card {
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 30px;
+            border: 1px solid rgba(150,100,220,0.2);
+            padding: 25px 20px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .sens-card .card-top-line {
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(90deg, #9b6dff, #6a2faf);
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .sens-card .card-head {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        .sens-card .card-ico {
+            width: 40px;
+            height: 40px;
+            background: rgba(100,40,180,0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #9b6dff;
+        }
+        .sens-card .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #f2e9ff;
+        }
+        .sens-card .card-sub {
+            font-size: 0.8rem;
+            color: #b396d9;
+        }
+
+        .search-wrap {
+            position: relative;
+            width: 100%;
+        }
+        .search-wrap .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6a4a8a;
+        }
+        .search-wrap .search-input {
+            width: 100%;
+            padding: 14px 20px 14px 48px;
+            border-radius: 60px;
+            border: 1px solid rgba(150,100,220,0.3);
+            background: rgba(0,0,0,0.4);
+            color: #f0eaff;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+            -webkit-appearance: none;
+        }
+        .search-wrap .search-input:focus {
+            border-color: #9b6dff;
+            box-shadow: 0 0 25px rgba(120,60,220,0.2);
+        }
+        .search-wrap .search-clear {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #6a4a8a;
+            cursor: pointer;
+            padding: 4px;
+            display: none;
+        }
+        .search-wrap .search-clear.show { display: block; }
+        .search-wrap .search-clear:hover { color: #b396d9; }
+
+        .dropdown {
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(20,10,30,0.95);
+            border-radius: 20px;
+            margin-top: 8px;
+            display: none;
+            position: absolute;
+            width: 100%;
+            z-index: 99999;
+            border: 1px solid rgba(150,100,220,0.3);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .dropdown.show { display: block; }
+        .dropdown div {
+            padding: 12px 20px;
+            color: #c4a8f0;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(150,100,220,0.1);
+            transition: 0.2s;
+        }
+        .dropdown div:hover { background: rgba(100,40,180,0.2); }
+
+        .selected-device {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            background: rgba(100,40,180,0.15);
+            border: 1px solid rgba(150,100,220,0.25);
+            border-radius: 30px;
+            padding: 12px 20px;
+            margin-top: 15px;
+        }
+        .selected-device.show { display: flex; }
+        .selected-device .sd-name {
+            color: #f2e9ff;
+            font-weight: 600;
+            flex: 1;
+        }
+        .selected-device .sd-clear {
+            background: none;
+            border: none;
+            color: #6a4a8a;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .selected-device .sd-clear:hover { color: #ff6b6b; }
+
+        .btn-detect {
+            width: 100%;
+            padding: 16px;
+            border-radius: 60px;
+            border: none;
+            background: linear-gradient(135deg, #6c2bb3, #3b1470);
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 30px rgba(100,40,200,0.2);
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-detect:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 50px rgba(130,50,220,0.4);
+        }
+        .btn-detect:active { transform: scale(0.98); }
+        .btn-detect .pulse {
+            width: 10px;
+            height: 10px;
+            background: #66ff33;
+            border-radius: 50%;
+            animation: pulse 1.5s ease-in-out infinite;
+            display: inline-block;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        .loader.show { display: block; }
+        .loader .ring {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(100,40,180,0.1);
+            border-top-color: #9b6dff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 10px;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .loader .loader-label {
+            color: #b396d9;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+        }
+
+        .detected-panel {
+            display: none;
+            background: rgba(100,40,180,0.1);
+            border: 1px solid rgba(150,100,220,0.2);
+            border-radius: 20px;
+            padding: 15px 20px;
+            margin-top: 15px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .detected-panel.show { display: flex; }
+        .detected-panel .dp-name { color: #f2e9ff; font-weight: 600; }
+        .detected-panel .dp-specs { color: #b396d9; font-size: 0.8rem; }
+        .detected-panel .dp-check { color: #66ff33; }
+
+        .age-section {
+            margin-top: 20px;
+        }
+        .age-section-title {
+            color: #b396d9;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+        .age-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        .manual-age-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .manual-age-input {
+            flex: 2;
+            min-width: 60px;
+            padding: 12px 16px;
+            border-radius: 30px;
+            border: 1px solid rgba(150,100,220,0.3);
+            background: rgba(0,0,0,0.4);
+            color: #f0eaff;
+            font-size: 1rem;
+            outline: none;
+        }
+        .manual-age-input:focus { border-color: #9b6dff; }
+        .manual-age-unit {
+            color: #b396d9;
+            font-weight: 700;
+            padding: 0 6px;
+        }
+        .manual-age-apply {
+            padding: 12px 24px;
+            border-radius: 30px;
+            border: none;
+            background: linear-gradient(135deg, #6c2bb3, #3b1470);
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .manual-age-apply:hover { opacity: 0.9; }
+        .age-hints {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .age-chip {
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(150,100,220,0.2);
+            background: rgba(0,0,0,0.3);
+            color: #b396d9;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .age-chip:hover { border-color: #9b6dff; }
+        .age-chip.selected { border-color: #9b6dff; background: rgba(100,40,180,0.3); }
+
+        .age-note {
+            color: #6a4a8a;
+            font-size: 0.7rem;
+            margin-top: 8px;
+            font-style: italic;
+            min-height: 20px;
+        }
+        .age-note.show { color: #b396d9; }
+
+        .btn-generate {
+            width: 100%;
+            padding: 16px;
+            border-radius: 60px;
+            border: none;
+            background: linear-gradient(135deg, #ff6b35, #e63946);
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 30px rgba(255,107,53,0.2);
+            letter-spacing: 2px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-generate:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 50px rgba(255,107,53,0.4);
+        }
+        .btn-generate:active { transform: scale(0.98); }
+
+        .results {
+            display: none;
+            margin-top: 20px;
+        }
+        .results.show { display: block; }
+
+        .device-banner {
+            background: rgba(100,40,180,0.1);
+            border-radius: 20px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-left: 3px solid #9b6dff;
+        }
+        .device-banner .device-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #f2e9ff;
+        }
+        .device-banner .device-meta {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+            flex-wrap: wrap;
+        }
+        .device-banner .match-pill {
+            background: rgba(100,40,180,0.2);
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            color: #b396d9;
+        }
+        .device-banner .match-pill.pre { color: #66ff33; background: rgba(100,40,180,0.3); }
+        .device-banner .match-pill.gen { color: #ff9f43; background: rgba(255,159,67,0.15); }
+        .device-banner .age-pill {
+            background: rgba(255,107,53,0.15);
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            color: #ff6b35;
+        }
+
+        .specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .spec-box {
+            background: rgba(0,0,0,0.2);
+            border-radius: 15px;
+            padding: 10px;
+            text-align: center;
+        }
+        .spec-box .spec-lbl {
+            color: #6a4a8a;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .spec-box .spec-val {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+        .spec-box .spec-val.ora { color: #ff9f43; }
+        .spec-box .spec-val.cya { color: #00d2d3; }
+
+        .perf-wrap, .age-impact {
+            margin-bottom: 12px;
+        }
+        .perf-lbl, .ai-lbl {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #6a4a8a;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .perf-lbl span:last-child, .ai-lbl span:last-child {
+            font-weight: 700;
+        }
+        .perf-track, .ai-track {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .perf-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b35, #ff9f43);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.6s ease;
+        }
+        .ai-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd93d, #ff6b35);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.6s ease;
+        }
+
+        .sensi-list {
+            margin: 15px 0;
+        }
+        .sensi-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .sensi-row .sensi-label {
+            color: #b396d9;
+            font-size: 0.9rem;
+        }
+        .sensi-row .sensi-value {
+            color: #b3ff9b;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .disclaimer {
+            font-size: 0.7rem;
+            color: #6a4a8a;
+            padding: 12px 0;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            margin-top: 10px;
+        }
+        .disclaimer strong { color: #b396d9; }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        .btn-action {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 60px;
+            border: 1px solid rgba(150,100,220,0.2);
+            background: rgba(0,0,0,0.3);
+            color: #c4a8f0;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-width: 120px;
+        }
+        .btn-action:hover {
+            border-color: #9b6dff;
+            background: rgba(100,40,180,0.2);
+        }
+        .btn-action.btn-copy:hover {
+            border-color: #66ff33;
+            color: #b3ff9b;
+        }
+        .btn-action.btn-reset:hover {
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+        }
+
+        .copy-ok {
+            display: none;
+            color: #b3ff9b;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        .copy-ok.show { display: block; }
+
+        .tip-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .tip {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .tip .tip-n {
+            min-width: 28px;
+            height: 28px;
+            background: rgba(100,40,180,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #9b6dff;
+            flex-shrink: 0;
+        }
+        .tip .tip-t {
+            color: #b396d9;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        .tip .tip-t strong { color: #f2e9ff; }
+
+        .active-counters {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            color: #6a4a8a;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            z-index: 3;
+            position: relative;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .active-counters .stat {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+        }
+        .active-counters .stat span {
+            color: #b396d9;
+            font-weight: 700;
+        }
+        .active-counters .stat .online-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #66ff33;
+            border-radius: 50%;
+            animation: onlinePulse 1.5s ease-in-out infinite;
+        }
+        @keyframes onlinePulse {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 30px 20px; }
+            .btn { padding: 14px 30px; font-size: 1rem; letter-spacing: 4px; }
+            .result-wrapper { padding: 15px 10px; }
+            .copy-btn { padding: 8px 20px; font-size: 0.9rem; }
+            .name-list { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+            .name-list-item { font-size: 0.75rem; padding: 6px 10px; }
+            .random-section .random-header .random-btn { padding: 6px 16px; font-size: 0.8rem; }
+            #watermark { font-size: 1rem; padding: 6px 18px; bottom: 18px; letter-spacing: 4px; }
+            .guild-logo { height: auto; }
+            .buy-btn { padding: 12px 24px; font-size: 1rem; width: 100%; }
+            .active-counters { font-size: 0.6rem; }
+            .tab-btn { padding: 8px 16px; font-size: 0.8rem; }
+            .sens-card { padding: 18px 15px; }
+            .specs { grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); }
+            .spec-box .spec-val { font-size: 0.9rem; }
+            .sensi-row .sensi-value { font-size: 0.95rem; }
+            .actions { flex-direction: column; }
+            .btn-action { min-width: unset; }
+            .manual-age-row { flex-wrap: wrap; }
+            .manual-age-input { flex: 1 1 100%; }
+            .manual-age-apply { flex: 1 1 auto; }
+            .detected-panel { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- =========================================================
+    BREACH TERMINAL v3.0 – FULL OVERLAY
+    ========================================================= -->
+    <div id="breach-terminal">
+        <div class="terminal-scan"></div>
+        <div class="terminal-grid"></div>
+        <div class="terminal-dot"></div>
+        <div class="terminal-watermark">CLASSIFIED</div>
+
+        <div class="terminal-content" id="terminalContent">
+
+            <!-- Stage 1: DETECTING -->
+            <div class="terminal-stage" id="stage1">
+                <div class="stage-icon">⏳</div>
+                <div class="stage-title gold">DETECTING</div>
+                <div class="stage-msg">Scanning user environment... <span class="typing-cursor"></span></div>
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                <div class="progress-label" id="progressLabel">0%</div>
+            </div>
+
+            <!-- Stage 2: BREACH CONFIRMED -->
+            <div class="terminal-stage" id="stage2">
+                <div class="stage-icon">🚨</div>
+                <div class="stage-title red">BREACH CONFIRMED</div>
+                <div class="stage-msg">
+                    Unauthorized access detected.<br>
+                    Origin: <span class="highlight">DevTools / User Agent</span>
+                </div>
+            </div>
+
+            <!-- Stage 3: LOCKDOWN -->
+            <div class="terminal-stage" id="stage3">
+                <div class="stage-icon">🛑</div>
+                <div class="stage-title red">LOCKDOWN INITIATED</div>
+                <div class="stage-msg">
+                    All connections terminated. System locked.<br>
+                    <span style="color:#ff6666; font-size:0.9rem;">Session invalidated • Encryption disabled</span>
+                </div>
+            </div>
+
+            <!-- Stage 4: LOG DUMP -->
+            <div class="terminal-stage" id="stage4">
+                <div class="stage-icon">📋</div>
+                <div class="stage-title green">SECURITY LOG DUMP</div>
+                <div class="stage-msg" style="font-size:0.9rem;">Incident report generated. Forensic data below:</div>
+                <div class="log-dump" id="logDump">
+                    <div class="log-line"><span class="key">[TIMESTAMP]</span>  <span class="val" id="logTime">—</span></div>
+                    <div class="log-line"><span class="key">[BROWSER]</span>    <span class="val" id="logBrowser">—</span></div>
+                    <div class="log-line"><span class="key">[OS]</span>          <span class="val" id="logOS">—</span></div>
+                    <div class="log-line"><span class="key">[IP ADDRESS]</span>  <span class="val" id="logIP">—</span></div>
+                    <div class="log-line"><span class="key">[RESOLUTION]</span>  <span class="val" id="logRes">—</span></div>
+                    <div class="log-line"><span class="key">[USER AGENT]</span>  <span class="val" id="logUA">—</span></div>
+                    <div class="log-line"><span class="key">[STATUS]</span>      <span class="val val-danger" id="logStatus">LOGGED</span></div>
+                    <div class="log-line"><span class="key">[WARNING]</span>    <span class="val val-danger">FURTHER ATTEMPTS WILL RESULT IN PERMANENT LOCKOUT</span></div>
+                </div>
+
+                <!-- Lockout Banner -->
+                <div class="lockout-banner">
+                    ⚠️ LOCKOUT PROTOCOL ACTIVE – FURTHER ATTEMPTS WILL RESULT IN PERMANENT LOCKOUT.
+                </div>
+
+                <!-- Override timer -->
+                <div class="override-timer">
+                    SYSTEM OVERRIDE IN <span class="timer-num" id="overrideCount">3</span>s... <span style="color:#ff4444;">RELOAD TO CANCEL</span>
+                </div>
+            </div>
+
+            <!-- Reload Button -->
+            <div style="text-align:center; margin-top:8px;">
+                <button class="terminal-reload-btn" id="terminalReloadBtn">⟳ INITIATE RELOAD</button>
+            </div>
+
+            <!-- ===== PHANTOM DEFENSE GRID – FOOTER ===== -->
+            <div class="terminal-footer">
+                <div class="grid-status">
+                    <span class="grid-dot"></span>
+                    <span>◆ PHANTOM DEFENSE GRID ◆</span>
+                    <span class="grid-divider">|</span>
+                    <span class="grid-lock">🔒 ACTIVE</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+    PHANTOM SHIELD HUD – PERMANENT OVERLAY
+    ========================================================= -->
+    <div id="shield-hud">
+        <div class="hud-top">
+            <span class="hud-shield">
+                <span class="shield-icon">🛡</span>
+                <span class="hud-dot"></span>
+                PHANTOM
+            </span>
+            <span class="hud-uptime" id="hudUptime">00:00:00</span>
+        </div>
+        <div class="hud-encryption">
+            <span class="lock-icon">🔒</span> AES‑256 ENCRYPTION: ACTIVE
+        </div>
+        <div class="hud-threat-wrap">
+            <div class="hud-threat" id="hudThreat">
+                <span class="threat-badge pass">● PASSED</span> SYSTEM INTEGRITY
+                <span class="threat-divider">|</span>
+                <span class="threat-badge pass">● SECURE</span> FIREWALL ACTIVE
+                <span class="threat-divider">|</span>
+                <span class="threat-badge pass">● ONLINE</span> DEFENSE RUNNING
+                <span class="threat-divider">|</span>
+                <span class="threat-badge pass">● CLEAN</span> NO THREATS
+                <span class="threat-divider">|</span>
+                <span class="threat-badge pass">● PASSED</span> SYSTEM INTEGRITY
+                <span class="threat-divider">|</span>
+                <span class="threat-badge pass">● SECURE</span> FIREWALL ACTIVE
+                <span class="threat-divider">|</span>
+                <span class="threat-badge pass">● ONLINE</span> DEFENSE RUNNING
+                <span class="threat-divider">|</span>
+                <span class="threat-badge pass">● CLEAN</span> NO THREATS
+            </div>
+        </div>
+        <div class="hud-live">
+            <span class="live-dot"></span> LIVE
+        </div>
+    </div>
+
+    <!-- ====== WATERMARK ====== -->
+    <div id="watermark">✦ FR4NX ✦</div>
+
+    <!-- ====== EFFECT LAYER ====== -->
+    <div id="effect-layer"></div>
+
+    <!-- ====== BIRD CANVAS ====== -->
+    <canvas id="birdCanvas"></canvas>
+
+    <!-- ====== INTRO SCREEN ====== -->
+    <div id="intro-screen">
+        <div id="intro-text"></div>
+        <div id="click-prompt">✦ Click anywhere to enter ✦</div>
+    </div>
+
+    <!-- ====== MAIN APP ====== -->
+    <div id="main-app">
+        <div class="container">
+
+            <!-- ===== GUILD LOGO ===== -->
+            <div class="logo-wrapper">
+                <img class="guild-logo" src="./Guild.png" alt="Phantom Guild" />
+            </div>
+
+            <div class="sub-title">Name Generator</div>
+
+            <div class="result-wrapper" id="resultWrapper">
+                <div id="result" class="placeholder">✦ Type your name below ✦</div>
+                <div class="result-message" id="resultMessage"></div>
+                <div class="copy-hint">⬇ Tap the name or button below to copy ⬇</div>
+            </div>
+
+            <div class="copy-btn-container">
+                <button class="copy-btn" id="manualCopyBtn">📋 Copy Name</button>
+            </div>
+
+            <!-- ===== RANDOM NAME SECTION ===== -->
+            <div class="random-section">
+                <div class="random-header">
+                    <button class="random-btn active" id="randomFreestyleBtn" onclick="loadRandomNames('freestyle')">
+                        🔥 Freestyle
+                    </button>
+                    <button class="random-btn" id="randomNormalBtn" onclick="loadRandomNames('normal')">
+                        ⚔️ Normal
+                    </button>
+                </div>
+
+                <div class="name-list-container" id="nameListContainer">
+                    <div class="name-list" id="nameList"></div>
+                    <button class="generate-more-btn" id="generateMoreBtn" onclick="loadMoreNames()">↻ Generate More</button>
+                    <div class="no-more-names" id="noMoreNames" style="display:none;">✨ All names have been shown</div>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <label for="userName">INPUT YOUR REQUIRED NAME HERE</label>
+                <input type="text" id="userName" placeholder="e.g. Shadow" oninput="updatePreview()" autofocus />
+            </div>
+
+            <button class="btn" id="doneBtn">D O N E ?</button>
+
+            <a href="https://pdf-tool-by-fr4nx.onrender.com/" target="_blank" class="buy-btn">
+                🛒 Buy Free Fire Likes
+            </a>
+
+            <!-- ========================================================= -->
+            <!-- ===== SENSITIVITY GENERATOR – UPDATED ===== -->
+            <!-- ========================================================= -->
+            <div class="sensitivity-section">
+                <h2>⚙️ Free Fire Sensitivity Generator</h2>
+                <p class="sub-desc">Optimized for your device – now with 200 max sensitivity.</p>
+
+                <div class="tab-switcher">
+                    <button class="tab-btn active" id="tabSearch" onclick="switchTab('search')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                        Search Device
+                    </button>
+                    <button class="tab-btn" id="tabAuto" onclick="switchTab('auto')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M12 2a10 10 0 0 1 7.07 17.07"/><path d="M12 6a6 6 0 0 1 4.24 10.24"/><path d="M12 10a2 2 0 0 1 1.41 3.41"/></svg>
+                        Auto Detect
+                    </button>
+                </div>
+
+                <!-- ===== TAB 1: SEARCH ===== -->
+                <div class="panel active" id="panelSearch">
+                    <div class="sens-card">
+                        <div class="card-top-line"></div>
+                        <div class="card-head">
+                            <div class="card-ico">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                            </div>
+                            <div>
+                                <div class="card-title">Search Your Device</div>
+                                <div class="card-sub">Type brand or model — e.g. "iPhone", "Samsung A", "Redmi"</div>
+                            </div>
+                        </div>
+                        <div class="search-wrap">
+                            <span class="search-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                            </span>
+                            <input class="search-input" id="searchInput" type="text" placeholder="Type device name..." oninput="filterDevices(this.value)" autocomplete="off" />
+                            <button class="search-clear" id="searchClear" onclick="clearSearch()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
+                            <div class="dropdown" id="dropdown"></div>
+                        </div>
+                        <div class="selected-device" id="selectedDevice">
+                            <span style="font-size:20px">📱</span>
+                            <span class="sd-name" id="sdName">—</span>
+                            <button class="sd-clear" onclick="clearSelection()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
+                        </div>
+                        <div class="age-section" id="searchAgeSection">
+                            <p class="age-section-title">📅 How old is your device?</p>
+                            <div class="age-grid" id="searchAgeGrid"></div>
+                            <div class="age-note" id="searchAgeNote">Enter age to boost sensitivity for older devices.</div>
+                            <button class="btn-generate" id="searchGenerateBtn" onclick="generateFromSearch()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                                GENERATE SENSITIVITY
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== TAB 2: AUTO DETECT ===== -->
+                <div class="panel" id="panelAuto">
+                    <div class="sens-card">
+                        <div class="card-top-line"></div>
+                        <div class="card-head">
+                            <div class="card-ico">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M12 2a10 10 0 0 1 7.07 17.07"/><path d="M12 6a6 6 0 0 1 4.24 10.24"/><path d="M12 10a2 2 0 0 1 1.41 3.41"/></svg>
+                            </div>
+                            <div>
+                                <div class="card-title">Auto Device Scanner</div>
+                                <div class="card-sub">Reads RAM, CPU cores &amp; screen specs from your browser</div>
+                            </div>
+                        </div>
+
+                        <p style="color:#b396d9; font-size:0.85rem; margin-bottom:15px; text-align:center; line-height:1.5;">
+                            🔍 Can't find your device? Click <strong>"Detect My Device"</strong> – we'll read your browser info and find the closest match.
+                        </p>
+
+                        <button class="btn-detect" id="detectBtn" onclick="detectDevice()">
+                            <span class="pulse"></span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><rect width="7" height="5" x="7" y="7" rx="1"/><rect width="7" height="5" x="10" y="12" rx="1"/></svg>
+                            DETECT MY DEVICE
+                        </button>
+                        <div class="loader" id="loader">
+                            <div class="ring"></div>
+                            <div class="loader-label">SCANNING DEVICE...</div>
+                        </div>
+                        <div class="detected-panel" id="detectedPanel">
+                            <div>
+                                <div class="dp-name" id="dpName">—</div>
+                                <div class="dp-specs" id="dpSpecs">—</div>
+                            </div>
+                            <div class="dp-check">✅</div>
+                        </div>
+                        <div class="age-section" id="autoAgeSection">
+                            <p class="age-section-title">📅 How old is your device?</p>
+                            <div class="age-grid" id="autoAgeGrid"></div>
+                            <div class="age-note" id="autoAgeNote">Enter age to boost sensitivity for older devices.</div>
+                            <button class="btn-generate" id="autoGenerateBtn" onclick="generateFromAuto()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                                GENERATE SENSITIVITY
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== RESULTS ===== -->
+                <div class="results" id="results">
+                    <div class="sens-card">
+                        <div class="card-top-line"></div>
+                        <div class="card-head">
+                            <div class="card-ico">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+                            </div>
+                            <div>
+                                <div class="card-title">Device Profile</div>
+                                <div class="card-sub" id="osLine">—</div>
+                            </div>
+                        </div>
+                        <div class="device-banner">
+                            <div>
+                                <div class="device-name" id="devName">—</div>
+                                <div class="device-meta">
+                                    <span class="match-pill" id="matchPill">PRESET</span>
+                                    <span class="age-pill" id="agePill">—</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="specs">
+                            <div class="spec-box"><div class="spec-lbl">RAM</div><div class="spec-val cya" id="sRam">—</div></div>
+                            <div class="spec-box"><div class="spec-lbl">CPU Cores</div><div class="spec-val cya" id="sCpu">—</div></div>
+                            <div class="spec-box"><div class="spec-lbl">Resolution</div><div class="spec-val cya" id="sRes">—</div></div>
+                            <div class="spec-box"><div class="spec-lbl">Pixel Ratio</div><div class="spec-val cya" id="sDPR">—</div></div>
+                        </div>
+                        <div class="perf-wrap">
+                            <div class="perf-lbl"><span>HARDWARE SCORE</span><span id="perfPct" style="color:#ff9f43;">0</span></div>
+                            <div class="perf-track"><div class="perf-fill" id="perfFill"></div></div>
+                        </div>
+                        <div class="age-impact">
+                            <div class="ai-lbl"><span>AGE BOOST FACTOR</span><span id="agePct" style="color:#ffd93d;">0%</span></div>
+                            <div class="ai-track"><div class="ai-fill" id="ageFill"></div></div>
+                        </div>
+                    </div>
+
+                    <div class="sens-card">
+                        <div class="card-top-line"></div>
+                        <div class="card-head">
+                            <div class="card-ico">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3z"/></svg>
+                            </div>
+                            <div>
+                                <div class="card-title">Sensitivity Settings</div>
+                                <div class="card-sub">Apply in FF → Settings → Sensitivity (max 200)</div>
+                            </div>
+                        </div>
+                        <div class="sensi-list" id="sensiList"></div>
+                        <div class="disclaimer">
+                            <strong>⚠️ Note:</strong> These are <strong>starting-point estimates</strong> – adjust in Training Mode.
+                        </div>
+                        <div class="actions">
+                            <button class="btn-action btn-copy" id="copyBtn" onclick="copySettings()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                                COPY SETTINGS
+                            </button>
+                            <button class="btn-action btn-reset" onclick="resetGenerator()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+                                RESET
+                            </button>
+                        </div>
+                        <div class="copy-ok" id="copyOk">✅ COPIED TO CLIPBOARD!</div>
+                    </div>
+
+                    <div class="sens-card">
+                        <div class="card-top-line"></div>
+                        <div class="card-head">
+                            <div class="card-ico">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                            </div>
+                            <div>
+                                <div class="card-title">How To Use These</div>
+                                <div class="card-sub">Make them actually work for you</div>
+                            </div>
+                        </div>
+                        <div class="tip-list">
+                            <div class="tip"><div class="tip-n">1</div><div class="tip-t"><strong>Apply in-game:</strong> Free Fire → Settings → Sensitivity and enter these values exactly.</div></div>
+                            <div class="tip"><div class="tip-n">2</div><div class="tip-t"><strong>Test in Training Mode</strong> for 15+ minutes before ranked — your muscle memory needs to adjust.</div></div>
+                            <div class="tip"><div class="tip-n">3</div><div class="tip-t"><strong>Older devices get higher sensitivity</strong> – this compensates for slower response over time.</div></div>
+                            <div class="tip"><div class="tip-n">4</div><div class="tip-t"><strong>Tweak ±5 at a time.</strong> Too slow? Raise General by 5. Too shaky? Lower it by 5.</div></div>
+                            <div class="tip"><div class="tip-n">5</div><div class="tip-t"><strong>These are not magic numbers.</strong> Pro players on the same phone use very different values — find what works for you.</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="active-counters">
+                <div class="stat">
+                    👁️ <span id="visitCount">0</span> visitors have entered the Phantom realm.
+                </div>
+                <div class="stat">
+                    <span class="online-dot"></span>
+                    <span id="onlineCount">0</span> active members are online now.
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <audio id="bg-music" loop preload="auto">
+        <source src="./music.mp3" type="audio/mpeg" />
+        <source src="/SYMBOL-GUILD-NAME-GENERATOR/music.mp3" type="audio/mpeg" />
+    </audio>
+
+    <script>
+        // =========================================================
+        // 0. ANTI-INSPECTION – TRIGGERS BREACH TERMINAL
+        // =========================================================
+        (function antiInspection() {
+            var terminal = document.getElementById('breach-terminal');
+            var breachTriggered = false;
+
+            function triggerBreach() {
+                if (breachTriggered) return;
+                breachTriggered = true;
+                // Activate terminal and run sequence
+                terminal.classList.add('active');
+                // The terminal script will auto‑run on load, but we need to ensure it starts.
+                // It will auto‑run after 1.5s anyway, but we can force it.
+                // We'll call the runBreachSequence function if available.
+                if (typeof runBreachSequence === 'function') {
+                    // Reset progress
+                    var progressFill = document.getElementById('progressFill');
+                    var progressLabel = document.getElementById('progressLabel');
+                    if (progressFill) { progressFill.style.width = '0%'; progressLabel.textContent = '0%'; }
+                    // Hide reload button
+                    var reloadBtn = document.getElementById('terminalReloadBtn');
+                    if (reloadBtn) reloadBtn.classList.remove('show');
+                    // Clear any existing interval
+                    if (window._overrideInterval) clearInterval(window._overrideInterval);
+                    // Start sequence
+                    runBreachSequence();
+                }
+            }
+
+            // 1. Right-click
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                triggerBreach();
+                return false;
+            });
+
+            // 2. Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'F12' ||
+                    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'K' || e.key === 'C')) ||
+                    (e.ctrlKey && e.key === 'U')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    triggerBreach();
+                    return false;
+                }
+            });
+
+            // 3. Webdriver detection
+            if (navigator.webdriver) {
+                triggerBreach();
+            }
+
+            // 4. DevTools size check (threshold 300px)
+            var threshold = 300;
+            setInterval(function() {
+                var w = window.outerWidth - window.innerWidth;
+                var h = window.outerHeight - window.innerHeight;
+                if (w > threshold || h > threshold) {
+                    triggerBreach();
+                }
+            }, 1000);
+
+            // 5. Block selection and copy
+            document.addEventListener('selectstart', function(e) { e.preventDefault(); });
+            document.addEventListener('copy', function(e) { e.preventDefault(); });
+
+            // 6. Override console
+            console.log = console.warn = console.error = console.info = function() {};
+
+            // 7. Prevent scrolling when terminal active
+            document.addEventListener('scroll', function(e) {
+                if (terminal && terminal.classList.contains('active')) {
+                    window.scrollTo(0, 0);
+                }
+            }, { passive: true });
+
+            // 8. beforeunload – trigger if user tries to leave (partial)
+            window.addEventListener('beforeunload', function(e) {
+                if (!breachTriggered) {
+                    triggerBreach();
+                    e.preventDefault();
+                    e.returnValue = '';
+                }
+            });
+        })();
+
+        // =========================================================
+        // BREACH TERMINAL v3.0 – ENGINE
+        // =========================================================
+        (function breachEngine() {
+            var terminal = document.getElementById('breach-terminal');
+            var reloadBtn = document.getElementById('terminalReloadBtn');
+            var overrideCount = document.getElementById('overrideCount');
+
+            var stage1 = document.getElementById('stage1');
+            var stage2 = document.getElementById('stage2');
+            var stage3 = document.getElementById('stage3');
+            var stage4 = document.getElementById('stage4');
+            var progressFill = document.getElementById('progressFill');
+            var progressLabel = document.getElementById('progressLabel');
+
+            var logTime = document.getElementById('logTime');
+            var logBrowser = document.getElementById('logBrowser');
+            var logOS = document.getElementById('logOS');
+            var logIP = document.getElementById('logIP');
+            var logRes = document.getElementById('logRes');
+            var logUA = document.getElementById('logUA');
+            var logStatus = document.getElementById('logStatus');
+
+            var isRunning = false;
+            var overrideInterval = null;
+
+            function hideAllStages() {
+                [stage1, stage2, stage3, stage4].forEach(function(el) { el.classList.remove('show'); });
+            }
+
+            function getBrowser() {
+                var ua = navigator.userAgent;
+                if (ua.indexOf('Chrome') > -1 && ua.indexOf('Edg') === -1) return 'Chrome';
+                if (ua.indexOf('Firefox') > -1) return 'Firefox';
+                if (ua.indexOf('Safari') > -1 && ua.indexOf('Chrome') === -1) return 'Safari';
+                if (ua.indexOf('Edg') > -1) return 'Edge';
+                if (ua.indexOf('Opera') > -1 || ua.indexOf('OPR') > -1) return 'Opera';
+                return 'Unknown Browser';
+            }
+
+            function getOS() {
+                var ua = navigator.userAgent;
+                if (ua.indexOf('Windows') > -1) return 'Windows';
+                if (ua.indexOf('Mac OS') > -1) return 'macOS';
+                if (ua.indexOf('Android') > -1) return 'Android';
+                if (ua.indexOf('iOS') > -1 || ua.indexOf('iPhone') > -1 || ua.indexOf('iPad') > -1) return 'iOS';
+                if (ua.indexOf('Linux') > -1) return 'Linux';
+                return 'Unknown OS';
+            }
+
+            window.runBreachSequence = function() {
+                if (isRunning) return;
+                isRunning = true;
+
+                var countdown = 3; // 3 seconds auto-reload
+                overrideCount.textContent = countdown;
+                if (overrideInterval) clearInterval(overrideInterval);
+
+                // Ensure terminal is active
+                if (!terminal.classList.contains('active')) {
+                    terminal.classList.add('active');
+                }
+
+                hideAllStages();
+
+                // --- STAGE 1: DETECTING ---
+                stage1.classList.add('show');
+                var progress = 0;
+                var interval = setInterval(function() {
+                    progress += 2;
+                    if (progress > 100) progress = 100;
+                    progressFill.style.width = progress + '%';
+                    progressLabel.textContent = progress + '%';
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        setTimeout(function() {
+                            stage1.classList.remove('show');
+                            // --- STAGE 2 ---
+                            stage2.classList.add('show');
+                            setTimeout(function() {
+                                stage2.classList.remove('show');
+                                // --- STAGE 3 ---
+                                stage3.classList.add('show');
+                                setTimeout(function() {
+                                    stage3.classList.remove('show');
+                                    // --- STAGE 4 ---
+                                    stage4.classList.add('show');
+
+                                    var now = new Date();
+                                    logTime.textContent = now.toISOString().replace('T', ' ').slice(0, 19);
+                                    logBrowser.textContent = getBrowser();
+                                    logOS.textContent = getOS();
+                                    logIP.textContent = '192.168.1.1';
+                                    logRes.textContent = screen.width + 'x' + screen.height + ' (' +
+                                        window.devicePixelRatio + 'x)';
+                                    logUA.textContent = navigator.userAgent.slice(0, 60) + '...';
+                                    logStatus.textContent = 'LOGGED';
+
+                                    reloadBtn.classList.add('show');
+
+                                    // Override countdown
+                                    if (overrideInterval) clearInterval(overrideInterval);
+                                    var cd = 3;
+                                    overrideCount.textContent = cd;
+                                    overrideInterval = setInterval(function() {
+                                        cd--;
+                                        if (cd <= 0) {
+                                            clearInterval(overrideInterval);
+                                            overrideCount.textContent = 'LOCKED';
+                                            setTimeout(function() {
+                                                location.reload();
+                                            }, 500);
+                                        } else {
+                                            overrideCount.textContent = cd;
+                                        }
+                                    }, 1000);
+
+                                    isRunning = false;
+                                }, 500);
+                            }, 500);
+                        }, 300);
+                    }
+                }, 5);
+            };
+
+            // Reload button
+            reloadBtn.addEventListener('click', function() {
+                if (overrideInterval) clearInterval(overrideInterval);
+                location.reload();
+            });
+
+            // Auto-trigger if terminal is already active? We'll let anti-inspection handle it.
+            // But for demo, we can trigger if no user action after 2s? No, we'll rely on anti-inspection.
+
+            console.log('🔴 Breach Terminal v3.0 – Engine ready.');
+        })();
+
+        // =========================================================
+        // PHANTOM SHIELD HUD – LIVE ENGINE
+        // =========================================================
+        (function shieldHUD() {
+            var startTime = Date.now();
+            var timerElement = document.getElementById('hudUptime');
+
+            setInterval(function() {
+                var elapsed = Math.floor((Date.now() - startTime) / 1000);
+                var hours = String(Math.floor(elapsed / 3600)).padStart(2, '0');
+                var minutes = String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0');
+                var seconds = String(elapsed % 60).padStart(2, '0');
+                timerElement.textContent = hours + ':' + minutes + ':' + seconds;
+            }, 1000);
+
+            var threatEl = document.getElementById('hudThreat');
+            var statusSets = [
+                '<span class="threat-badge pass">● PASSED</span> SYSTEM INTEGRITY <span class="threat-divider">|</span> <span class="threat-badge pass">● SECURE</span> FIREWALL ACTIVE <span class="threat-divider">|</span> <span class="threat-badge pass">● ONLINE</span> DEFENSE RUNNING <span class="threat-divider">|</span> <span class="threat-badge pass">● CLEAN</span> NO THREATS <span class="threat-divider">|</span> <span class="threat-badge pass">● PASSED</span> SYSTEM INTEGRITY <span class="threat-divider">|</span> <span class="threat-badge pass">● SECURE</span> FIREWALL ACTIVE <span class="threat-divider">|</span> <span class="threat-badge pass">● ONLINE</span> DEFENSE RUNNING <span class="threat-divider">|</span> <span class="threat-badge pass">● CLEAN</span> NO THREATS',
+                '<span class="threat-badge pass">● STABLE</span> ALL SYSTEMS NOMINAL <span class="threat-divider">|</span> <span class="threat-badge pass">● GUARDED</span> THREAT LEVEL: LOW <span class="threat-divider">|</span> <span class="threat-badge pass">● OPTIMAL</span> PERFORMANCE HIGH <span class="threat-divider">|</span> <span class="threat-badge pass">● SECURE</span> CONNECTION VERIFIED <span class="threat-divider">|</span> <span class="threat-badge pass">● STABLE</span> ALL SYSTEMS NOMINAL <span class="threat-divider">|</span> <span class="threat-badge pass">● GUARDED</span> THREAT LEVEL: LOW <span class="threat-divider">|</span> <span class="threat-badge pass">● OPTIMAL</span> PERFORMANCE HIGH <span class="threat-divider">|</span> <span class="threat-badge pass">● SECURE</span> CONNECTION VERIFIED',
+                '<span class="threat-badge pass">● PROTECTED</span> ENCRYPTION ACTIVE <span class="threat-divider">|</span> <span class="threat-badge pass">● SCANNED</span> NO MALWARE <span class="threat-divider">|</span> <span class="threat-badge pass">● VERIFIED</span> USER AUTHENTICATED <span class="threat-divider">|</span> <span class="threat-badge pass">● CLEAN</span> SYSTEM HEALTH: 100% <span class="threat-divider">|</span> <span class="threat-badge pass">● PROTECTED</span> ENCRYPTION ACTIVE <span class="threat-divider">|</span> <span class="threat-badge pass">● SCANNED</span> NO MALWARE <span class="threat-divider">|</span> <span class="threat-badge pass">● VERIFIED</span> USER AUTHENTICATED <span class="threat-divider">|</span> <span class="threat-badge pass">● CLEAN</span> SYSTEM HEALTH: 100%'
+            ];
+            var idx = 0;
+
+            setInterval(function() {
+                idx = (idx + 1) % statusSets.length;
+                threatEl.style.transition = 'opacity 0.6s ease';
+                threatEl.style.opacity = '0.2';
+                setTimeout(function() {
+                    threatEl.innerHTML = statusSets[idx];
+                    threatEl.style.opacity = '1';
+                }, 400);
+                setTimeout(function() {
+                    threatEl.style.transition = 'none';
+                }, 1000);
+            }, 8000);
+
+            setInterval(function() {
+                if (Math.random() < 0.15) {
+                    var originalHTML = threatEl.innerHTML;
+                    threatEl.innerHTML =
+                        '<span class="threat-badge warn">● WARNING</span> UNUSUAL ACTIVITY DETECTED – INVESTIGATING <span class="threat-divider">|</span> <span class="threat-badge warn">● ALERT</span> SOURCE: EXTERNAL <span class="threat-divider">|</span> <span class="threat-badge warn">● WARNING</span> UNUSUAL ACTIVITY DETECTED – INVESTIGATING <span class="threat-divider">|</span> <span class="threat-badge warn">● ALERT</span> SOURCE: EXTERNAL';
+                    threatEl.style.color = '#ffcc44';
+                    setTimeout(function() {
+                        threatEl.innerHTML = originalHTML;
+                        threatEl.style.color = '';
+                    }, 2500);
+                }
+            }, 12000);
+
+            console.log('🛡️ Phantom Shield HUD – Advanced overlay active.');
+        })();
+
+        // =========================================================
+        // 1. DEVICE DATABASE & PATTERNS (PRESET VALUES RESTORED)
+        // =========================================================
+
+        const DB = {
+            "Samsung Galaxy S25 Ultra": { g: 98, r: 96, s2: 89, s4: 79, sn: 69, fl: 96, tier: "flagship" },
+            "Samsung Galaxy S25+": { g: 96, r: 94, s2: 87, s4: 77, sn: 67, fl: 94, tier: "flagship" },
+            "Samsung Galaxy S25": { g: 94, r: 92, s2: 85, s4: 75, sn: 65, fl: 92, tier: "flagship" },
+            "Samsung Galaxy S24 Ultra": { g: 97, r: 95, s2: 88, s4: 78, sn: 68, fl: 95, tier: "flagship" },
+            "Samsung Galaxy S24+": { g: 94, r: 92, s2: 85, s4: 75, sn: 65, fl: 92, tier: "flagship" },
+            "Samsung Galaxy S24": { g: 92, r: 90, s2: 83, s4: 73, sn: 63, fl: 90, tier: "flagship" },
+            "Samsung Galaxy S23 Ultra": { g: 95, r: 93, s2: 86, s4: 76, sn: 66, fl: 93, tier: "flagship" },
+            "Samsung Galaxy S23+": { g: 92, r: 90, s2: 83, s4: 73, sn: 63, fl: 90, tier: "flagship" },
+            "Samsung Galaxy S23": { g: 90, r: 88, s2: 81, s4: 71, sn: 61, fl: 88, tier: "flagship" },
+            "Samsung Galaxy S22 Ultra": { g: 93, r: 91, s2: 84, s4: 74, sn: 64, fl: 91, tier: "flagship" },
+            "Samsung Galaxy S22": { g: 88, r: 86, s2: 79, s4: 69, sn: 59, fl: 86, tier: "flagship" },
+            "Samsung Galaxy A55": { g: 82, r: 80, s2: 72, s4: 62, sn: 52, fl: 79, tier: "mid" },
+            "Samsung Galaxy A54": { g: 80, r: 78, s2: 70, s4: 60, sn: 50, fl: 77, tier: "mid" },
+            "Samsung Galaxy A53": { g: 78, r: 76, s2: 68, s4: 58, sn: 48, fl: 74, tier: "mid" },
+            "Samsung Galaxy A35": { g: 76, r: 74, s2: 66, s4: 56, sn: 46, fl: 72, tier: "mid" },
+            "Samsung Galaxy A34": { g: 74, r: 72, s2: 64, s4: 54, sn: 44, fl: 70, tier: "mid" },
+            "Xiaomi 15 Ultra": { g: 99, r: 97, s2: 90, s4: 80, sn: 70, fl: 97, tier: "flagship" },
+            "Xiaomi 15 Pro": { g: 97, r: 95, s2: 88, s4: 78, sn: 68, fl: 95, tier: "flagship" },
+            "Xiaomi 15": { g: 95, r: 93, s2: 86, s4: 76, sn: 66, fl: 93, tier: "flagship" },
+            "Xiaomi 14 Ultra": { g: 98, r: 96, s2: 89, s4: 79, sn: 69, fl: 96, tier: "flagship" },
+            "Xiaomi 14 Pro": { g: 96, r: 94, s2: 87, s4: 77, sn: 67, fl: 94, tier: "flagship" },
+            "Xiaomi 14": { g: 94, r: 92, s2: 85, s4: 75, sn: 65, fl: 92, tier: "flagship" },
+            "POCO X7 Pro": { g: 88, r: 86, s2: 78, s4: 68, sn: 58, fl: 86, tier: "flagship" },
+            "POCO X7": { g: 84, r: 82, s2: 74, s4: 64, sn: 54, fl: 81, tier: "mid" },
+            "POCO X6 Pro": { g: 87, r: 85, s2: 77, s4: 67, sn: 57, fl: 84, tier: "flagship" },
+            "Redmi Note 14 Pro+": { g: 86, r: 84, s2: 76, s4: 66, sn: 56, fl: 83, tier: "mid" },
+            "Redmi Note 14 Pro": { g: 83, r: 81, s2: 73, s4: 63, sn: 53, fl: 80, tier: "mid" },
+            "Redmi Note 14": { g: 76, r: 74, s2: 66, s4: 56, sn: 46, fl: 72, tier: "mid" },
+            "Redmi Note 13 Pro+": { g: 85, r: 83, s2: 75, s4: 65, sn: 55, fl: 82, tier: "mid" },
+            "Redmi Note 13 Pro": { g: 82, r: 80, s2: 72, s4: 62, sn: 52, fl: 79, tier: "mid" },
+            "iPhone 17 Pro Max": { g: 99, r: 97, s2: 90, s4: 80, sn: 70, fl: 97, tier: "flagship" },
+            "iPhone 17 Pro": { g: 98, r: 96, s2: 89, s4: 79, sn: 69, fl: 96, tier: "flagship" },
+            "iPhone 17": { g: 95, r: 93, s2: 86, s4: 76, sn: 66, fl: 93, tier: "flagship" },
+            "iPhone 16 Pro Max": { g: 98, r: 96, s2: 89, s4: 79, sn: 69, fl: 96, tier: "flagship" },
+            "iPhone 16 Pro": { g: 97, r: 95, s2: 88, s4: 78, sn: 68, fl: 95, tier: "flagship" },
+            "iPhone 16 Plus": { g: 95, r: 93, s2: 86, s4: 76, sn: 66, fl: 93, tier: "flagship" },
+            "iPhone 16": { g: 94, r: 92, s2: 85, s4: 75, sn: 65, fl: 92, tier: "flagship" },
+            "iPhone 15 Pro Max": { g: 97, r: 95, s2: 88, s4: 78, sn: 68, fl: 95, tier: "flagship" },
+            "iPhone 15 Pro": { g: 96, r: 94, s2: 87, s4: 77, sn: 67, fl: 94, tier: "flagship" },
+            "iPhone 15": { g: 92, r: 90, s2: 83, s4: 73, sn: 63, fl: 90, tier: "flagship" },
+            "iPhone 14 Pro Max": { g: 95, r: 93, s2: 86, s4: 76, sn: 66, fl: 93, tier: "flagship" },
+            "iPhone 14 Pro": { g: 94, r: 92, s2: 85, s4: 75, sn: 65, fl: 92, tier: "flagship" },
+            "iPhone 14": { g: 90, r: 88, s2: 81, s4: 71, sn: 61, fl: 88, tier: "flagship" },
+            "iPhone 13 Pro Max": { g: 93, r: 91, s2: 84, s4: 74, sn: 64, fl: 91, tier: "flagship" },
+            "iPhone 13 Pro": { g: 92, r: 90, s2: 83, s4: 73, sn: 63, fl: 90, tier: "flagship" },
+            "iPhone 13": { g: 88, r: 86, s2: 79, s4: 69, sn: 59, fl: 86, tier: "flagship" },
+            "OnePlus 13": { g: 97, r: 95, s2: 88, s4: 78, sn: 68, fl: 95, tier: "flagship" },
+            "OnePlus 13R": { g: 88, r: 86, s2: 78, s4: 68, sn: 58, fl: 86, tier: "flagship" },
+            "OnePlus 12": { g: 95, r: 93, s2: 86, s4: 76, sn: 66, fl: 93, tier: "flagship" },
+            "Google Pixel 9 Pro XL": { g: 97, r: 95, s2: 88, s4: 78, sn: 68, fl: 95, tier: "flagship" },
+            "Google Pixel 9 Pro": { g: 96, r: 94, s2: 87, s4: 77, sn: 67, fl: 94, tier: "flagship" },
+            "Google Pixel 9": { g: 93, r: 91, s2: 84, s4: 74, sn: 64, fl: 91, tier: "flagship" },
+            "Google Pixel 8 Pro": { g: 94, r: 92, s2: 85, s4: 75, sn: 65, fl: 92, tier: "flagship" },
+            "Google Pixel 8": { g: 91, r: 89, s2: 82, s4: 72, sn: 62, fl: 89, tier: "flagship" },
+            "ASUS ROG Phone 9 Pro": { g: 99, r: 97, s2: 90, s4: 80, sn: 70, fl: 97, tier: "flagship" },
+            "ASUS ROG Phone 9": { g: 98, r: 96, s2: 89, s4: 79, sn: 69, fl: 96, tier: "flagship" },
+            "ASUS ROG Phone 8 Pro": { g: 97, r: 95, s2: 88, s4: 78, sn: 68, fl: 95, tier: "flagship" },
+            "Nothing Phone 2": { g: 84, r: 82, s2: 74, s4: 64, sn: 54, fl: 81, tier: "mid" },
+            "Nothing Phone 1": { g: 78, r: 76, s2: 68, s4: 58, sn: 48, fl: 74, tier: "mid" }
+        };
+
+        const PATTERNS = [
+            [/SM-S938/i, "Samsung Galaxy S25 Ultra"],
+            [/SM-S936/i, "Samsung Galaxy S25+"],
+            [/SM-S931/i, "Samsung Galaxy S25"],
+            [/SM-S928/i, "Samsung Galaxy S24 Ultra"],
+            [/SM-S926/i, "Samsung Galaxy S24+"],
+            [/SM-S921/i, "Samsung Galaxy S24"],
+            [/SM-S918/i, "Samsung Galaxy S23 Ultra"],
+            [/SM-S916/i, "Samsung Galaxy S23+"],
+            [/SM-S911/i, "Samsung Galaxy S23"],
+            [/SM-S908/i, "Samsung Galaxy S22 Ultra"],
+            [/SM-S901/i, "Samsung Galaxy S22"],
+            [/SM-A556/i, "Samsung Galaxy A55"],
+            [/SM-A546/i, "Samsung Galaxy A54"],
+            [/SM-A536/i, "Samsung Galaxy A53"],
+            [/SM-A356/i, "Samsung Galaxy A35"],
+            [/SM-A346/i, "Samsung Galaxy A34"],
+            [/2407FPN8EG|Xiaomi 15 Ultra/i, "Xiaomi 15 Ultra"],
+            [/2501FPN6EG|Xiaomi 15 Pro/i, "Xiaomi 15 Pro"],
+            [/2503FPN6EG|Xiaomi 15\b/i, "Xiaomi 15"],
+            [/23116PN5BC|Xiaomi 14 Ultra/i, "Xiaomi 14 Ultra"],
+            [/23116PN5BI|Xiaomi 14 Pro/i, "Xiaomi 14 Pro"],
+            [/23127PN0CC|Xiaomi 14\b/i, "Xiaomi 14"],
+            [/24111RA49C|POCO X7 Pro/i, "POCO X7 Pro"],
+            [/24111RA49G|POCO X7\b/i, "POCO X7"],
+            [/23122PCD1G|POCO X6 Pro/i, "POCO X6 Pro"],
+            [/24120RN75G|Redmi Note 14 Pro\+/i, "Redmi Note 14 Pro+"],
+            [/24120RN75I|Redmi Note 14 Pro\b/i, "Redmi Note 14 Pro"],
+            [/24120RN74G|Redmi Note 14\b/i, "Redmi Note 14"],
+            [/23117RA68G|Redmi Note 13 Pro\+/i, "Redmi Note 13 Pro+"],
+            [/23117RA68I|Redmi Note 13 Pro\b/i, "Redmi Note 13 Pro"],
+            [/iPhone 17 Pro Max/i, "iPhone 17 Pro Max"],
+            [/iPhone 17 Pro/i, "iPhone 17 Pro"],
+            [/iPhone 17\b/i, "iPhone 17"],
+            [/iPhone 16 Pro Max/i, "iPhone 16 Pro Max"],
+            [/iPhone 16 Pro/i, "iPhone 16 Pro"],
+            [/iPhone 16 Plus/i, "iPhone 16 Plus"],
+            [/iPhone 16\b/i, "iPhone 16"],
+            [/iPhone 15 Pro Max/i, "iPhone 15 Pro Max"],
+            [/iPhone 15 Pro/i, "iPhone 15 Pro"],
+            [/iPhone 15\b/i, "iPhone 15"],
+            [/iPhone 14 Pro Max/i, "iPhone 14 Pro Max"],
+            [/iPhone 14 Pro/i, "iPhone 14 Pro"],
+            [/iPhone 14\b/i, "iPhone 14"],
+            [/iPhone 13 Pro Max/i, "iPhone 13 Pro Max"],
+            [/iPhone 13 Pro/i, "iPhone 13 Pro"],
+            [/iPhone 13\b/i, "iPhone 13"],
+            [/CPH2583|OnePlus 13\b/i, "OnePlus 13"],
+            [/CPH2585|OnePlus 13R/i, "OnePlus 13R"],
+            [/CPH2449|OnePlus 12\b/i, "OnePlus 12"],
+            [/Pixel 9 Pro XL/i, "Google Pixel 9 Pro XL"],
+            [/Pixel 9 Pro/i, "Google Pixel 9 Pro"],
+            [/Pixel 9\b/i, "Google Pixel 9"],
+            [/Pixel 8 Pro/i, "Google Pixel 8 Pro"],
+            [/Pixel 8\b/i, "Google Pixel 8"],
+            [/ASUS_AI2501|ROG Phone 9 Pro/i, "ASUS ROG Phone 9 Pro"],
+            [/ASUS_AI2501|ROG Phone 9\b/i, "ASUS ROG Phone 9"],
+            [/ASUS_AI2401|ROG Phone 8 Pro/i, "ASUS ROG Phone 8 Pro"],
+            [/NX712J|Nothing Phone 2/i, "Nothing Phone 2"],
+            [/NX611J|Nothing Phone 1/i, "Nothing Phone 1"]
+        ];
+
+        // =========================================================
+        // 2. GENERATION ENGINE (same as fixed version)
+        // =========================================================
+        function getWearFromYears(years) {
+            if (years <= 0) return 0;
+            if (years <= 0.5) return 0.02;
+            if (years <= 1) return 0.04 + (years - 0.5) * 0.12;
+            if (years <= 2) return 0.10 + (years - 1) * 0.07;
+            if (years <= 3) return 0.17 + (years - 2) * 0.08;
+            if (years <= 4) return 0.25 + (years - 3) * 0.07;
+            if (years <= 5) return 0.32 + (years - 4) * 0.08;
+            return Math.min(0.40 + (years - 5) * 0.02, 0.60);
+        }
+
+        function generateBasePreset(info) {
+            var ram = info.ram || 0;
+            var cpu = info.cpu || 0;
+            var w = info.w || 360;
+            var h = info.h || 640;
+            var dpr = info.dpr || 1;
+
+            var score = 45;
+            if (ram > 0) score += Math.min(ram / 16, 1) * 28;
+            if (cpu > 0) score += Math.min(cpu / 12, 1) * 17;
+            var px = (w * dpr) * (h * dpr);
+            if (px > 4000000) score += 10;
+            else if (px > 2000000) score += 5;
+            score = Math.round(Math.min(Math.max(score, 0), 100));
+
+            var general = Math.round(200 - (score * 0.9));
+            general = Math.max(50, Math.min(200, general));
+            var redDot = Math.max(0, general - 2);
+            var scope2x = Math.max(0, general - 10);
+            var scope4x = Math.max(0, general - 20);
+            var sniper = Math.max(0, general - 30);
+            var freeLook = Math.max(0, general - 3);
+
+            return {
+                g: general,
+                r: redDot,
+                s2: scope2x,
+                s4: scope4x,
+                sn: sniper,
+                fl: freeLook,
+                perf: score,
+                tier: score > 80 ? "flagship" : score > 55 ? "mid" : "budget"
+            };
+        }
+
+        function applyAgeToPreset(preset, wear) {
+            var keys = ["g", "r", "s2", "s4", "sn", "fl"];
+            var out = {};
+            keys.forEach(function(k) {
+                var val = Math.round(preset[k] * (1 + wear));
+                out[k] = Math.min(200, Math.max(0, val));
+            });
+            out.perf = preset.perf || 70;
+            out.tier = preset.tier || "mid";
+            out.wear = Math.round(wear * 100);
+            return out;
+        }
+
+        function detectDeviceFromUA(ua) {
+            var isAndroid = /Android/i.test(ua);
+            for (var i = 0; i < PATTERNS.length; i++) {
+                var pattern = PATTERNS[i];
+                if (isAndroid && /iPhone/i.test(pattern[0].source)) continue;
+                if (pattern[0].test(ua)) return pattern[1];
+            }
+            return null;
+        }
+
+        function getDevicePreset(name) { return DB[name] || null; }
+
+
+        // =========================================================
+        // 3. UI STATE & FUNCTIONS
+        // =========================================================
+        var selectedDevice = null;
+        var selectedAge = null;
+        var searchModel = null;
+        var searchAge = null;
+        var autoAge = null;
+        var currentPreset = null;
+        var currentModel = null;
+        var isAutoDetect = false;
+
+        function switchTab(tab) {
+            document.getElementById('tabSearch').className = 'tab-btn' + (tab === 'search' ? ' active' : '');
+            document.getElementById('tabAuto').className = 'tab-btn' + (tab === 'auto' ? ' active' : '');
+            document.getElementById('panelSearch').style.display = tab === 'search' ? 'block' : 'none';
+            document.getElementById('panelAuto').style.display = tab === 'auto' ? 'block' : 'none';
+        }
+
+        function buildAgeGrid(containerId, noteId, onSelect) {
+            var grid = document.getElementById(containerId);
+            grid.innerHTML = '';
+
+            var row = document.createElement('div');
+            row.className = 'manual-age-row';
+            var inp = document.createElement('input');
+            inp.className = 'manual-age-input';
+            inp.type = 'number';
+            inp.min = '0';
+            inp.max = '20';
+            inp.step = '0.5';
+            inp.placeholder = '0';
+            var unit = document.createElement('span');
+            unit.className = 'manual-age-unit';
+            unit.textContent = 'YRS';
+            var applyBtn = document.createElement('button');
+            applyBtn.className = 'manual-age-apply';
+            applyBtn.textContent = 'CONFIRM AGE';
+            row.appendChild(inp);
+            row.appendChild(unit);
+            row.appendChild(applyBtn);
+            grid.appendChild(row);
+
+            var hints = document.createElement('div');
+            hints.className = 'age-hints';
+            [
+                [0, "New"],
+                [1, "1 Yr"],
+                [2, "2 Yrs"],
+                [3, "3 Yrs"],
+                [5, "5 Yrs+"]
+            ].forEach(function(h) {
+                var chip = document.createElement('button');
+                chip.className = 'age-chip';
+                chip.textContent = h[1];
+                chip.addEventListener('click', function() {
+                    inp.value = h[0];
+                    hints.querySelectorAll('.age-chip').forEach(function(c) { c.classList.remove('selected'); });
+                    chip.classList.add('selected');
+                    doApply();
+                });
+                hints.appendChild(chip);
+            });
+            grid.appendChild(hints);
+
+            function doApply() {
+                var years = parseFloat(inp.value);
+                if (isNaN(years) || years < 0 || inp.value === '') {
+                    inp.style.borderColor = '#ef4444';
+                    inp.focus();
+                    setTimeout(function() { inp.style.borderColor = ''; }, 1500);
+                    return;
+                }
+                var wear = getWearFromYears(years);
+                var yrs = Math.round(years * 10) / 10;
+                var lbl = yrs === 0 ? 'Brand New' : yrs < 1 ? Math.round(yrs * 12) + ' Months old' : yrs + ' Year' + (yrs ===
+                    1 ? '' : 's') + ' old';
+                var wearPct = Math.round(wear * 100);
+                var note = document.getElementById(noteId);
+                note.innerHTML = '<strong>' + lbl + '</strong> — sensitivity boosted by <strong>' + wearPct +
+                    '%</strong>' + (wearPct === 0 ? ' — no boost applied.' : ' to compensate for aging hardware.');
+                note.className = 'age-note show';
+                onSelect({ label: lbl, val: 'custom', wear: wear });
+            }
+            applyBtn.addEventListener('click', doApply);
+            inp.addEventListener('keydown', function(e) { if (e.key === 'Enter') doApply(); });
+        }
+
+        function renderResults(preset, displayName, info, ageObj) {
+            currentPreset = preset;
+            currentModel = displayName;
+
+            var ageLabel = ageObj ? ageObj.label : 'Unknown';
+            var wearPct = preset.wear || 0;
+
+            document.getElementById('devName').textContent = displayName;
+            document.getElementById('agePill').textContent = ageLabel;
+
+            var pill = document.getElementById('matchPill');
+            if (DB[displayName]) {
+                pill.textContent = 'PRESET MATCH';
+                pill.className = 'match-pill pre';
+            } else {
+                pill.textContent = 'GENERATED';
+                pill.className = 'match-pill gen';
+            }
+
+            var liveW = screen.width || 360;
+            var liveH = screen.height || 640;
+            var liveDPR = window.devicePixelRatio || 1;
+            var liveRam = navigator.deviceMemory || 'N/A';
+            var liveCpu = navigator.hardwareConcurrency || 'N/A';
+
+            document.getElementById('sRam').textContent = liveRam + ' GB';
+            document.getElementById('sCpu').textContent = liveCpu + ' cores';
+            document.getElementById('sRes').textContent = liveW + ' x ' + liveH;
+            document.getElementById('sDPR').textContent = liveDPR.toFixed(1) + 'x';
+            document.getElementById('osLine').textContent = navigator.userAgent || '—';
+
+            var perf = preset.perf || 70;
+            var perfFill = document.getElementById('perfFill');
+            var perfPct = document.getElementById('perfPct');
+            perfFill.style.width = '0%';
+            setTimeout(function() {
+                perfFill.style.width = perf + '%';
+                perfFill.style.background = perf > 80 ? '#22c55e' : perf > 55 ? '#38bdf8' : '#ef4444';
+            }, 100);
+            perfPct.textContent = perf;
+
+            var ageFill = document.getElementById('ageFill');
+            ageFill.style.width = '0%';
+            setTimeout(function() { ageFill.style.width = wearPct + '%'; }, 150);
+            document.getElementById('agePct').textContent = wearPct + '%';
+
+            var list = document.getElementById('sensiList');
+            var rows = [
+                { key: 'g', label: 'General', color: '#38bdf8' },
+                { key: 'r', label: 'Red Dot', color: '#ef4444' },
+                { key: 's2', label: '2x Scope', color: '#eab308' },
+                { key: 's4', label: '4x Scope', color: '#22c55e' },
+                { key: 'sn', label: 'Sniper Scope', color: '#22d3ee' },
+                { key: 'fl', label: 'Free Look', color: '#a855f7' }
+            ];
+            list.innerHTML = '';
+            rows.forEach(function(cfg) {
+                var val = preset[cfg.key] || 0;
+                var div = document.createElement('div');
+                div.className = 'sensi-row';
+                div.innerHTML = '<span class="sensi-label">' + cfg.label +
+                    '</span><span class="sensi-value" style="color:' + cfg.color + '">' + val + '</span>';
+                list.appendChild(div);
+            });
+
+            document.getElementById('results').className = 'results show';
+            setTimeout(function() {
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 200);
+        }
+
+
+        // =========================================================
+        // 4. AUTO DETECT
+        // =========================================================
+        function detectDevice() {
+            var btn = document.getElementById('detectBtn');
+            var loader = document.getElementById('loader');
+            var panel = document.getElementById('detectedPanel');
+
+            btn.style.display = 'none';
+            loader.classList.add('show');
+            panel.classList.remove('show');
+
+            setTimeout(function() {
+                var ua = navigator.userAgent || '';
+                var ram = navigator.deviceMemory || null;
+                var cpu = navigator.hardwareConcurrency || null;
+                var w = screen.width || 360;
+                var h = screen.height || 640;
+                var dpr = window.devicePixelRatio || 1;
+
+                var info = { ua: ua, ram: ram, cpu: cpu, w: w, h: h, dpr: dpr };
+
+                var detectedName = detectDeviceFromUA(ua);
+                var preset = null;
+                var displayName = '';
+
+                if (detectedName && getDevicePreset(detectedName)) {
+                    preset = getDevicePreset(detectedName);
+                    preset.perf = 85;
+                    displayName = detectedName;
+                    isAutoDetect = true;
+                    selectedDevice = detectedName;
+                } else {
+                    preset = generateBasePreset(info);
+                    displayName = 'Your device (generated)';
+                    isAutoDetect = true;
+                    selectedDevice = null;
+                    window._autoGenPreset = preset;
+                    window._autoGenInfo = info;
+                }
+
+                document.getElementById('dpName').textContent = displayName;
+                document.getElementById('dpSpecs').textContent =
+                    (ram ? ram + 'GB RAM · ' : '') +
+                    (cpu ? cpu + ' cores · ' : '') +
+                    w + 'x' + h + ' (' + dpr + 'x)';
+                panel.classList.add('show');
+
+                buildAgeGrid('autoAgeGrid', 'autoAgeNote', function(opt) {
+                    autoAge = opt;
+                    document.getElementById('autoGenerateBtn').className = 'btn-generate show';
+                });
+                document.getElementById('autoAgeSection').style.display = 'block';
+                document.getElementById('autoGenerateBtn').className = 'btn-generate';
+                autoAge = null;
+                loader.classList.remove('show');
+                btn.style.display = 'flex';
+
+            }, 1200);
+        }
+
+
+        // =========================================================
+        // 5. GENERATE FROM AUTO / SEARCH
+        // =========================================================
+        function generateFromAuto() {
+            if (!autoAge) { alert('Please enter your device age first.'); return; }
+
+            var preset = null;
+            var displayName = '';
+
+            if (selectedDevice && getDevicePreset(selectedDevice)) {
+                preset = getDevicePreset(selectedDevice);
+                if (!preset.perf) preset.perf = 85;
+                displayName = selectedDevice;
+            } else if (window._autoGenPreset) {
+                preset = window._autoGenPreset;
+                displayName = 'Your device (generated)';
+            } else {
+                alert('Please detect your device first.');
+                return;
+            }
+
+            var finalPreset = applyAgeToPreset(preset, autoAge.wear);
+            renderResults(finalPreset, displayName, null, autoAge);
+        }
+
+        function generateFromSearch() {
+            if (!searchModel) { alert('Please select a device first.'); return; }
+            if (!searchAge) { alert('Please enter your device age first.'); return; }
+
+            var preset = getDevicePreset(searchModel);
+            if (!preset) { alert('Device not found in database.'); return; }
+            if (!preset.perf) preset.perf = preset.tier === 'flagship' ? 88 : preset.tier === 'mid' ? 65 : 48;
+
+            var finalPreset = applyAgeToPreset(preset, searchAge.wear);
+            renderResults(finalPreset, searchModel, null, searchAge);
+        }
+
+
+        // =========================================================
+        // 6. FILTER & SELECT
+        // =========================================================
+        function filterDevices(q) {
+            if (!q) return [];
+            q = q.toLowerCase();
+            var results = [];
+            for (var name in DB) {
+                if (name.toLowerCase().indexOf(q) !== -1) {
+                    results.push(name);
+                }
+                if (results.length >= 12) break;
+            }
+            return results;
+        }
+
+        function selectModel(m) {
+            searchModel = m;
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchClear').className = 'search-clear';
+            document.getElementById('dropdown').className = 'dropdown';
+            document.getElementById('sdName').textContent = m;
+            document.getElementById('selectedDevice').className = 'selected-device show';
+
+            buildAgeGrid('searchAgeGrid', 'searchAgeNote', function(opt) {
+                searchAge = opt;
+                document.getElementById('searchGenerateBtn').className = 'btn-generate show';
+            });
+            document.getElementById('searchAgeSection').style.display = 'block';
+            document.getElementById('searchGenerateBtn').className = 'btn-generate';
+            searchAge = null;
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('dropdown').className = 'dropdown';
+            document.getElementById('searchClear').className = 'search-clear';
+            clearSelection();
+        }
+
+        function clearSelection() {
+            searchModel = null;
+            searchAge = null;
+            document.getElementById('sdName').textContent = '—';
+            document.getElementById('selectedDevice').className = 'selected-device';
+            document.getElementById('searchAgeSection').style.display = 'none';
+            document.getElementById('searchGenerateBtn').className = 'btn-generate';
+            document.getElementById('searchAgeGrid').innerHTML = '';
+            document.getElementById('searchAgeNote').textContent = 'Enter age to boost sensitivity for older devices.';
+            document.getElementById('searchAgeNote').className = 'age-note';
+        }
+
+
+        // =========================================================
+        // 7. COPY, RESET, ETC.
+        // =========================================================
+        function copySettings() {
+            if (!currentPreset) { alert('Generate sensitivity first!'); return; }
+            var p = currentPreset;
+            var text =
+                'FREE FIRE SENSITIVITY SETTINGS\n' +
+                'Device: ' + currentModel + '\n' +
+                '---\n' +
+                'General:        ' + p.g + '\n' +
+                'Red Dot:        ' + p.r + '\n' +
+                '2x Scope:       ' + p.s2 + '\n' +
+                '4x Scope:       ' + p.s4 + '\n' +
+                'Sniper Scope:   ' + p.sn + '\n' +
+                'Free Look:      ' + p.fl + '\n' +
+                '---\n' +
+                'Generated by Phantom Guild';
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(function() { showCopyOk(); }).catch(function() { fallbackCopy(
+                    text); });
+            } else {
+                fallbackCopy(text);
+            }
+        }
+
+        function fallbackCopy(text) {
+            var ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            try { document.execCommand('copy');
+                showCopyOk(); } catch (e) {}
+            document.body.removeChild(ta);
+        }
+
+        function showCopyOk() {
+            var ok = document.getElementById('copyOk');
+            ok.classList.add('show');
+            setTimeout(function() { ok.classList.remove('show'); }, 2000);
+        }
+
+        function resetGenerator() {
+            currentPreset = null;
+            currentModel = null;
+            selectedDevice = null;
+            selectedAge = null;
+            searchModel = null;
+            searchAge = null;
+            autoAge = null;
+            window._autoGenPreset = null;
+
+            document.getElementById('results').className = 'results';
+            document.getElementById('detectedPanel').className = 'detected-panel';
+            document.getElementById('autoAgeSection').style.display = 'none';
+            document.getElementById('autoGenerateBtn').className = 'btn-generate';
+            document.getElementById('autoAgeGrid').innerHTML = '';
+            document.getElementById('autoAgeNote').textContent = 'Enter age to boost sensitivity for older devices.';
+            document.getElementById('autoAgeNote').className = 'age-note';
+            document.getElementById('searchAgeGrid').innerHTML = '';
+            document.getElementById('searchAgeNote').textContent = 'Enter age to boost sensitivity for older devices.';
+            document.getElementById('searchAgeNote').className = 'age-note';
+            document.getElementById('detectBtn').style.display = 'flex';
+            document.getElementById('loader').classList.remove('show');
+            clearSelection();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+
+        // =========================================================
+        // 8. NAME GENERATOR (unchanged)
+        // =========================================================
+        var smallCapsMap = {
+            'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ',
+            'f': 'ꜰ', 'g': 'ɢ', 'h': 'ʜ', 'i': 'ɪ', 'j': 'ᴊ',
+            'k': 'ᴋ', 'l': 'ʟ', 'm': 'ᴍ', 'n': 'ɴ', 'o': 'ᴏ',
+            'p': 'ᴘ', 'q': 'ǫ', 'r': 'ʀ', 's': 'ꜱ', 't': 'ᴛ',
+            'u': 'ᴜ', 'v': 'ᴠ', 'w': 'ᴡ', 'x': 'x', 'y': 'ʏ', 'z': 'ᴢ'
+        };
+        var currentGeneratedName = '';
+
+        function updatePreview() {
+            var inputField = document.getElementById('userName');
+            var resultDisplay = document.getElementById('result');
+            var resultMessage = document.getElementById('resultMessage');
+            var rawName = inputField.value.trim();
+            if (rawName === '') {
+                resultDisplay.textContent = '✦ Type your name below ✦';
+                resultDisplay.className = 'placeholder';
+                currentGeneratedName = '';
+                resultMessage.textContent = '';
+                resultMessage.className = 'result-message';
+                return;
+            }
+            var smallName = rawName.toLowerCase().split('').map(function(ch) { return smallCapsMap[ch] || ch; }).join('');
+            var phantomIdentity = smallName + '・〆';
+            currentGeneratedName = phantomIdentity;
+            resultDisplay.textContent = phantomIdentity;
+            resultDisplay.className = '';
+            resultDisplay.style.color = '#f2e9ff';
+            resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
+            resultMessage.textContent = 'Now go and meet Huios, the Guild Leader.';
+            resultMessage.className = 'result-message show';
+        }
+
+        document.getElementById('doneBtn').addEventListener('click', function() {
+            updatePreview();
+            var resultDisplay = document.getElementById('result');
+            if (currentGeneratedName) {
+                resultDisplay.style.transition = '0.1s';
+                resultDisplay.style.textShadow = '0 0 80px #ff66ff, 0 0 160px #9b6dff';
+                setTimeout(function() {
+                    resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
+                }, 300);
+            }
+        });
+
+        function copyResult() {
+            var resultDisplay = document.getElementById('result');
+            var textToCopy = currentGeneratedName;
+            if (!textToCopy || resultDisplay.className === 'placeholder') {
+                resultDisplay.textContent = '⚠️ TYPE A NAME FIRST!';
+                resultDisplay.style.color = '#ff8888';
+                resultDisplay.style.textShadow = '0 0 30px #ff2222';
+                setTimeout(function() {
+                    if (document.getElementById('userName').value.trim() === '') {
+                        resultDisplay.textContent = '✦ Type your name below ✦';
+                        resultDisplay.className = 'placeholder';
+                    } else { updatePreview(); }
+                }, 1500);
+                return;
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(textToCopy).then(function() { showCopiedFeedback2(resultDisplay); })
+                    .catch(function() { fallbackCopyText2(textToCopy, resultDisplay); });
+            } else {
+                fallbackCopyText2(textToCopy, resultDisplay);
+            }
+        }
+
+        function fallbackCopyText2(text, resultDisplay) {
+            var textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '0';
+            textarea.style.top = '0';
+            textarea.style.width = '1px';
+            textarea.style.height = '1px';
+            textarea.style.opacity = '0.5';
+            textarea.style.zIndex = '9999';
+            textarea.style.pointerEvents = 'none';
+            textarea.setAttribute('readonly', '');
+            document.body.appendChild(textarea);
+            setTimeout(function() {
+                textarea.focus();
+                textarea.select();
+                textarea.setSelectionRange(0, text.length);
+                try {
+                    var success = document.execCommand('copy');
+                    if (success) { showCopiedFeedback2(resultDisplay); } else { showCopiedFeedback2(resultDisplay); }
+                } catch (e) { showCopiedFeedback2(resultDisplay); }
+                document.body.removeChild(textarea);
+            }, 50);
+        }
+
+        function showCopiedFeedback2(resultDisplay) {
+            resultDisplay.textContent = '✅  COPIED!  ✅';
+            resultDisplay.style.color = '#b3ff9b';
+            resultDisplay.style.textShadow = '0 0 40px #66ff33';
+            setTimeout(function() {
+                if (currentGeneratedName) {
+                    resultDisplay.textContent = currentGeneratedName;
+                    resultDisplay.style.color = '#f2e9ff';
+                    resultDisplay.style.textShadow = '0 0 40px #9b6dff, 0 0 80px #4a1a7a';
+                }
+            }, 1500);
+        }
+
+        var resultWrapper = document.getElementById('resultWrapper');
+        resultWrapper.addEventListener('click', copyResult);
+        resultWrapper.addEventListener('touchstart', copyResult, { passive: true });
+        var manualCopyBtn = document.getElementById('manualCopyBtn');
+        manualCopyBtn.addEventListener('click', copyResult);
+        manualCopyBtn.addEventListener('touchstart', copyResult, { passive: true });
+        document.getElementById('userName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') { document.getElementById('doneBtn').click(); }
+        });
+
+
+        // =========================================================
+        // 9. RANDOM NAMES (unchanged)
+        // =========================================================
+        var freestyleNames = [
+            'Zephyr', 'Azrael', 'Orion', 'Draven', 'Raven', 'Kael', 'Jareth',
+            'Thorne', 'Nyx', 'Fenris', 'Onyx', 'Wraith', 'Umbra', 'Morwen',
+            'Xerxes', 'Vesper', 'Riven', 'Sable', 'Taliesin', 'Lucian',
+            'Aether', 'Bram', 'Corvus', 'Dante', 'Gideon', 'Ignis', 'Lysander',
+            'Marius', 'Orpheus', 'Percival', 'Raphael', 'Severin', 'Theron',
+            'Valerian', 'Yorick', 'Zane', 'Balthazar', 'Caius', 'Helios',
+            'Icarus', 'Keres', 'Magnus', 'Nero', 'Phelan', 'Quintus', 'Ursa'
+        ];
+        var normalNames = [
+            'Shadow', 'Viper', 'Hunter', 'Storm', 'Blade', 'Frost', 'Reaper',
+            'Phoenix', 'Titan', 'Vortex', 'Cobra', 'Raptor', 'Fury', 'Havoc',
+            'Wraith', 'Ghost', 'Raven', 'Wolf', 'Hawk', 'Lion', 'Tiger',
+            'Spartan', 'Viking', 'Samurai', 'Knight', 'Ranger', 'Scout',
+            'Vanguard', 'Dragon', 'Griffin', 'Phoenix', 'Serpent', 'Hydra',
+            'Titan', 'Atlas', 'Apex', 'Nova', 'Stryker', 'Warden', 'Havoc'
+        ];
+
+        var currentNameMode = 'freestyle';
+        var currentNameList = [];
+        var usedNameIndices = [];
+
+        function getRandomNamesFromArray(arr, count) {
+            var available = arr.filter(function(_, idx) { return usedNameIndices.indexOf(idx) === -1; });
+            if (available.length === 0) return [];
+            var shuffled = available.sort(function() { return Math.random() - 0.5; });
+            var selected = shuffled.slice(0, Math.min(count, shuffled.length));
+            selected.forEach(function(name) {
+                var idx = arr.indexOf(name);
+                if (idx !== -1 && usedNameIndices.indexOf(idx) === -1) usedNameIndices.push(idx);
+            });
+            return selected;
+        }
+
+        function renderNameList(names) {
+            var listContainer = document.getElementById('nameList');
+            var noMoreMsg = document.getElementById('noMoreNames');
+            listContainer.innerHTML = '';
+            if (names.length === 0) { noMoreMsg.style.display = 'block'; return; }
+            noMoreMsg.style.display = 'none';
+            names.forEach(function(name) {
+                var item = document.createElement('div');
+                item.className = 'name-list-item';
+                item.textContent = name;
+                item.addEventListener('click', function() {
+                    document.getElementById('userName').value = name;
+                    updatePreview();
+                    document.getElementById('doneBtn').click();
+                    document.getElementById('nameListContainer').classList.remove('open');
+                });
+                listContainer.appendChild(item);
+            });
+        }
+
+        function loadRandomNames(mode) {
+            currentNameMode = mode;
+            usedNameIndices = [];
+            document.querySelectorAll('.random-header .random-btn').forEach(function(b) { b.classList.remove('active'); });
+            if (mode === 'freestyle') {
+                document.getElementById('randomFreestyleBtn').classList.add('active');
+                currentNameList = freestyleNames;
+            } else {
+                document.getElementById('randomNormalBtn').classList.add('active');
+                currentNameList = normalNames;
+            }
+            var container = document.getElementById('nameListContainer');
+            container.classList.add('open');
+            var newNames = getRandomNamesFromArray(currentNameList, 7);
+            renderNameList(newNames);
+            document.getElementById('noMoreNames').style.display = 'none';
+            document.getElementById('generateMoreBtn').style.display = 'inline-block';
+        }
+
+        function loadMoreNames() {
+            var newNames = getRandomNamesFromArray(currentNameList, 7);
+            if (newNames.length === 0) {
+                document.getElementById('noMoreNames').style.display = 'block';
+                document.getElementById('generateMoreBtn').style.display = 'none';
+                return;
+            }
+            renderNameList(newNames);
+            var remaining = currentNameList.filter(function(_, idx) { return usedNameIndices.indexOf(idx) === -1; });
+            if (remaining.length === 0) {
+                document.getElementById('noMoreNames').style.display = 'block';
+                document.getElementById('generateMoreBtn').style.display = 'none';
+            } else {
+                document.getElementById('noMoreNames').style.display = 'none';
+                document.getElementById('generateMoreBtn').style.display = 'inline-block';
+            }
+        }
+
+        loadRandomNames('freestyle');
+
+
+        // =========================================================
+        // 10. SEARCH INPUT EVENTS
+        // =========================================================
+        var si = document.getElementById('searchInput');
+        var sc = document.getElementById('searchClear');
+        var dd = document.getElementById('dropdown');
+
+        function doSearch() {
+            var q = si.value.trim();
+            sc.className = q ? 'search-clear show' : 'search-clear';
+            if (!q) { dd.className = 'dropdown'; return; }
+            var res = filterDevices(q);
+            if (!res.length) {
+                dd.innerHTML = '<div style="padding:12px; color:#6a4a8a;">No devices found for "' + q + '"</div>';
+                dd.className = 'dropdown show';
+                return;
+            }
+            dd.innerHTML = '';
+            res.forEach(function(m) {
+                var tier = (DB[m]) ? DB[m].tier : 'unknown';
+                var item = document.createElement('div');
+                item.textContent = m + ' (' + tier + ')';
+                item.addEventListener('mousedown', function(e) { e.preventDefault();
+                    selectModel(m); });
+                dd.appendChild(item);
+            });
+            dd.className = 'dropdown show';
+        }
+
+        si.addEventListener('input', doSearch);
+        si.addEventListener('keyup', doSearch);
+        sc.addEventListener('click', function() { si.value = '';
+            sc.className = 'search-clear';
+            dd.className = 'dropdown';
+            clearSelection();
+            si.focus(); });
+
+
+        // =========================================================
+        // 11. ACTIVE COUNTERS
+        // =========================================================
+        (function activeCounters() {
+            var visitEl = document.getElementById('visitCount');
+            var onlineEl = document.getElementById('onlineCount');
+
+            function randomTotal() { return Math.floor(Math.random() * 500) + 500; }
+
+            function randomOnline() { return Math.floor(Math.random() * 10) + 3; }
+
+            var currentTotal = randomTotal();
+
+            function updateTotal() {
+                var delta = Math.floor(Math.random() * 21) - 10;
+                var newTotal = currentTotal + delta;
+                if (newTotal < 500) newTotal = 500 + Math.floor(Math.random() * 50);
+                if (newTotal > 999) newTotal = 999 - Math.floor(Math.random() * 50);
+                currentTotal = newTotal;
+                visitEl.textContent = currentTotal;
+            }
+
+            function updateOnline() { onlineEl.textContent = randomOnline(); }
+
+            visitEl.textContent = currentTotal;
+            updateOnline();
+            setInterval(updateTotal, 20000);
+            setInterval(updateOnline, 8000);
+        })();
+
+
+        // =========================================================
+        // 12. PHANTOM EFFECTS (unchanged)
+        // =========================================================
+        (function phantomEffects() {
+            var layer = document.getElementById('effect-layer');
+            var lastX = 0,
+                lastY = 0;
+
+            function createTrailParticle(x, y) {
+                var el = document.createElement('div');
+                el.className = 'trail-particle';
+                var size = 4 + Math.random() * 6;
+                el.style.width = size + 'px';
+                el.style.height = size + 'px';
+                el.style.left = (x - size / 2) + 'px';
+                el.style.top = (y - size / 2) + 'px';
+                var angle = Math.random() * Math.PI * 2;
+                var dist = 10 + Math.random() * 20;
+                el.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+                el.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+                layer.appendChild(el);
+                setTimeout(function() { if (el.parentNode) el.remove(); }, 700);
+            }
+
+            function createRipple(x, y) {
+                var maxSize = 30 + Math.random() * 20;
+                var ring1 = document.createElement('div');
+                ring1.className = 'ripple-ring';
+                ring1.style.left = x + 'px';
+                ring1.style.top = y + 'px';
+                ring1.style.width = maxSize + 'px';
+                ring1.style.height = maxSize + 'px';
+                ring1.style.borderColor = 'rgba(155, 109, 255, ' + (0.3 + Math.random() * 0.3) + ')';
+                layer.appendChild(ring1);
+
+                var ring2 = document.createElement('div');
+                ring2.className = 'ripple-ring';
+                ring2.style.left = x + 'px';
+                ring2.style.top = y + 'px';
+                ring2.style.width = (maxSize * 0.6) + 'px';
+                ring2.style.height = (maxSize * 0.6) + 'px';
+                ring2.style.borderColor = 'rgba(200, 150, 255, 0.3)';
+                ring2.style.animationDelay = '0.08s';
+                layer.appendChild(ring2);
+
+                setTimeout(function() {
+                    if (ring1.parentNode) ring1.remove();
+                    if (ring2.parentNode) ring2.remove();
+                }, 800);
+            }
+
+            function handleMove(e) {
+                var x, y;
+                if (e.touches) { x = e.touches[0].clientX;
+                    y = e.touches[0].clientY; } else { x = e.clientX;
+                    y = e.clientY; }
+                var dx = x - lastX,
+                    dy = y - lastY;
+                if (Math.sqrt(dx * dx + dy * dy) < 8) return;
+                lastX = x;
+                lastY = y;
+                createTrailParticle(x, y);
+                if (Math.random() > 0.7) {
+                    createTrailParticle(x + (Math.random() - 0.5) * 15, y + (Math.random() - 0.5) * 15);
+                }
+            }
+
+            function handleClick(e) {
+                var x, y;
+                if (e.touches) { x = e.touches[0].clientX;
+                    y = e.touches[0].clientY; } else { x = e.clientX;
+                    y = e.clientY; }
+                createRipple(x, y);
+                setTimeout(function() {
+                    createTrailParticle(x + (Math.random() - 0.5) * 30, y + (Math.random() - 0.5) * 30);
+                }, 50);
+            }
+
+            window.addEventListener('mousemove', handleMove);
+            window.addEventListener('touchmove', handleMove, { passive: true });
+            document.addEventListener('click', handleClick);
+            document.addEventListener('touchstart', handleClick, { passive: true });
+            window.addEventListener('beforeunload', function() {
+                window.removeEventListener('mousemove', handleMove);
+                window.removeEventListener('touchmove', handleMove);
+                document.removeEventListener('click', handleClick);
+                document.removeEventListener('touchstart', handleClick);
+            });
+        })();
+
+
+        // =========================================================
+        // 13. AUDIO PRELOAD, INTRO, BIRDS (unchanged)
+        // =========================================================
+        var audio = document.getElementById('bg-music');
+        audio.volume = 0.25;
+        audio.preload = 'auto';
+        audio.load();
+
+        var audioCtx = null;
+        var audioCtxResumed = false;
+
+        function resumeAudioContext() {
+            if (audioCtxResumed) return;
+            try {
+                if (!audioCtx) { audioCtx = new(window.AudioContext || window.webkitAudioContext)(); }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume().then(function() { audioCtxResumed = true; }).catch(function() {});
+                } else { audioCtxResumed = true; }
+            } catch (e) {}
+        }
+        document.addEventListener('click', resumeAudioContext);
+        document.addEventListener('touchstart', resumeAudioContext);
+        document.addEventListener('keydown', resumeAudioContext);
+
+        var introLines = [
+            "Welcome to Phantom ・〆 Guild name generator.",
+            "Here, you get your official Phantom name signature and text style.",
+            "Just type your name below and see it transform.",
+            "Tap the result to copy it."
+        ];
+        var introContainer = document.getElementById('intro-text');
+        var introScreen = document.getElementById('intro-screen');
+        var mainApp = document.getElementById('main-app');
+        var clickPrompt = document.getElementById('click-prompt');
+        var lineIndex = 0;
+        var introComplete = false;
+
+        function typeLine() {
+            if (lineIndex >= introLines.length) {
+                introComplete = true;
+                clickPrompt.classList.add('show');
+                return;
+            }
+            var currentLine = introLines[lineIndex];
+            var lineElement = document.createElement('div');
+            lineElement.className = 'line';
+            introContainer.appendChild(lineElement);
+            var currentChar = 0;
+
+            function typeChar() {
+                if (currentChar < currentLine.length) {
+                    var char = currentLine[currentChar];
+                    lineElement.textContent += char;
+                    currentChar++;
+                    setTimeout(typeChar, 45);
+                } else {
+                    var cursor = document.createElement('span');
+                    cursor.className = 'cursor-blink';
+                    lineElement.appendChild(cursor);
+                    lineIndex++;
+                    setTimeout(typeLine, 300);
+                }
+            }
+            typeChar();
+        }
+        window.addEventListener('load', typeLine);
+
+        var musicStarted = false;
+
+        function playMusic() {
+            if (musicStarted) return;
+            var playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(function() { musicStarted = true; }).catch(function() {});
+            }
+        }
+
+        introScreen.addEventListener('click', function() {
+            if (introComplete) {
+                introScreen.classList.add('fade-out');
+                mainApp.classList.add('visible');
+                playMusic();
+                setTimeout(function() { startBirds(); }, 300);
+            }
+        });
+        introScreen.addEventListener('touchstart', function() {
+            if (introComplete) {
+                introScreen.classList.add('fade-out');
+                mainApp.classList.add('visible');
+                playMusic();
+                setTimeout(function() { startBirds(); }, 300);
+            }
+        }, { passive: true });
+
+        document.addEventListener('click', function() {
+            if (introComplete && !musicStarted) { playMusic(); }
+        });
+
+        audio.addEventListener('ended', function() { audio.play().catch(function() {}); });
+
+        // =========================================================
+        // 14. BIRDS (unchanged)
+        // =========================================================
+        var canvas = document.getElementById('birdCanvas');
+        var ctx = canvas.getContext('2d');
+        var birds = [];
+        var particles = [];
+        var animationId = null;
+        var birdsActive = false;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function getBirdCount() {
+            var w = window.innerWidth,
+                h = window.innerHeight;
+            var area = w * h;
+            var count = Math.floor(area / 200000);
+            count = Math.max(10, Math.min(45, count));
+            return count;
+        }
+
+        function Bird() {
+            this.reset = function() {
+                var margin = 100;
+                var side = Math.floor(Math.random() * 4);
+                if (side === 0) { this.x = Math.random() * canvas.width;
+                    this.y = -margin; } else if (side === 1) { this.x = canvas.width + margin;
+                    this.y = Math.random() * canvas.height; } else if (side === 2) { this.x = Math.random() * canvas.width;
+                    this.y = canvas.height + margin; } else { this.x = -margin;
+                    this.y = Math.random() * canvas.height; }
+                this.targetX = canvas.width / 2 + (Math.random() - 0.5) * 250;
+                this.targetY = canvas.height / 2 - 50 + (Math.random() - 0.5) * 150;
+                this.speed = 0.5 + Math.random() * 0.5;
+                this.angle = 0;
+                this.size = 10 + Math.random() * 8;
+                this.wingPhase = Math.random() * Math.PI * 2;
+                this.wingSpeed = 0.06 + Math.random() * 0.03;
+                this.curvePhase = Math.random() * Math.PI * 2;
+                this.curveSpeed = 0.004 + Math.random() * 0.008;
+                this.alive = true;
+                this.opacity = 1;
+                this.disappearing = false;
+                this.disappearTimer = 0;
+            };
+            this.update = function() {
+                if (this.disappearing) {
+                    this.disappearTimer += 0.02;
+                    this.opacity = 1 - this.disappearTimer;
+                    if (this.disappearTimer >= 1) this.alive = false;
+                    return;
+                }
+                var dx = this.targetX - this.x;
+                var dy = this.targetY - this.y;
+                var dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist > 5) {
+                    var angle = Math.atan2(dy, dx);
+                    var curveAngle = Math.sin(this.curvePhase) * 0.12;
+                    var moveAngle = angle + curveAngle;
+                    this.x += Math.cos(moveAngle) * this.speed;
+                    this.y += Math.sin(moveAngle) * this.speed;
+                    this.curvePhase += this.curveSpeed;
+                    this.y += Math.sin(this.curvePhase * 2) * 0.2;
+                } else {
+                    this.targetX = canvas.width / 2 + (Math.random() - 0.5) * 350;
+                    this.targetY = canvas.height / 2 - 50 + (Math.random() - 0.5) * 250;
+                }
+                this.wingPhase += this.wingSpeed;
+                this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
+                var logoEl = document.querySelector('.guild-logo');
+                if (logoEl) {
+                    var rect = logoEl.getBoundingClientRect();
+                    var logoRect = {
+                        x: rect.left + rect.width * 0.1,
+                        y: rect.top + rect.height * 0.1,
+                        width: rect.width * 0.8,
+                        height: rect.height * 0.8
+                    };
+                    if (this.x > logoRect.x && this.x < logoRect.x + logoRect.width &&
+                        this.y > logoRect.y && this.y < logoRect.y + logoRect.height) {
+                        this.triggerDisappear();
+                    }
+                }
+            };
+            this.triggerDisappear = function() {
+                if (this.disappearing) return;
+                this.disappearing = true;
+                this.disappearTimer = 0;
+                spawnParticles(this.x, this.y);
+            };
+            this.draw = function() {
+                if (!this.alive || this.opacity <= 0) return;
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                var wingFlap = Math.sin(this.wingPhase);
+                var size = this.size;
+                ctx.fillStyle = '#5a3a7a';
+                ctx.shadowColor = '#7a4a9a';
+                ctx.shadowBlur = 8;
+                ctx.beginPath();
+                ctx.ellipse(0, 0, size * 0.5, size * 0.35, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(size * 0.4, -size * 0.08, size * 0.2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#3a2a4a';
+                ctx.beginPath();
+                ctx.moveTo(size * 0.6, -size * 0.08);
+                ctx.lineTo(size * 0.75, -size * 0.04);
+                ctx.lineTo(size * 0.6, 0);
+                ctx.fill();
+                ctx.fillStyle = '#4a2a5a';
+                ctx.beginPath();
+                ctx.ellipse(-size * 0.25, -size * 0.15 + wingFlap * size * 0.12, size * 0.4, size * 0.25, -0.2 + wingFlap *
+                    0.15, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(-size * 0.25, size * 0.15 - wingFlap * size * 0.12, size * 0.4, size * 0.25, 0.2 - wingFlap *
+                    0.15, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#3a2a4a';
+                ctx.beginPath();
+                ctx.moveTo(-size * 0.5, -size * 0.12);
+                ctx.lineTo(-size * 0.7, -size * 0.2 + wingFlap * size * 0.08);
+                ctx.lineTo(-size * 0.5, size * 0.12);
+                ctx.fill();
+                ctx.restore();
+                ctx.save();
+                ctx.globalAlpha = this.opacity * 0.1;
+                ctx.shadowColor = '#9b6dff';
+                ctx.shadowBlur = 20;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, size * 0.8, 0, Math.PI * 2);
+                ctx.fillStyle = '#6a2faf';
+                ctx.fill();
+                ctx.restore();
+            };
+            this.reset();
+        }
+
+        function spawnParticles(x, y) {
+            var count = 15 + Math.floor(Math.random() * 10);
+            for (var i = 0; i < count; i++) {
+                var angle = Math.random() * Math.PI * 2;
+                var speed = 0.5 + Math.random() * 2;
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed - 0.5,
+                    life: 1,
+                    size: 2 + Math.random() * 3,
+                    color: 'hsl(' + (260 + Math.random() * 30) + ', 70%, ' + (50 + Math.random() * 30) + '%)'
+                });
+            }
+        }
+
+        function updateParticles() {
+            for (var i = particles.length - 1; i >= 0; i--) {
+                var p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.04;
+                p.life -= 0.02;
+                if (p.life <= 0) particles.splice(i, 1);
+            }
+        }
+
+        function drawParticles() {
+            for (var i = 0; i < particles.length; i++) {
+                var p = particles[i];
+                ctx.save();
+                ctx.globalAlpha = p.life * 0.6;
+                ctx.shadowColor = '#9b6dff';
+                ctx.shadowBlur = 10;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function animateBirds() {
+            if (!birdsActive) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (var i = 0; i < birds.length; i++) {
+                var bird = birds[i];
+                bird.update();
+                bird.draw();
+            }
+            birds = birds.filter(function(b) { return b.alive; });
+            updateParticles();
+            drawParticles();
+            var targetCount = getBirdCount();
+            while (birds.length < targetCount) birds.push(new Bird());
+            while (birds.length > targetCount) {
+                var toRemove = birds.pop();
+                if (toRemove) toRemove.alive = false;
+            }
+            animationId = requestAnimationFrame(animateBirds);
+        }
+
+        function startBirds() {
+            if (birdsActive) return;
+            birdsActive = true;
+            var count = getBirdCount();
+            for (var i = 0; i < count; i++) {
+                var bird = new Bird();
+                bird.x = Math.random() * canvas.width;
+                bird.y = Math.random() * canvas.height;
+                bird.targetX = canvas.width / 2 + (Math.random() - 0.5) * 250;
+                bird.targetY = canvas.height / 2 - 50 + (Math.random() - 0.5) * 150;
+                birds.push(bird);
+            }
+            animateBirds();
+        }
+
+        window.addEventListener('resize', function() {
+            resizeCanvas();
+            if (birdsActive) {
+                var targetCount = getBirdCount();
+                while (birds.length < targetCount) birds.push(new Bird());
+                while (birds.length > targetCount) {
+                    var toRemove = birds.pop();
+                    if (toRemove) toRemove.alive = false;
+                }
+            }
+        });
+
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden && birdsActive) {
+                if (animationId) { cancelAnimationFrame(animationId);
+                    animationId = null; }
+            } else if (!document.hidden && birdsActive && !animationId) {
+                animateBirds();
+            }
+        });
+
+        // =========================================================
+        // 15. GLOBAL EXPOSURE
+        // =========================================================
+        window.switchTab = switchTab;
+        window.detectDevice = detectDevice;
+        window.generateFromAuto = generateFromAuto;
+        window.generateFromSearch = generateFromSearch;
+        window.copySettings = copySettings;
+        window.resetGenerator = resetGenerator;
+        window.filterDevices = filterDevices;
+        window.selectModel = selectModel;
+        window.clearSearch = clearSearch;
+        window.clearSelection = clearSelection;
+        window.loadRandomNames = loadRandomNames;
+        window.loadMoreNames = loadMoreNames;
+        window.updatePreview = updatePreview;
+        window.copyResult = copyResult;
+
+        console.log('🔥 Phantom Guild – Sensitivity generator with 200 max & age boost.');
+        console.log('📱 Loaded ' + Object.keys(DB).length + ' preset devices.');
+        console.log('🔍 Loaded ' + PATTERNS.length + ' UA patterns.');
+    </script>
+</body>
+</html>
