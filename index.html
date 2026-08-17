@@ -263,171 +263,8 @@
             .terminal-reload-btn { padding: 12px 30px; font-size: 0.9rem; }
         }
 
-        /* =========================================================
-           PHANTOM SHIELD HUD – ADVANCED FIXED VERSION (MOBILE FIXED)
-           ========================================================= */
-        #shield-hud {
-            position: fixed;
-            top: 24px;
-            right: 24px;
-            z-index: 9998;
-            min-width: 210px;
-            max-width: 280px;
-            background: rgba(6, 0, 14, 0.8);
-            backdrop-filter: blur(18px) saturate(1.6);
-            -webkit-backdrop-filter: blur(18px) saturate(1.6);
-            border: 1px solid rgba(0, 255, 200, 0.2);
-            border-radius: 20px;
-            padding: 18px 22px 14px 22px;
-            font-family: 'Inter', 'Courier New', monospace;
-            box-shadow: 0 0 40px rgba(0, 255, 200, 0.05), inset 0 0 40px rgba(0, 255, 200, 0.02);
-            transition: all 0.3s ease;
-            pointer-events: none;
-            user-select: none;
-            line-height: 1.5;
-            animation: hudGlow 3s ease-in-out infinite alternate;
-        }
-        @keyframes hudGlow {
-            0% { border-color: rgba(0, 255, 200, 0.15); box-shadow: 0 0 30px rgba(0, 255, 200, 0.02); }
-            100% { border-color: rgba(0, 255, 200, 0.35); box-shadow: 0 0 60px rgba(0, 255, 200, 0.07); }
-        }
-        .hud-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-        }
-        .hud-shield {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #66ffdd;
-            font-size: 0.85rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            text-shadow: 0 0 20px rgba(0, 255, 200, 0.15);
-        }
-        .hud-shield .shield-icon { font-size: 1.1rem; filter: drop-shadow(0 0 8px rgba(0, 255, 200, 0.3)); }
-        .hud-shield .hud-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #66ffdd;
-            border-radius: 50%;
-            box-shadow: 0 0 15px #66ffdd, 0 0 30px rgba(0, 255, 200, 0.3);
-            animation: dotBlink 1.2s step-end infinite;
-        }
-        .hud-uptime {
-            color: #aaffee;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            font-variant-numeric: tabular-nums;
-            background: rgba(0, 255, 200, 0.06);
-            padding: 2px 12px;
-            border-radius: 30px;
-            border: 1px solid rgba(0, 255, 200, 0.08);
-            text-shadow: 0 0 8px rgba(0, 255, 200, 0.1);
-        }
-        .hud-encryption {
-            color: #88ffcc;
-            font-size: 0.6rem;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            border-top: 1px solid rgba(0, 255, 200, 0.06);
-            padding-top: 6px;
-            margin-top: 6px;
-            text-align: center;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-        .hud-encryption .lock-icon { font-size: 0.7rem; opacity: 0.9; filter: drop-shadow(0 0 6px rgba(0, 255, 200, 0.2)); }
-        .hud-threat-wrap {
-            overflow: hidden;
-            height: 24px; /* Increased height to prevent cut-off */
-            margin-top: 6px;
-            border-top: 1px solid rgba(0, 255, 200, 0.05);
-            padding-top: 4px;
-            position: relative;
-        }
-        .hud-threat {
-            display: inline-block;
-            white-space: nowrap;
-            font-size: 0.62rem;
-            color: #88ccff;
-            letter-spacing: 1px;
-            font-weight: 400;
-            animation: threatScroll 18s linear infinite;
-            padding-left: 0;
-            will-change: transform;
-            line-height: 1.6; /* Ensure vertical alignment */
-        }
-        @keyframes threatScroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-        .hud-threat .threat-badge {
-            display: inline-block;
-            background: rgba(0, 255, 200, 0.08);
-            padding: 0 10px;
-            border-radius: 20px;
-            color: #66ffdd;
-            font-weight: 600;
-            margin-right: 6px;
-        }
-        .hud-threat .threat-divider { margin: 0 14px; opacity: 0.15; color: #66ffdd; }
-        .hud-threat .threat-badge.pass { color: #66ffdd; }
-        .hud-threat .threat-badge.warn { color: #ffcc44; }
-        .hud-threat .threat-badge.danger { color: #ff4466; }
-        .hud-live {
-            position: absolute;
-            bottom: 6px;
-            right: 16px;
-            font-size: 0.45rem;
-            color: rgba(0, 255, 200, 0.25);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .hud-live .live-dot {
-            display: inline-block;
-            width: 4px;
-            height: 4px;
-            background: #66ffdd;
-            border-radius: 50%;
-            animation: dotBlink 1s step-end infinite;
-        }
-        #shield-hud:hover {
-            border-color: rgba(0, 255, 200, 0.5);
-            box-shadow: 0 0 70px rgba(0, 255, 200, 0.1);
-        }
-        @media (max-width: 480px) {
-            #shield-hud {
-                top: 14px;
-                right: 14px;
-                padding: 12px 14px 10px 14px;
-                min-width: 150px;
-                max-width: 190px;
-                border-radius: 14px;
-            }
-            .hud-shield { font-size: 0.7rem; gap: 4px; }
-            .hud-shield .shield-icon { font-size: 0.9rem; }
-            .hud-uptime { font-size: 0.6rem; padding: 1px 8px; }
-            .hud-encryption { font-size: 0.5rem; padding-top: 4px; margin-top: 4px; }
-            .hud-threat-wrap { height: 20px; } /* Increased for mobile */
-            .hud-threat { font-size: 0.5rem; animation-duration: 14s; line-height: 1.4; }
-            .hud-live { font-size: 0.4rem; bottom: 4px; right: 10px; }
-        }
-
         /* ============================
-           ALL STYLES – SAME AS BEFORE
+           MAIN STYLES – LIGHT & FAST
            ============================ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -439,7 +276,6 @@
             font-family: 'Segoe UI', 'Arial', sans-serif;
             padding: 20px;
             overflow-y: auto;
-            position: relative;
             background: radial-gradient(circle at center, #12081a, #07020a);
             -webkit-overflow-scrolling: touch;
         }
@@ -452,7 +288,6 @@
             height: 100vh;
             z-index: 9999;
             pointer-events: none;
-            isolation: isolate;
         }
 
         #watermark {
@@ -466,22 +301,22 @@
             color: #b396d9;
             letter-spacing: 6px;
             text-transform: uppercase;
-            opacity: 0.9;
+            opacity: 0.8;
             pointer-events: none;
-            text-shadow: 0 0 30px rgba(155,109,255,0.6), 0 0 60px rgba(155,109,255,0.3), 0 0 100px rgba(100,40,180,0.2);
+            text-shadow: 0 0 30px rgba(155,109,255,0.6);
             font-family: 'Segoe UI', sans-serif;
             white-space: nowrap;
-            background: rgba(10,5,20,0.5);
+            background: rgba(10,5,20,0.4);
             padding: 8px 28px;
             border-radius: 40px;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(155,109,255,0.25);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(155,109,255,0.2);
             animation: watermarkPulse 2.5s ease-in-out infinite alternate;
         }
         @keyframes watermarkPulse {
-            0% { text-shadow: 0 0 30px rgba(155,109,255,0.6), 0 0 60px rgba(155,109,255,0.3), 0 0 100px rgba(100,40,180,0.2); border-color: rgba(155,109,255,0.25); }
-            100% { text-shadow: 0 0 50px rgba(155,109,255,1), 0 0 100px rgba(155,109,255,0.5), 0 0 150px rgba(100,40,180,0.3); border-color: rgba(155,109,255,0.5); }
+            0% { text-shadow: 0 0 30px rgba(155,109,255,0.6), 0 0 60px rgba(155,109,255,0.3); border-color: rgba(155,109,255,0.25); }
+            100% { text-shadow: 0 0 50px rgba(155,109,255,1), 0 0 100px rgba(155,109,255,0.5); border-color: rgba(155,109,255,0.5); }
         }
 
         #effect-layer {
@@ -501,7 +336,6 @@
             background: radial-gradient(circle, rgba(155,109,255,0.6), rgba(100,40,180,0.1));
             box-shadow: 0 0 10px rgba(155,109,255,0.2);
             animation: trailFade 0.7s ease-out forwards;
-            will-change: transform, opacity;
         }
         @keyframes trailFade {
             0% { opacity: 0.8; transform: translate(0,0) scale(1); }
@@ -514,7 +348,6 @@
             border: 1px solid rgba(155,109,255,0.5);
             box-shadow: 0 0 20px rgba(155,109,255,0.15);
             animation: rippleExpand 0.8s ease-out forwards;
-            will-change: transform, opacity;
         }
         @keyframes rippleExpand {
             0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
@@ -523,7 +356,6 @@
         .ripple-ring:nth-child(2) {
             animation-delay: 0.08s;
             border-color: rgba(200,150,255,0.3);
-            border-width: 1px;
         }
 
         #intro-screen {
@@ -540,8 +372,6 @@
             opacity: 1;
             visibility: visible;
             cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-            overflow-y: auto;
         }
         #intro-screen.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
 
@@ -556,8 +386,6 @@
             line-height: 1.8;
             font-family: 'Courier New', monospace;
             letter-spacing: 1px;
-            z-index: 2;
-            position: relative;
         }
         #intro-text .line { opacity: 0; transform: translateY(8px); animation: lineFadeIn 0.3s forwards; }
         @keyframes lineFadeIn { to { opacity: 1; transform: translateY(0); } }
@@ -578,9 +406,6 @@
             letter-spacing: 4px;
             opacity: 0;
             display: none;
-            font-family: 'Segoe UI', sans-serif;
-            z-index: 2;
-            position: relative;
         }
         #click-prompt.show {
             display: block;
@@ -601,8 +426,6 @@
             max-height: 90vh;
             overflow-y: auto;
             padding: 5px;
-            position: relative;
-            z-index: 2;
         }
         #main-app.visible { opacity: 1; pointer-events: all; }
 
@@ -625,9 +448,6 @@
             display: block;
             width: 100%;
             margin: 0 auto 15px auto;
-            z-index: 2;
-            padding: 0;
-            background: transparent;
         }
         .logo-wrapper::after {
             content: '';
@@ -670,8 +490,6 @@
             padding: 8px 20px;
             background: rgba(0,0,0,0.2);
             border-radius: 30px;
-            position: relative;
-            z-index: 3;
         }
 
         .result-wrapper {
@@ -684,9 +502,6 @@
             margin-bottom: 15px;
             transition: 0.3s;
             cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-            position: relative;
-            z-index: 3;
         }
         .result-wrapper:hover { border-color: #9b6dff; box-shadow: 0 0 30px rgba(100,40,200,0.15); }
         .result-wrapper:active { transform: scale(0.98); }
@@ -720,7 +535,6 @@
             opacity: 0;
             transition: opacity 0.5s ease;
             letter-spacing: 2px;
-            font-family: 'Segoe UI', sans-serif;
         }
         .result-message.show { opacity: 1; }
 
@@ -734,8 +548,6 @@
 
         .copy-btn-container {
             margin: 10px 0 20px 0;
-            position: relative;
-            z-index: 3;
         }
         .copy-btn {
             background: rgba(100,40,180,0.25);
@@ -750,17 +562,13 @@
             transition: 0.3s;
             letter-spacing: 2px;
             display: inline-block;
-            -webkit-tap-highlight-color: transparent;
         }
         .copy-btn:hover { background: rgba(100,40,180,0.4); border-color: #9b6dff; box-shadow: 0 0 20px rgba(100,40,200,0.15); }
         .copy-btn:active { transform: scale(0.95); }
 
         .random-section {
             margin: 20px 0 15px 0;
-            position: relative;
-            z-index: 3;
         }
-
         .random-section .random-header {
             display: flex;
             gap: 10px;
@@ -768,7 +576,6 @@
             flex-wrap: wrap;
             margin-bottom: 12px;
         }
-
         .random-section .random-header .random-btn {
             background: rgba(100,40,180,0.15);
             border: 1px solid rgba(150,100,220,0.2);
@@ -780,7 +587,6 @@
             transition: 0.3s;
             letter-spacing: 1px;
             display: inline-block;
-            -webkit-tap-highlight-color: transparent;
         }
         .random-section .random-header .random-btn:hover {
             background: rgba(100,40,180,0.3);
@@ -806,14 +612,12 @@
             max-height: 600px;
             opacity: 1;
         }
-
         .random-section .name-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 8px;
             padding: 10px 0;
         }
-
         .random-section .name-list-item {
             background: rgba(100,40,180,0.1);
             border: 1px solid rgba(150,100,220,0.15);
@@ -862,7 +666,6 @@
 
         .input-area {
             position: relative;
-            z-index: 3;
         }
         .input-area label {
             display: block;
@@ -907,9 +710,6 @@
             transition: 0.3s;
             box-shadow: 0 0 30px rgba(100,40,200,0.2);
             text-transform: uppercase;
-            position: relative;
-            z-index: 3;
-            -webkit-tap-highlight-color: transparent;
         }
         .btn:hover { transform: scale(1.03); background: linear-gradient(135deg, #8235d9, #4f1d8a); box-shadow: 0 0 40px rgba(130,50,220,0.4); }
         .btn:active { transform: scale(0.95); }
@@ -929,23 +729,15 @@
             transition: 0.3s;
             border: none;
             cursor: pointer;
-            z-index: 3;
-            position: relative;
-            -webkit-tap-highlight-color: transparent;
         }
         .buy-btn:hover { transform: scale(1.03); box-shadow: 0 0 40px rgba(255,107,53,0.5); }
         .buy-btn:active { transform: scale(0.95); }
 
-        /* ========================================================= */
-        /* ===== SENSITIVITY GENERATOR STYLES – FIXED FOR MOBILE ===== */
-        /* ========================================================= */
-
+        /* ===== SENSITIVITY GENERATOR ===== */
         .sensitivity-section {
             margin-top: 30px;
             padding-top: 20px;
             border-top: 1px solid rgba(150,100,220,0.2);
-            position: relative;
-            z-index: 3;
         }
         .sensitivity-section h2 {
             color: #e4d5ff;
@@ -987,12 +779,6 @@
             color: #f2e9ff;
             box-shadow: 0 0 30px rgba(100,40,200,0.15);
         }
-        .tab-btn svg {
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 6px;
-        }
-
         .panel { display: none; }
         .panel.active { display: block; }
 
@@ -1080,8 +866,6 @@
             display: none;
         }
         .search-wrap .search-clear.show { display: block; }
-        .search-wrap .search-clear:hover { color: #b396d9; }
-
         .dropdown {
             max-height: 200px;
             overflow-y: auto;
@@ -1117,18 +901,8 @@
             margin-top: 15px;
         }
         .selected-device.show { display: flex; }
-        .selected-device .sd-name {
-            color: #f2e9ff;
-            font-weight: 600;
-            flex: 1;
-        }
-        .selected-device .sd-clear {
-            background: none;
-            border: none;
-            color: #6a4a8a;
-            cursor: pointer;
-            padding: 4px;
-        }
+        .selected-device .sd-name { color: #f2e9ff; font-weight: 600; flex: 1; }
+        .selected-device .sd-clear { background: none; border: none; color: #6a4a8a; cursor: pointer; padding: 4px; }
         .selected-device .sd-clear:hover { color: #ff6b6b; }
 
         .btn-detect {
@@ -1149,10 +923,7 @@
             justify-content: center;
             gap: 10px;
         }
-        .btn-detect:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 50px rgba(130,50,220,0.4);
-        }
+        .btn-detect:hover { transform: scale(1.02); box-shadow: 0 0 50px rgba(130,50,220,0.4); }
         .btn-detect:active { transform: scale(0.98); }
         .btn-detect .pulse {
             width: 10px;
@@ -1183,11 +954,7 @@
             margin: 0 auto 10px;
         }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        .loader .loader-label {
-            color: #b396d9;
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-        }
+        .loader .loader-label { color: #b396d9; font-size: 0.8rem; letter-spacing: 2px; }
 
         .detected-panel {
             display: none;
@@ -1238,11 +1005,7 @@
             outline: none;
         }
         .manual-age-input:focus { border-color: #9b6dff; }
-        .manual-age-unit {
-            color: #b396d9;
-            font-weight: 700;
-            padding: 0 6px;
-        }
+        .manual-age-unit { color: #b396d9; font-weight: 700; padding: 0 6px; }
         .manual-age-apply {
             padding: 12px 24px;
             border-radius: 30px;
@@ -1271,7 +1034,6 @@
         }
         .age-chip:hover { border-color: #9b6dff; }
         .age-chip.selected { border-color: #9b6dff; background: rgba(100,40,180,0.3); }
-
         .age-note {
             color: #6a4a8a;
             font-size: 0.7rem;
@@ -1300,10 +1062,7 @@
             justify-content: center;
             gap: 10px;
         }
-        .btn-generate:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 50px rgba(255,107,53,0.4);
-        }
+        .btn-generate:hover { transform: scale(1.02); box-shadow: 0 0 50px rgba(255,107,53,0.4); }
         .btn-generate:active { transform: scale(0.98); }
 
         .results {
@@ -1359,23 +1118,12 @@
             padding: 10px;
             text-align: center;
         }
-        .spec-box .spec-lbl {
-            color: #6a4a8a;
-            font-size: 0.6rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .spec-box .spec-val {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-top: 2px;
-        }
+        .spec-box .spec-lbl { color: #6a4a8a; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; }
+        .spec-box .spec-val { font-size: 1.1rem; font-weight: 700; margin-top: 2px; }
         .spec-box .spec-val.ora { color: #ff9f43; }
         .spec-box .spec-val.cya { color: #00d2d3; }
 
-        .perf-wrap, .age-impact {
-            margin-bottom: 12px;
-        }
+        .perf-wrap, .age-impact { margin-bottom: 12px; }
         .perf-lbl, .ai-lbl {
             display: flex;
             justify-content: space-between;
@@ -1384,9 +1132,7 @@
             letter-spacing: 1px;
             text-transform: uppercase;
         }
-        .perf-lbl span:last-child, .ai-lbl span:last-child {
-            font-weight: 700;
-        }
+        .perf-lbl span:last-child, .ai-lbl span:last-child { font-weight: 700; }
         .perf-track, .ai-track {
             width: 100%;
             height: 4px;
@@ -1410,24 +1156,15 @@
             transition: width 0.6s ease;
         }
 
-        .sensi-list {
-            margin: 15px 0;
-        }
+        .sensi-list { margin: 15px 0; }
         .sensi-row {
             display: flex;
             justify-content: space-between;
             padding: 8px 0;
             border-bottom: 1px solid rgba(255,255,255,0.03);
         }
-        .sensi-row .sensi-label {
-            color: #b396d9;
-            font-size: 0.9rem;
-        }
-        .sensi-row .sensi-value {
-            color: #b3ff9b;
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
+        .sensi-row .sensi-label { color: #b396d9; font-size: 0.9rem; }
+        .sensi-row .sensi-value { color: #b3ff9b; font-weight: 700; font-size: 1.1rem; }
 
         .disclaimer {
             font-size: 0.7rem;
@@ -1462,39 +1199,15 @@
             gap: 8px;
             min-width: 120px;
         }
-        .btn-action:hover {
-            border-color: #9b6dff;
-            background: rgba(100,40,180,0.2);
-        }
-        .btn-action.btn-copy:hover {
-            border-color: #66ff33;
-            color: #b3ff9b;
-        }
-        .btn-action.btn-reset:hover {
-            border-color: #ff6b6b;
-            color: #ff6b6b;
-        }
+        .btn-action:hover { border-color: #9b6dff; background: rgba(100,40,180,0.2); }
+        .btn-action.btn-copy:hover { border-color: #66ff33; color: #b3ff9b; }
+        .btn-action.btn-reset:hover { border-color: #ff6b6b; color: #ff6b6b; }
 
-        .copy-ok {
-            display: none;
-            color: #b3ff9b;
-            font-weight: 700;
-            text-align: center;
-            margin-top: 10px;
-            font-size: 0.9rem;
-        }
+        .copy-ok { display: none; color: #b3ff9b; font-weight: 700; text-align: center; margin-top: 10px; font-size: 0.9rem; }
         .copy-ok.show { display: block; }
 
-        .tip-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .tip {
-            display: flex;
-            gap: 12px;
-            align-items: flex-start;
-        }
+        .tip-list { display: flex; flex-direction: column; gap: 12px; }
+        .tip { display: flex; gap: 12px; align-items: flex-start; }
         .tip .tip-n {
             min-width: 28px;
             height: 28px;
@@ -1508,11 +1221,7 @@
             color: #9b6dff;
             flex-shrink: 0;
         }
-        .tip .tip-t {
-            color: #b396d9;
-            font-size: 0.85rem;
-            line-height: 1.5;
-        }
+        .tip .tip-t { color: #b396d9; font-size: 0.85rem; line-height: 1.5; }
         .tip .tip-t strong { color: #f2e9ff; }
 
         .active-counters {
@@ -1523,9 +1232,6 @@
             color: #6a4a8a;
             font-size: 0.7rem;
             letter-spacing: 1px;
-            z-index: 3;
-            position: relative;
-            font-family: 'Segoe UI', sans-serif;
         }
         .active-counters .stat {
             display: flex;
@@ -1533,10 +1239,7 @@
             align-items: center;
             gap: 6px;
         }
-        .active-counters .stat span {
-            color: #b396d9;
-            font-weight: 700;
-        }
+        .active-counters .stat span { color: #b396d9; font-weight: 700; }
         .active-counters .stat .online-dot {
             display: inline-block;
             width: 8px;
@@ -1586,10 +1289,7 @@
         <div class="terminal-grid"></div>
         <div class="terminal-dot"></div>
         <div class="terminal-watermark">CLASSIFIED</div>
-
         <div class="terminal-content" id="terminalContent">
-
-            <!-- Stage 1: DETECTING -->
             <div class="terminal-stage" id="stage1">
                 <div class="stage-icon">⏳</div>
                 <div class="stage-title gold">DETECTING</div>
@@ -1597,28 +1297,16 @@
                 <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
                 <div class="progress-label" id="progressLabel">0%</div>
             </div>
-
-            <!-- Stage 2: BREACH CONFIRMED -->
             <div class="terminal-stage" id="stage2">
                 <div class="stage-icon">🚨</div>
                 <div class="stage-title red">BREACH CONFIRMED</div>
-                <div class="stage-msg">
-                    Unauthorized access detected.<br>
-                    Origin: <span class="highlight">DevTools / User Agent</span>
-                </div>
+                <div class="stage-msg">Unauthorized access detected.<br>Origin: <span class="highlight">DevTools / User Agent</span></div>
             </div>
-
-            <!-- Stage 3: LOCKDOWN -->
             <div class="terminal-stage" id="stage3">
                 <div class="stage-icon">🛑</div>
                 <div class="stage-title red">LOCKDOWN INITIATED</div>
-                <div class="stage-msg">
-                    All connections terminated. System locked.<br>
-                    <span style="color:#ff6666; font-size:0.9rem;">Session invalidated • Encryption disabled</span>
-                </div>
+                <div class="stage-msg">All connections terminated. System locked.<br><span style="color:#ff6666; font-size:0.9rem;">Session invalidated • Encryption disabled</span></div>
             </div>
-
-            <!-- Stage 4: LOG DUMP -->
             <div class="terminal-stage" id="stage4">
                 <div class="stage-icon">📋</div>
                 <div class="stage-title green">SECURITY LOG DUMP</div>
@@ -1633,24 +1321,12 @@
                     <div class="log-line"><span class="key">[STATUS]</span>      <span class="val val-danger" id="logStatus">LOGGED</span></div>
                     <div class="log-line"><span class="key">[WARNING]</span>    <span class="val val-danger">FURTHER ATTEMPTS WILL RESULT IN PERMANENT LOCKOUT</span></div>
                 </div>
-
-                <!-- Lockout Banner -->
-                <div class="lockout-banner">
-                    ⚠️ LOCKOUT PROTOCOL ACTIVE – FURTHER ATTEMPTS WILL RESULT IN PERMANENT LOCKOUT.
-                </div>
-
-                <!-- Override timer -->
-                <div class="override-timer">
-                    SYSTEM OVERRIDE IN <span class="timer-num" id="overrideCount">3</span>s... <span style="color:#ff4444;">RELOAD TO CANCEL</span>
-                </div>
+                <div class="lockout-banner">⚠️ LOCKOUT PROTOCOL ACTIVE – FURTHER ATTEMPTS WILL RESULT IN PERMANENT LOCKOUT.</div>
+                <div class="override-timer">SYSTEM OVERRIDE IN <span class="timer-num" id="overrideCount">3</span>s... <span style="color:#ff4444;">RELOAD TO CANCEL</span></div>
             </div>
-
-            <!-- Reload Button -->
             <div style="text-align:center; margin-top:8px;">
                 <button class="terminal-reload-btn" id="terminalReloadBtn">⟳ INITIATE RELOAD</button>
             </div>
-
-            <!-- ===== PHANTOM DEFENSE GRID – FOOTER ===== -->
             <div class="terminal-footer">
                 <div class="grid-status">
                     <span class="grid-dot"></span>
@@ -1659,45 +1335,6 @@
                     <span class="grid-lock">🔒 ACTIVE</span>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- =========================================================
-    PHANTOM SHIELD HUD – PERMANENT OVERLAY
-    ========================================================= -->
-    <div id="shield-hud">
-        <div class="hud-top">
-            <span class="hud-shield">
-                <span class="shield-icon">🛡</span>
-                <span class="hud-dot"></span>
-                PHANTOM
-            </span>
-            <span class="hud-uptime" id="hudUptime">00:00:00</span>
-        </div>
-        <div class="hud-encryption">
-            <span class="lock-icon">🔒</span> AES‑256 ENCRYPTION: ACTIVE
-        </div>
-        <div class="hud-threat-wrap">
-            <div class="hud-threat" id="hudThreat">
-                <span class="threat-badge pass">● PASSED</span> SYSTEM INTEGRITY
-                <span class="threat-divider">|</span>
-                <span class="threat-badge pass">● SECURE</span> FIREWALL ACTIVE
-                <span class="threat-divider">|</span>
-                <span class="threat-badge pass">● ONLINE</span> DEFENSE RUNNING
-                <span class="threat-divider">|</span>
-                <span class="threat-badge pass">● CLEAN</span> NO THREATS
-                <span class="threat-divider">|</span>
-                <span class="threat-badge pass">● PASSED</span> SYSTEM INTEGRITY
-                <span class="threat-divider">|</span>
-                <span class="threat-badge pass">● SECURE</span> FIREWALL ACTIVE
-                <span class="threat-divider">|</span>
-                <span class="threat-badge pass">● ONLINE</span> DEFENSE RUNNING
-                <span class="threat-divider">|</span>
-                <span class="threat-badge pass">● CLEAN</span> NO THREATS
-            </div>
-        </div>
-        <div class="hud-live">
-            <span class="live-dot"></span> LIVE
         </div>
     </div>
 
@@ -1720,7 +1357,6 @@
     <div id="main-app">
         <div class="container">
 
-            <!-- ===== GUILD LOGO ===== -->
             <div class="logo-wrapper">
                 <img class="guild-logo" src="./Guild.png" alt="Phantom Guild" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgNDAwIDE1MCI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMxYzBhMjgiLz48dGV4dCB4PSIyMCIgeT0iOTAiIGZvbnQtc2l6ZT0iNDgiIGZpbGw9IiM5YjZkZmYiIGZvbnQtZmFtaWx5PSdTZWdvZSBVSScsIHNhbnMtc2VyaWY7Ij7huJ5QSEFOVE9N4bikwrfCvOKAhuKAuyBCWSDwn5OmPC90ZXh0Pjwvc3ZnPg=='" />
             </div>
@@ -1737,17 +1373,11 @@
                 <button class="copy-btn" id="manualCopyBtn">📋 Copy Name</button>
             </div>
 
-            <!-- ===== RANDOM NAME SECTION ===== -->
             <div class="random-section">
                 <div class="random-header">
-                    <button class="random-btn active" id="randomFreestyleBtn" onclick="loadRandomNames('freestyle')">
-                        🔥 Freestyle
-                    </button>
-                    <button class="random-btn" id="randomNormalBtn" onclick="loadRandomNames('normal')">
-                        ⚔️ Normal
-                    </button>
+                    <button class="random-btn active" id="randomFreestyleBtn" onclick="loadRandomNames('freestyle')">🔥 Freestyle</button>
+                    <button class="random-btn" id="randomNormalBtn" onclick="loadRandomNames('normal')">⚔️ Normal</button>
                 </div>
-
                 <div class="name-list-container" id="nameListContainer">
                     <div class="name-list" id="nameList"></div>
                     <button class="generate-more-btn" id="generateMoreBtn" onclick="loadMoreNames()">↻ Generate More</button>
@@ -1762,137 +1392,84 @@
 
             <button class="btn" id="doneBtn">D O N E ?</button>
 
-            <a href="https://pdf-tool-by-fr4nx.onrender.com/" target="_blank" class="buy-btn">
-                🛒 Buy Free Fire Likes
-            </a>
+            <a href="https://pdf-tool-by-fr4nx.onrender.com/" target="_blank" class="buy-btn">🛒 Buy Free Fire Likes</a>
 
-            <!-- ========================================================= -->
-            <!-- ===== SENSITIVITY GENERATOR – UPDATED ===== -->
-            <!-- ========================================================= -->
+            <!-- ===== SENSITIVITY GENERATOR ===== -->
             <div class="sensitivity-section">
                 <h2>⚙️ Free Fire Sensitivity Generator</h2>
                 <p class="sub-desc">Optimized for your device – now with 200 max sensitivity.</p>
 
                 <div class="tab-switcher">
                     <button class="tab-btn active" id="tabSearch" onclick="switchTab('search')">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                        Search Device
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> Search Device
                     </button>
                     <button class="tab-btn" id="tabAuto" onclick="switchTab('auto')">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M12 2a10 10 0 0 1 7.07 17.07"/><path d="M12 6a6 6 0 0 1 4.24 10.24"/><path d="M12 10a2 2 0 0 1 1.41 3.41"/></svg>
-                        Auto Detect
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M12 2a10 10 0 0 1 7.07 17.07"/><path d="M12 6a6 6 0 0 1 4.24 10.24"/><path d="M12 10a2 2 0 0 1 1.41 3.41"/></svg> Auto Detect
                     </button>
                 </div>
 
-                <!-- ===== TAB 1: SEARCH ===== -->
                 <div class="panel active" id="panelSearch">
                     <div class="sens-card">
                         <div class="card-top-line"></div>
                         <div class="card-head">
-                            <div class="card-ico">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                            </div>
-                            <div>
-                                <div class="card-title">Search Your Device</div>
-                                <div class="card-sub">Type brand or model — e.g. "iPhone", "Samsung A", "Redmi"</div>
-                            </div>
+                            <div class="card-ico"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+                            <div><div class="card-title">Search Your Device</div><div class="card-sub">Type brand or model — e.g. "iPhone", "Samsung A", "Redmi"</div></div>
                         </div>
                         <div class="search-wrap">
-                            <span class="search-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                            </span>
+                            <span class="search-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
                             <input class="search-input" id="searchInput" type="text" placeholder="Type device name..." oninput="filterDevices(this.value)" autocomplete="off" />
-                            <button class="search-clear" id="searchClear" onclick="clearSearch()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                            </button>
+                            <button class="search-clear" id="searchClear" onclick="clearSearch()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
                             <div class="dropdown" id="dropdown"></div>
                         </div>
                         <div class="selected-device" id="selectedDevice">
                             <span style="font-size:20px">📱</span>
                             <span class="sd-name" id="sdName">—</span>
-                            <button class="sd-clear" onclick="clearSelection()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                            </button>
+                            <button class="sd-clear" onclick="clearSelection()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
                         </div>
                         <div class="age-section" id="searchAgeSection">
                             <p class="age-section-title">📅 How old is your device?</p>
                             <div class="age-grid" id="searchAgeGrid"></div>
                             <div class="age-note" id="searchAgeNote">Enter age to boost sensitivity for older devices.</div>
-                            <button class="btn-generate" id="searchGenerateBtn" onclick="generateFromSearch()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                                GENERATE SENSITIVITY
-                            </button>
+                            <button class="btn-generate" id="searchGenerateBtn" onclick="generateFromSearch()"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> GENERATE SENSITIVITY</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- ===== TAB 2: AUTO DETECT ===== -->
                 <div class="panel" id="panelAuto">
                     <div class="sens-card">
                         <div class="card-top-line"></div>
                         <div class="card-head">
-                            <div class="card-ico">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M12 2a10 10 0 0 1 7.07 17.07"/><path d="M12 6a6 6 0 0 1 4.24 10.24"/><path d="M12 10a2 2 0 0 1 1.41 3.41"/></svg>
-                            </div>
-                            <div>
-                                <div class="card-title">Auto Device Scanner</div>
-                                <div class="card-sub">Reads RAM, CPU cores &amp; screen specs from your browser</div>
-                            </div>
+                            <div class="card-ico"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M12 2a10 10 0 0 1 7.07 17.07"/><path d="M12 6a6 6 0 0 1 4.24 10.24"/><path d="M12 10a2 2 0 0 1 1.41 3.41"/></svg></div>
+                            <div><div class="card-title">Auto Device Scanner</div><div class="card-sub">Reads RAM, CPU cores &amp; screen specs from your browser</div></div>
                         </div>
-
-                        <p style="color:#b396d9; font-size:0.85rem; margin-bottom:15px; text-align:center; line-height:1.5;">
-                            🔍 Can't find your device? Click <strong>"Detect My Device"</strong> – we'll read your browser info and find the closest match.
-                        </p>
-
+                        <p style="color:#b396d9; font-size:0.85rem; margin-bottom:15px; text-align:center; line-height:1.5;">🔍 Can't find your device? Click <strong>"Detect My Device"</strong> – we'll read your browser info and find the closest match.</p>
                         <button class="btn-detect" id="detectBtn" onclick="detectDevice()">
                             <span class="pulse"></span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><rect width="7" height="5" x="7" y="7" rx="1"/><rect width="7" height="5" x="10" y="12" rx="1"/></svg>
-                            DETECT MY DEVICE
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><rect width="7" height="5" x="7" y="7" rx="1"/><rect width="7" height="5" x="10" y="12" rx="1"/></svg> DETECT MY DEVICE
                         </button>
-                        <div class="loader" id="loader">
-                            <div class="ring"></div>
-                            <div class="loader-label">SCANNING DEVICE...</div>
-                        </div>
+                        <div class="loader" id="loader"><div class="ring"></div><div class="loader-label">SCANNING DEVICE...</div></div>
                         <div class="detected-panel" id="detectedPanel">
-                            <div>
-                                <div class="dp-name" id="dpName">—</div>
-                                <div class="dp-specs" id="dpSpecs">—</div>
-                            </div>
+                            <div><div class="dp-name" id="dpName">—</div><div class="dp-specs" id="dpSpecs">—</div></div>
                             <div class="dp-check">✅</div>
                         </div>
                         <div class="age-section" id="autoAgeSection">
                             <p class="age-section-title">📅 How old is your device?</p>
                             <div class="age-grid" id="autoAgeGrid"></div>
                             <div class="age-note" id="autoAgeNote">Enter age to boost sensitivity for older devices.</div>
-                            <button class="btn-generate" id="autoGenerateBtn" onclick="generateFromAuto()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                                GENERATE SENSITIVITY
-                            </button>
+                            <button class="btn-generate" id="autoGenerateBtn" onclick="generateFromAuto()"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> GENERATE SENSITIVITY</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- ===== RESULTS ===== -->
                 <div class="results" id="results">
                     <div class="sens-card">
                         <div class="card-top-line"></div>
                         <div class="card-head">
-                            <div class="card-ico">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
-                            </div>
-                            <div>
-                                <div class="card-title">Device Profile</div>
-                                <div class="card-sub" id="osLine">—</div>
-                            </div>
+                            <div class="card-ico"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg></div>
+                            <div><div class="card-title">Device Profile</div><div class="card-sub" id="osLine">—</div></div>
                         </div>
                         <div class="device-banner">
-                            <div>
-                                <div class="device-name" id="devName">—</div>
-                                <div class="device-meta">
-                                    <span class="match-pill" id="matchPill">PRESET</span>
-                                    <span class="age-pill" id="agePill">—</span>
-                                </div>
-                            </div>
+                            <div><div class="device-name" id="devName">—</div><div class="device-meta"><span class="match-pill" id="matchPill">PRESET</span><span class="age-pill" id="agePill">—</span></div></div>
                         </div>
                         <div class="specs">
                             <div class="spec-box"><div class="spec-lbl">RAM</div><div class="spec-val cya" id="sRam">—</div></div>
@@ -1900,40 +1477,21 @@
                             <div class="spec-box"><div class="spec-lbl">Resolution</div><div class="spec-val cya" id="sRes">—</div></div>
                             <div class="spec-box"><div class="spec-lbl">Pixel Ratio</div><div class="spec-val cya" id="sDPR">—</div></div>
                         </div>
-                        <div class="perf-wrap">
-                            <div class="perf-lbl"><span>HARDWARE SCORE</span><span id="perfPct" style="color:#ff9f43;">0</span></div>
-                            <div class="perf-track"><div class="perf-fill" id="perfFill"></div></div>
-                        </div>
-                        <div class="age-impact">
-                            <div class="ai-lbl"><span>AGE BOOST FACTOR</span><span id="agePct" style="color:#ffd93d;">0%</span></div>
-                            <div class="ai-track"><div class="ai-fill" id="ageFill"></div></div>
-                        </div>
+                        <div class="perf-wrap"><div class="perf-lbl"><span>HARDWARE SCORE</span><span id="perfPct" style="color:#ff9f43;">0</span></div><div class="perf-track"><div class="perf-fill" id="perfFill"></div></div></div>
+                        <div class="age-impact"><div class="ai-lbl"><span>AGE BOOST FACTOR</span><span id="agePct" style="color:#ffd93d;">0%</span></div><div class="ai-track"><div class="ai-fill" id="ageFill"></div></div></div>
                     </div>
 
                     <div class="sens-card">
                         <div class="card-top-line"></div>
                         <div class="card-head">
-                            <div class="card-ico">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3z"/></svg>
-                            </div>
-                            <div>
-                                <div class="card-title">Sensitivity Settings</div>
-                                <div class="card-sub">Apply in FF → Settings → Sensitivity (max 200)</div>
-                            </div>
+                            <div class="card-ico"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3z"/></svg></div>
+                            <div><div class="card-title">Sensitivity Settings</div><div class="card-sub">Apply in FF → Settings → Sensitivity (max 200)</div></div>
                         </div>
                         <div class="sensi-list" id="sensiList"></div>
-                        <div class="disclaimer">
-                            <strong>⚠️ Note:</strong> These are <strong>starting-point estimates</strong> – adjust in Training Mode.
-                        </div>
+                        <div class="disclaimer"><strong>⚠️ Note:</strong> These are <strong>starting-point estimates</strong> – adjust in Training Mode.</div>
                         <div class="actions">
-                            <button class="btn-action btn-copy" id="copyBtn" onclick="copySettings()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
-                                COPY SETTINGS
-                            </button>
-                            <button class="btn-action btn-reset" onclick="resetGenerator()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
-                                RESET
-                            </button>
+                            <button class="btn-action btn-copy" id="copyBtn" onclick="copySettings()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> COPY SETTINGS</button>
+                            <button class="btn-action btn-reset" onclick="resetGenerator()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg> RESET</button>
                         </div>
                         <div class="copy-ok" id="copyOk">✅ COPIED TO CLIPBOARD!</div>
                     </div>
@@ -1941,13 +1499,8 @@
                     <div class="sens-card">
                         <div class="card-top-line"></div>
                         <div class="card-head">
-                            <div class="card-ico">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
-                            </div>
-                            <div>
-                                <div class="card-title">How To Use These</div>
-                                <div class="card-sub">Make them actually work for you</div>
-                            </div>
+                            <div class="card-ico"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></div>
+                            <div><div class="card-title">How To Use These</div><div class="card-sub">Make them actually work for you</div></div>
                         </div>
                         <div class="tip-list">
                             <div class="tip"><div class="tip-n">1</div><div class="tip-t"><strong>Apply in-game:</strong> Free Fire → Settings → Sensitivity and enter these values exactly.</div></div>
@@ -1961,13 +1514,8 @@
             </div>
 
             <div class="active-counters">
-                <div class="stat">
-                    👁️ <span id="visitCount">0</span> visitors have entered the Phantom realm.
-                </div>
-                <div class="stat">
-                    <span class="online-dot"></span>
-                    <span id="onlineCount">0</span> active members are online now.
-                </div>
+                <div class="stat">👁️ <span id="visitCount">0</span> visitors have entered the Phantom realm.</div>
+                <div class="stat"><span class="online-dot"></span> <span id="onlineCount">0</span> active members are online now.</div>
             </div>
 
         </div>
@@ -2031,7 +1579,7 @@
                 if (w > threshold || h > threshold) {
                     triggerBreach();
                 }
-            }, 1000);
+            }, 2000);
 
             document.addEventListener('selectstart', function(e) { e.preventDefault(); });
             document.addEventListener('copy', function(e) { e.preventDefault(); });
@@ -2054,7 +1602,7 @@
         })();
 
         // =========================================================
-        // BREACH TERMINAL v3.0 – ENGINE
+        // BREACH TERMINAL ENGINE
         // =========================================================
         (function breachEngine() {
             var terminal = document.getElementById('breach-terminal');
@@ -2181,59 +1729,7 @@
         })();
 
         // =========================================================
-        // PHANTOM SHIELD HUD – LIVE ENGINE
-        // =========================================================
-        (function shieldHUD() {
-            var startTime = Date.now();
-            var timerElement = document.getElementById('hudUptime');
-
-            setInterval(function() {
-                var elapsed = Math.floor((Date.now() - startTime) / 1000);
-                var hours = String(Math.floor(elapsed / 3600)).padStart(2, '0');
-                var minutes = String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0');
-                var seconds = String(elapsed % 60).padStart(2, '0');
-                timerElement.textContent = hours + ':' + minutes + ':' + seconds;
-            }, 1000);
-
-            var threatEl = document.getElementById('hudThreat');
-            var statusSets = [
-                '<span class="threat-badge pass">● PASSED</span> SYSTEM INTEGRITY <span class="threat-divider">|</span> <span class="threat-badge pass">● SECURE</span> FIREWALL ACTIVE <span class="threat-divider">|</span> <span class="threat-badge pass">● ONLINE</span> DEFENSE RUNNING <span class="threat-divider">|</span> <span class="threat-badge pass">● CLEAN</span> NO THREATS <span class="threat-divider">|</span> <span class="threat-badge pass">● PASSED</span> SYSTEM INTEGRITY <span class="threat-divider">|</span> <span class="threat-badge pass">● SECURE</span> FIREWALL ACTIVE <span class="threat-divider">|</span> <span class="threat-badge pass">● ONLINE</span> DEFENSE RUNNING <span class="threat-divider">|</span> <span class="threat-badge pass">● CLEAN</span> NO THREATS',
-                '<span class="threat-badge pass">● STABLE</span> ALL SYSTEMS NOMINAL <span class="threat-divider">|</span> <span class="threat-badge pass">● GUARDED</span> THREAT LEVEL: LOW <span class="threat-divider">|</span> <span class="threat-badge pass">● OPTIMAL</span> PERFORMANCE HIGH <span class="threat-divider">|</span> <span class="threat-badge pass">● SECURE</span> CONNECTION VERIFIED <span class="threat-divider">|</span> <span class="threat-badge pass">● STABLE</span> ALL SYSTEMS NOMINAL <span class="threat-divider">|</span> <span class="threat-badge pass">● GUARDED</span> THREAT LEVEL: LOW <span class="threat-divider">|</span> <span class="threat-badge pass">● OPTIMAL</span> PERFORMANCE HIGH <span class="threat-divider">|</span> <span class="threat-badge pass">● SECURE</span> CONNECTION VERIFIED',
-                '<span class="threat-badge pass">● PROTECTED</span> ENCRYPTION ACTIVE <span class="threat-divider">|</span> <span class="threat-badge pass">● SCANNED</span> NO MALWARE <span class="threat-divider">|</span> <span class="threat-badge pass">● VERIFIED</span> USER AUTHENTICATED <span class="threat-divider">|</span> <span class="threat-badge pass">● CLEAN</span> SYSTEM HEALTH: 100% <span class="threat-divider">|</span> <span class="threat-badge pass">● PROTECTED</span> ENCRYPTION ACTIVE <span class="threat-divider">|</span> <span class="threat-badge pass">● SCANNED</span> NO MALWARE <span class="threat-divider">|</span> <span class="threat-badge pass">● VERIFIED</span> USER AUTHENTICATED <span class="threat-divider">|</span> <span class="threat-badge pass">● CLEAN</span> SYSTEM HEALTH: 100%'
-            ];
-            var idx = 0;
-
-            setInterval(function() {
-                idx = (idx + 1) % statusSets.length;
-                threatEl.style.transition = 'opacity 0.6s ease';
-                threatEl.style.opacity = '0.2';
-                setTimeout(function() {
-                    threatEl.innerHTML = statusSets[idx];
-                    threatEl.style.opacity = '1';
-                }, 400);
-                setTimeout(function() {
-                    threatEl.style.transition = 'none';
-                }, 1000);
-            }, 8000);
-
-            setInterval(function() {
-                if (Math.random() < 0.15) {
-                    var originalHTML = threatEl.innerHTML;
-                    threatEl.innerHTML =
-                        '<span class="threat-badge warn">● WARNING</span> UNUSUAL ACTIVITY DETECTED – INVESTIGATING <span class="threat-divider">|</span> <span class="threat-badge warn">● ALERT</span> SOURCE: EXTERNAL <span class="threat-divider">|</span> <span class="threat-badge warn">● WARNING</span> UNUSUAL ACTIVITY DETECTED – INVESTIGATING <span class="threat-divider">|</span> <span class="threat-badge warn">● ALERT</span> SOURCE: EXTERNAL';
-                    threatEl.style.color = '#ffcc44';
-                    setTimeout(function() {
-                        threatEl.innerHTML = originalHTML;
-                        threatEl.style.color = '';
-                    }, 2500);
-                }
-            }, 12000);
-
-            console.log('🛡️ Phantom Shield HUD – Advanced overlay active.');
-        })();
-
-        // =========================================================
-        // 1. DEVICE DATABASE & PATTERNS (PRESET VALUES RESTORED)
+        // 1. DEVICE DATABASE & PATTERNS
         // =========================================================
 
         const DB = {
@@ -2361,7 +1857,7 @@
         ];
 
         // =========================================================
-        // 2. GENERATION ENGINE (same as fixed version)
+        // 2. GENERATION ENGINE
         // =========================================================
         function getWearFromYears(years) {
             if (years <= 0) return 0;
@@ -2822,7 +2318,7 @@
 
 
         // =========================================================
-        // 8. NAME GENERATOR (unchanged)
+        // 8. NAME GENERATOR
         // =========================================================
         var smallCapsMap = {
             'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ',
@@ -2942,7 +2438,7 @@
 
 
         // =========================================================
-        // 9. RANDOM NAMES (unchanged)
+        // 9. RANDOM NAMES
         // =========================================================
         var freestyleNames = [
             'Zephyr', 'Azrael', 'Orion', 'Draven', 'Raven', 'Kael', 'Jareth',
@@ -3108,54 +2604,54 @@
 
 
         // =========================================================
-        // 12. PHANTOM EFFECTS (unchanged)
+        // 12. PHANTOM EFFECTS (Lighter for smoothness)
         // =========================================================
         (function phantomEffects() {
             var layer = document.getElementById('effect-layer');
             var lastX = 0,
                 lastY = 0;
+            var trailCount = 0;
 
             function createTrailParticle(x, y) {
+                if (trailCount > 3) return;
+                trailCount++;
                 var el = document.createElement('div');
                 el.className = 'trail-particle';
-                var size = 4 + Math.random() * 6;
+                var size = 3 + Math.random() * 4;
                 el.style.width = size + 'px';
                 el.style.height = size + 'px';
                 el.style.left = (x - size / 2) + 'px';
                 el.style.top = (y - size / 2) + 'px';
                 var angle = Math.random() * Math.PI * 2;
-                var dist = 10 + Math.random() * 20;
+                var dist = 8 + Math.random() * 16;
                 el.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
                 el.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
                 layer.appendChild(el);
-                setTimeout(function() { if (el.parentNode) el.remove(); }, 700);
+                setTimeout(function() { if (el.parentNode) el.remove();
+                    trailCount--; }, 600);
             }
 
             function createRipple(x, y) {
-                var maxSize = 30 + Math.random() * 20;
+                var maxSize = 20 + Math.random() * 15;
                 var ring1 = document.createElement('div');
                 ring1.className = 'ripple-ring';
                 ring1.style.left = x + 'px';
                 ring1.style.top = y + 'px';
                 ring1.style.width = maxSize + 'px';
                 ring1.style.height = maxSize + 'px';
-                ring1.style.borderColor = 'rgba(155, 109, 255, ' + (0.3 + Math.random() * 0.3) + ')';
                 layer.appendChild(ring1);
-
                 var ring2 = document.createElement('div');
                 ring2.className = 'ripple-ring';
                 ring2.style.left = x + 'px';
                 ring2.style.top = y + 'px';
                 ring2.style.width = (maxSize * 0.6) + 'px';
                 ring2.style.height = (maxSize * 0.6) + 'px';
-                ring2.style.borderColor = 'rgba(200, 150, 255, 0.3)';
                 ring2.style.animationDelay = '0.08s';
                 layer.appendChild(ring2);
-
                 setTimeout(function() {
                     if (ring1.parentNode) ring1.remove();
                     if (ring2.parentNode) ring2.remove();
-                }, 800);
+                }, 700);
             }
 
             function handleMove(e) {
@@ -3165,13 +2661,11 @@
                     y = e.clientY; }
                 var dx = x - lastX,
                     dy = y - lastY;
-                if (Math.sqrt(dx * dx + dy * dy) < 8) return;
+                if (Math.sqrt(dx * dx + dy * dy) < 10) return;
                 lastX = x;
                 lastY = y;
                 createTrailParticle(x, y);
-                if (Math.random() > 0.7) {
-                    createTrailParticle(x + (Math.random() - 0.5) * 15, y + (Math.random() - 0.5) * 15);
-                }
+                if (Math.random() > 0.85) createTrailParticle(x + (Math.random() - 0.5) * 12, y + (Math.random() - 0.5) * 12);
             }
 
             function handleClick(e) {
@@ -3180,9 +2674,6 @@
                     y = e.touches[0].clientY; } else { x = e.clientX;
                     y = e.clientY; }
                 createRipple(x, y);
-                setTimeout(function() {
-                    createTrailParticle(x + (Math.random() - 0.5) * 30, y + (Math.random() - 0.5) * 30);
-                }, 50);
             }
 
             window.addEventListener('mousemove', handleMove);
@@ -3199,7 +2690,7 @@
 
 
         // =========================================================
-        // 13. AUDIO PRELOAD, INTRO, BIRDS (unchanged)
+        // 13. AUDIO, INTRO, BIRDS (Optimised)
         // =========================================================
         var audio = document.getElementById('bg-music');
         audio.volume = 0.25;
@@ -3249,16 +2740,15 @@
 
             function typeChar() {
                 if (currentChar < currentLine.length) {
-                    var char = currentLine[currentChar];
-                    lineElement.textContent += char;
+                    lineElement.textContent += currentLine[currentChar];
                     currentChar++;
-                    setTimeout(typeChar, 45);
+                    setTimeout(typeChar, 40);
                 } else {
                     var cursor = document.createElement('span');
                     cursor.className = 'cursor-blink';
                     lineElement.appendChild(cursor);
                     lineIndex++;
-                    setTimeout(typeLine, 300);
+                    setTimeout(typeLine, 250);
                 }
             }
             typeChar();
@@ -3299,7 +2789,7 @@
         audio.addEventListener('ended', function() { audio.play().catch(function() {}); });
 
         // =========================================================
-        // 14. BIRDS (unchanged)
+        // 14. BIRDS (Ultra-light)
         // =========================================================
         var canvas = document.getElementById('birdCanvas');
         var ctx = canvas.getContext('2d');
@@ -3316,38 +2806,35 @@
         resizeCanvas();
 
         function getBirdCount() {
-            var w = window.innerWidth,
-                h = window.innerHeight;
-            var area = w * h;
-            var count = Math.floor(area / 300000); // Reduced for performance
-            count = Math.max(8, Math.min(35, count));
+            var area = window.innerWidth * window.innerHeight;
+            var count = Math.floor(area / 400000);
+            count = Math.max(6, Math.min(20, count));
             return count;
         }
 
         function Bird() {
             this.reset = function() {
-                var margin = 100;
+                var margin = 80;
                 var side = Math.floor(Math.random() * 4);
                 if (side === 0) { this.x = Math.random() * canvas.width;
                     this.y = -margin; } else if (side === 1) { this.x = canvas.width + margin;
                     this.y = Math.random() * canvas.height; } else if (side === 2) { this.x = Math.random() * canvas.width;
                     this.y = canvas.height + margin; } else { this.x = -margin;
                     this.y = Math.random() * canvas.height; }
-                this.targetX = canvas.width / 2 + (Math.random() - 0.5) * 250;
-                this.targetY = canvas.height / 2 - 50 + (Math.random() - 0.5) * 150;
-                this.speed = 0.5 + Math.random() * 0.4;
+                this.targetX = canvas.width / 2 + (Math.random() - 0.5) * 200;
+                this.targetY = canvas.height / 2 - 50 + (Math.random() - 0.5) * 120;
+                this.speed = 0.4 + Math.random() * 0.4;
                 this.angle = 0;
-                this.size = 10 + Math.random() * 6;
+                this.size = 8 + Math.random() * 6;
                 this.wingPhase = Math.random() * Math.PI * 2;
-                this.wingSpeed = 0.06 + Math.random() * 0.02;
+                this.wingSpeed = 0.05 + Math.random() * 0.02;
                 this.curvePhase = Math.random() * Math.PI * 2;
-                this.curveSpeed = 0.004 + Math.random() * 0.006;
+                this.curveSpeed = 0.003 + Math.random() * 0.005;
                 this.alive = true;
                 this.opacity = 1;
                 this.disappearing = false;
                 this.disappearTimer = 0;
             };
-            // ... rest of Bird (same, but reduced particle count)
             this.update = function() {
                 if (this.disappearing) {
                     this.disappearTimer += 0.02;
@@ -3360,27 +2847,21 @@
                 var dist = Math.sqrt(dx * dx + dy * dy);
                 if (dist > 5) {
                     var angle = Math.atan2(dy, dx);
-                    var curveAngle = Math.sin(this.curvePhase) * 0.12;
-                    var moveAngle = angle + curveAngle;
-                    this.x += Math.cos(moveAngle) * this.speed;
-                    this.y += Math.sin(moveAngle) * this.speed;
+                    var curveAngle = Math.sin(this.curvePhase) * 0.1;
+                    this.x += Math.cos(angle + curveAngle) * this.speed;
+                    this.y += Math.sin(angle + curveAngle) * this.speed;
                     this.curvePhase += this.curveSpeed;
-                    this.y += Math.sin(this.curvePhase * 2) * 0.2;
                 } else {
-                    this.targetX = canvas.width / 2 + (Math.random() - 0.5) * 350;
-                    this.targetY = canvas.height / 2 - 50 + (Math.random() - 0.5) * 250;
+                    this.targetX = canvas.width / 2 + (Math.random() - 0.5) * 300;
+                    this.targetY = canvas.height / 2 - 50 + (Math.random() - 0.5) * 200;
                 }
                 this.wingPhase += this.wingSpeed;
                 this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
                 var logoEl = document.querySelector('.guild-logo');
                 if (logoEl) {
                     var rect = logoEl.getBoundingClientRect();
-                    var logoRect = {
-                        x: rect.left + rect.width * 0.1,
-                        y: rect.top + rect.height * 0.1,
-                        width: rect.width * 0.8,
-                        height: rect.height * 0.8
-                    };
+                    var logoRect = { x: rect.left + rect.width * 0.1, y: rect.top + rect.height * 0.1, width: rect.width *
+                            0.8, height: rect.height * 0.8 };
                     if (this.x > logoRect.x && this.x < logoRect.x + logoRect.width &&
                         this.y > logoRect.y && this.y < logoRect.y + logoRect.height) {
                         this.triggerDisappear();
@@ -3403,39 +2884,24 @@
                 var size = this.size;
                 ctx.fillStyle = '#5a3a7a';
                 ctx.shadowColor = '#7a4a9a';
-                ctx.shadowBlur = 8;
+                ctx.shadowBlur = 6;
                 ctx.beginPath();
                 ctx.ellipse(0, 0, size * 0.5, size * 0.35, 0, 0, Math.PI * 2);
                 ctx.fill();
-                ctx.beginPath();
-                ctx.arc(size * 0.4, -size * 0.08, size * 0.2, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.fillStyle = '#3a2a4a';
-                ctx.beginPath();
-                ctx.moveTo(size * 0.6, -size * 0.08);
-                ctx.lineTo(size * 0.75, -size * 0.04);
-                ctx.lineTo(size * 0.6, 0);
-                ctx.fill();
                 ctx.fillStyle = '#4a2a5a';
                 ctx.beginPath();
-                ctx.ellipse(-size * 0.25, -size * 0.15 + wingFlap * size * 0.12, size * 0.4, size * 0.25, -0.2 + wingFlap *
+                ctx.ellipse(-size * 0.25, -size * 0.15 + wingFlap * size * 0.12, size * 0.35, size * 0.2, -0.2 + wingFlap *
                     0.15, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.beginPath();
-                ctx.ellipse(-size * 0.25, size * 0.15 - wingFlap * size * 0.12, size * 0.4, size * 0.25, 0.2 - wingFlap *
+                ctx.ellipse(-size * 0.25, size * 0.15 - wingFlap * size * 0.12, size * 0.35, size * 0.2, 0.2 - wingFlap *
                     0.15, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.fillStyle = '#3a2a4a';
-                ctx.beginPath();
-                ctx.moveTo(-size * 0.5, -size * 0.12);
-                ctx.lineTo(-size * 0.7, -size * 0.2 + wingFlap * size * 0.08);
-                ctx.lineTo(-size * 0.5, size * 0.12);
                 ctx.fill();
                 ctx.restore();
                 ctx.save();
-                ctx.globalAlpha = this.opacity * 0.1;
+                ctx.globalAlpha = this.opacity * 0.08;
                 ctx.shadowColor = '#9b6dff';
-                ctx.shadowBlur = 20;
+                ctx.shadowBlur = 15;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, size * 0.8, 0, Math.PI * 2);
                 ctx.fillStyle = '#6a2faf';
@@ -3446,17 +2912,17 @@
         }
 
         function spawnParticles(x, y) {
-            var count = 10 + Math.floor(Math.random() * 6); // Reduced
+            var count = 5 + Math.floor(Math.random() * 4);
             for (var i = 0; i < count; i++) {
                 var angle = Math.random() * Math.PI * 2;
-                var speed = 0.5 + Math.random() * 2;
+                var speed = 0.3 + Math.random() * 1.5;
                 particles.push({
                     x: x,
                     y: y,
                     vx: Math.cos(angle) * speed,
-                    vy: Math.sin(angle) * speed - 0.5,
+                    vy: Math.sin(angle) * speed - 0.3,
                     life: 1,
-                    size: 2 + Math.random() * 3,
+                    size: 1.5 + Math.random() * 2,
                     color: 'hsl(' + (260 + Math.random() * 30) + ', 70%, ' + (50 + Math.random() * 30) + '%)'
                 });
             }
@@ -3467,7 +2933,7 @@
                 var p = particles[i];
                 p.x += p.vx;
                 p.y += p.vy;
-                p.vy += 0.04;
+                p.vy += 0.03;
                 p.life -= 0.02;
                 if (p.life <= 0) particles.splice(i, 1);
             }
@@ -3477,9 +2943,9 @@
             for (var i = 0; i < particles.length; i++) {
                 var p = particles[i];
                 ctx.save();
-                ctx.globalAlpha = p.life * 0.6;
+                ctx.globalAlpha = p.life * 0.5;
                 ctx.shadowColor = '#9b6dff';
-                ctx.shadowBlur = 10;
+                ctx.shadowBlur = 6;
                 ctx.fillStyle = p.color;
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
@@ -3491,20 +2957,13 @@
         function animateBirds() {
             if (!birdsActive) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (var i = 0; i < birds.length; i++) {
-                var bird = birds[i];
-                bird.update();
-                bird.draw();
-            }
+            for (var i = 0; i < birds.length; i++) birds[i].update();
             birds = birds.filter(function(b) { return b.alive; });
             updateParticles();
             drawParticles();
             var targetCount = getBirdCount();
             while (birds.length < targetCount) birds.push(new Bird());
-            while (birds.length > targetCount) {
-                var toRemove = birds.pop();
-                if (toRemove) toRemove.alive = false;
-            }
+            while (birds.length > targetCount) { var b = birds.pop(); if (b) b.alive = false; }
             animationId = requestAnimationFrame(animateBirds);
         }
 
@@ -3512,14 +2971,10 @@
             if (birdsActive) return;
             birdsActive = true;
             var count = getBirdCount();
-            for (var i = 0; i < count; i++) {
-                var bird = new Bird();
-                bird.x = Math.random() * canvas.width;
-                bird.y = Math.random() * canvas.height;
-                bird.targetX = canvas.width / 2 + (Math.random() - 0.5) * 250;
-                bird.targetY = canvas.height / 2 - 50 + (Math.random() - 0.5) * 150;
-                birds.push(bird);
-            }
+            for (var i = 0; i < count; i++) { var b = new Bird();
+                b.x = Math.random() * canvas.width;
+                b.y = Math.random() * canvas.height;
+                birds.push(b); }
             animateBirds();
         }
 
@@ -3528,20 +2983,13 @@
             if (birdsActive) {
                 var targetCount = getBirdCount();
                 while (birds.length < targetCount) birds.push(new Bird());
-                while (birds.length > targetCount) {
-                    var toRemove = birds.pop();
-                    if (toRemove) toRemove.alive = false;
-                }
+                while (birds.length > targetCount) { var b = birds.pop(); if (b) b.alive = false; }
             }
         });
 
         document.addEventListener('visibilitychange', function() {
-            if (document.hidden && birdsActive) {
-                if (animationId) { cancelAnimationFrame(animationId);
-                    animationId = null; }
-            } else if (!document.hidden && birdsActive && !animationId) {
-                animateBirds();
-            }
+            if (document.hidden && birdsActive) { if (animationId) { cancelAnimationFrame(animationId);
+                    animationId = null; } } else if (!document.hidden && birdsActive && !animationId) { animateBirds(); }
         });
 
         // =========================================================
@@ -3562,9 +3010,7 @@
         window.updatePreview = updatePreview;
         window.copyResult = copyResult;
 
-        console.log('🔥 Phantom Guild – Sensitivity generator with 200 max & age boost.');
-        console.log('📱 Loaded ' + Object.keys(DB).length + ' preset devices.');
-        console.log('🔍 Loaded ' + PATTERNS.length + ' UA patterns.');
+        console.log('🔥 Phantom Guild – Ultra-smooth & secure.');
     </script>
 </body>
 </html>
