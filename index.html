@@ -483,7 +483,7 @@
             color: #b396d9;
             letter-spacing: 8px;
             text-transform: uppercase;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             border-top: 1px solid rgba(150,100,220,0.2);
             border-bottom: 1px solid rgba(150,100,220,0.2);
             display: inline-block;
@@ -492,6 +492,64 @@
             border-radius: 30px;
         }
 
+        /* =========================================================
+           TAB SYSTEM – CLEAN & MOBILE-FRIENDLY
+           ========================================================= */
+        .tab-switcher {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 25px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 6px;
+            border-radius: 60px;
+            border: 1px solid rgba(150, 100, 220, 0.1);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .tab-switcher .tab-btn {
+            flex: 1;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 50px;
+            background: transparent;
+            color: #6a4a8a;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Segoe UI', sans-serif;
+            white-space: nowrap;
+        }
+        .tab-switcher .tab-btn:hover {
+            color: #b396d9;
+        }
+        .tab-switcher .tab-btn.active {
+            background: rgba(100, 40, 180, 0.3);
+            color: #f2e9ff;
+            box-shadow: 0 0 20px rgba(100, 40, 200, 0.15);
+        }
+        .tab-switcher .tab-btn .tab-icon {
+            margin-right: 6px;
+        }
+
+        .tab-panel {
+            display: none;
+            animation: fadeInTab 0.4s ease;
+        }
+        .tab-panel.active {
+            display: block;
+        }
+        @keyframes fadeInTab {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* =========================================================
+           SECTIONS – REFINED
+           ========================================================= */
         .result-wrapper {
             background: rgba(0,0,0,0.3);
             backdrop-filter: blur(4px);
@@ -733,32 +791,35 @@
         .buy-btn:hover { transform: scale(1.03); box-shadow: 0 0 40px rgba(255,107,53,0.5); }
         .buy-btn:active { transform: scale(0.95); }
 
-        /* ===== SENSITIVITY GENERATOR ===== */
+        /* =========================================================
+           SENSITIVITY GENERATOR – COMPACT & CLEAN
+           ========================================================= */
         .sensitivity-section {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(150,100,220,0.2);
+            margin-top: 5px;
+            text-align: left;
         }
         .sensitivity-section h2 {
             color: #e4d5ff;
             text-shadow: 0 0 20px #8a4bff;
             margin-bottom: 10px;
             font-size: 1.6rem;
+            text-align: center;
         }
         .sensitivity-section .sub-desc {
             color: #b396d9;
             margin-bottom: 20px;
             font-size: 0.9rem;
+            text-align: center;
         }
 
-        .tab-switcher {
+        .sens-tab-switcher {
             display: flex;
             gap: 10px;
             justify-content: center;
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
-        .tab-btn {
+        .sens-tab-btn {
             padding: 10px 25px;
             border-radius: 60px;
             border: 1px solid rgba(150,100,220,0.2);
@@ -772,15 +833,15 @@
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
         }
-        .tab-btn:hover { border-color: #9b6dff; color: #f2e9ff; }
-        .tab-btn.active {
+        .sens-tab-btn:hover { border-color: #9b6dff; color: #f2e9ff; }
+        .sens-tab-btn.active {
             background: rgba(100,40,180,0.3);
             border-color: #9b6dff;
             color: #f2e9ff;
             box-shadow: 0 0 30px rgba(100,40,200,0.15);
         }
-        .panel { display: none; }
-        .panel.active { display: block; }
+        .sens-panel { display: none; }
+        .sens-panel.active { display: block; }
 
         .sens-card {
             background: rgba(0,0,0,0.3);
@@ -1224,6 +1285,122 @@
         .tip .tip-t { color: #b396d9; font-size: 0.85rem; line-height: 1.5; }
         .tip .tip-t strong { color: #f2e9ff; }
 
+        /* =========================================================
+           SOUL SYNC – EMBEDDED FOOTER
+           ========================================================= */
+        .soul-sync-footer {
+            margin-top: 25px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(0, 255, 200, 0.08);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 8px 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            padding: 16px 20px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(0, 255, 200, 0.04);
+            transition: border-color 0.5s ease;
+        }
+        .soul-sync-footer:hover {
+            border-color: rgba(0, 255, 200, 0.12);
+        }
+        .soul-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            color: rgba(0, 255, 200, 0.4);
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .soul-item .soul-icon {
+            font-size: 0.9rem;
+            opacity: 0.6;
+        }
+        .soul-item .soul-value {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #b3ffd9;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 10px rgba(0, 255, 200, 0.05);
+        }
+        .soul-item .soul-value.good {
+            color: #66ffdd;
+            text-shadow: 0 0 15px rgba(0, 255, 200, 0.1);
+        }
+        .soul-item .soul-value.fair {
+            color: #ffd93d;
+            text-shadow: 0 0 15px rgba(255, 217, 61, 0.1);
+        }
+        .soul-item .soul-value.poor {
+            color: #ff6b6b;
+            text-shadow: 0 0 15px rgba(255, 107, 107, 0.1);
+        }
+        .soul-item .soul-value.na {
+            color: rgba(255, 255, 255, 0.15);
+        }
+        .soul-battery-wrap {
+            grid-column: span 2;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 2px;
+        }
+        .soul-battery-wrap .battery-label {
+            font-size: 0.6rem;
+            color: rgba(0, 255, 200, 0.25);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            min-width: 50px;
+        }
+        .soul-battery-wrap .battery-track {
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 30px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 255, 200, 0.06);
+        }
+        .soul-battery-wrap .battery-fill {
+            height: 100%;
+            border-radius: 30px;
+            width: 0%;
+            transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            background: linear-gradient(90deg, #ff6b6b, #ffd93d, #66ffdd);
+        }
+        .soul-battery-wrap .battery-pct {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: rgba(0, 255, 200, 0.4);
+            font-family: 'Courier New', monospace;
+            min-width: 40px;
+            text-align: right;
+        }
+        .soul-live {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.5rem;
+            color: rgba(0, 255, 200, 0.15);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            justify-self: end;
+        }
+        .soul-live .dot {
+            width: 6px;
+            height: 6px;
+            background: #66ffdd;
+            border-radius: 50%;
+            box-shadow: 0 0 12px #66ffdd;
+            animation: dotPulse 1.2s step-end infinite;
+        }
+        @keyframes dotPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.2; transform: scale(0.6); }
+        }
+
         .active-counters {
             margin-top: 20px;
             display: flex;
@@ -1253,8 +1430,50 @@
             50% { opacity: 1; transform: scale(1.2); }
         }
 
+        /* =========================================================
+           SCROLL INDICATOR
+           ========================================================= */
+        .scroll-hint {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            color: rgba(155, 109, 255, 0.3);
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: bounceHint 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+        .scroll-hint span:first-child {
+            font-size: 1.2rem;
+            animation: arrowBounce 1.5s ease-in-out infinite;
+        }
+        @keyframes arrowBounce {
+            0%, 100% { transform: translateY(0); opacity: 0.3; }
+            50% { transform: translateY(6px); opacity: 1; }
+        }
+        @keyframes bounceHint {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        @media (min-width: 768px) {
+            .scroll-hint { display: none; }
+        }
+
+        /* =========================================================
+           RESPONSIVE
+           ========================================================= */
         @media (max-width: 480px) {
-            .container { padding: 30px 20px; }
+            .container { padding: 25px 18px; }
+            .tab-switcher { padding: 4px; gap: 4px; }
+            .tab-switcher .tab-btn { padding: 10px 12px; font-size: 0.7rem; letter-spacing: 1px; }
+            .tab-switcher .tab-btn .tab-icon { margin-right: 3px; }
             .btn { padding: 14px 30px; font-size: 1rem; letter-spacing: 4px; }
             .result-wrapper { padding: 15px 10px; }
             .copy-btn { padding: 8px 20px; font-size: 0.9rem; }
@@ -1265,7 +1484,7 @@
             .guild-logo { height: auto; }
             .buy-btn { padding: 12px 24px; font-size: 1rem; width: 100%; }
             .active-counters { font-size: 0.6rem; }
-            .tab-btn { padding: 8px 16px; font-size: 0.8rem; }
+            .sens-tab-btn { padding: 8px 16px; font-size: 0.8rem; }
             .sens-card { padding: 18px 15px; }
             .specs { grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); }
             .spec-box .spec-val { font-size: 0.9rem; }
@@ -1276,6 +1495,14 @@
             .manual-age-input { flex: 1 1 100%; }
             .manual-age-apply { flex: 1 1 auto; }
             .detected-panel { flex-direction: column; align-items: flex-start; }
+            .soul-sync-footer {
+                grid-template-columns: 1fr 1fr;
+                padding: 14px 16px;
+                gap: 6px 12px;
+            }
+            .soul-item { font-size: 0.65rem; }
+            .soul-item .soul-value { font-size: 0.7rem; }
+            .soul-battery-wrap { grid-column: span 2; }
         }
     </style>
 </head>
@@ -1363,153 +1590,217 @@
 
             <div class="sub-title">Name Generator</div>
 
-            <div class="result-wrapper" id="resultWrapper">
-                <div id="result" class="placeholder">✦ Type your name below ✦</div>
-                <div class="result-message" id="resultMessage"></div>
-                <div class="copy-hint">⬇ Tap the name or button below to copy ⬇</div>
+            <!-- =========================================================
+            TAB SYSTEM
+            ========================================================= -->
+            <div class="tab-switcher">
+                <button class="tab-btn active" data-tab="tabName">
+                    <span class="tab-icon">✦</span> Name
+                </button>
+                <button class="tab-btn" data-tab="tabSensitivity">
+                    <span class="tab-icon">⚙️</span> Sensitivity
+                </button>
             </div>
 
-            <div class="copy-btn-container">
-                <button class="copy-btn" id="manualCopyBtn">📋 Copy Name</button>
+            <!-- =========================================================
+            TAB 1: NAME GENERATOR
+            ========================================================= -->
+            <div class="tab-panel active" id="tabName">
+
+                <div class="result-wrapper" id="resultWrapper">
+                    <div id="result" class="placeholder">✦ Type your name below ✦</div>
+                    <div class="result-message" id="resultMessage"></div>
+                    <div class="copy-hint">⬇ Tap the name or button below to copy ⬇</div>
+                </div>
+
+                <div class="copy-btn-container">
+                    <button class="copy-btn" id="manualCopyBtn">📋 Copy Name</button>
+                </div>
+
+                <div class="random-section">
+                    <div class="random-header">
+                        <button class="random-btn active" id="randomFreestyleBtn" onclick="loadRandomNames('freestyle')">🔥 Freestyle</button>
+                        <button class="random-btn" id="randomNormalBtn" onclick="loadRandomNames('normal')">⚔️ Normal</button>
+                    </div>
+                    <div class="name-list-container" id="nameListContainer">
+                        <div class="name-list" id="nameList"></div>
+                        <button class="generate-more-btn" id="generateMoreBtn" onclick="loadMoreNames()">↻ Generate More</button>
+                        <div class="no-more-names" id="noMoreNames" style="display:none;">✨ All names have been shown</div>
+                    </div>
+                </div>
+
+                <div class="input-area">
+                    <label for="userName">INPUT YOUR REQUIRED NAME HERE</label>
+                    <input type="text" id="userName" placeholder="e.g. Shadow" oninput="updatePreview()" autofocus />
+                </div>
+
+                <button class="btn" id="doneBtn">D O N E ?</button>
+
+                <a href="https://pdf-tool-by-fr4nx.onrender.com/" target="_blank" class="buy-btn">🛒 Buy Free Fire Likes</a>
+
             </div>
 
-            <div class="random-section">
-                <div class="random-header">
-                    <button class="random-btn active" id="randomFreestyleBtn" onclick="loadRandomNames('freestyle')">🔥 Freestyle</button>
-                    <button class="random-btn" id="randomNormalBtn" onclick="loadRandomNames('normal')">⚔️ Normal</button>
+            <!-- =========================================================
+            TAB 2: SENSITIVITY GENERATOR
+            ========================================================= -->
+            <div class="tab-panel" id="tabSensitivity">
+
+                <div class="sensitivity-section">
+                    <h2>⚙️ Free Fire Sensitivity Generator</h2>
+                    <p class="sub-desc">Optimized for your device – now with 200 max sensitivity.</p>
+
+                    <div class="sens-tab-switcher">
+                        <button class="sens-tab-btn active" onclick="switchSensTab('search')">🔍 Search Device</button>
+                        <button class="sens-tab-btn" onclick="switchSensTab('auto')">📡 Auto Detect</button>
+                    </div>
+
+                    <!-- SEARCH -->
+                    <div class="sens-panel active" id="sensPanelSearch">
+                        <div class="sens-card">
+                            <div class="card-top-line"></div>
+                            <div class="card-head">
+                                <div class="card-ico"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+                                <div><div class="card-title">Search Your Device</div><div class="card-sub">Type brand or model — e.g. "iPhone", "Samsung A", "Redmi"</div></div>
+                            </div>
+                            <div class="search-wrap">
+                                <span class="search-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
+                                <input class="search-input" id="searchInput" type="text" placeholder="Type device name..." oninput="filterDevices(this.value)" autocomplete="off" />
+                                <button class="search-clear" id="searchClear" onclick="clearSearch()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                                <div class="dropdown" id="dropdown"></div>
+                            </div>
+                            <div class="selected-device" id="selectedDevice">
+                                <span style="font-size:20px">📱</span>
+                                <span class="sd-name" id="sdName">—</span>
+                                <button class="sd-clear" onclick="clearSelection()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                            </div>
+                            <div class="age-section" id="searchAgeSection">
+                                <p class="age-section-title">📅 How old is your device?</p>
+                                <div class="age-grid" id="searchAgeGrid"></div>
+                                <div class="age-note" id="searchAgeNote">Enter age to boost sensitivity for older devices.</div>
+                                <button class="btn-generate" id="searchGenerateBtn" onclick="generateFromSearch()"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> GENERATE SENSITIVITY</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AUTO DETECT -->
+                    <div class="sens-panel" id="sensPanelAuto">
+                        <div class="sens-card">
+                            <div class="card-top-line"></div>
+                            <div class="card-head">
+                                <div class="card-ico"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M12 2a10 10 0 0 1 7.07 17.07"/><path d="M12 6a6 6 0 0 1 4.24 10.24"/><path d="M12 10a2 2 0 0 1 1.41 3.41"/></svg></div>
+                                <div><div class="card-title">Auto Device Scanner</div><div class="card-sub">Reads RAM, CPU cores &amp; screen specs from your browser</div></div>
+                            </div>
+                            <p style="color:#b396d9; font-size:0.85rem; margin-bottom:15px; text-align:center; line-height:1.5;">🔍 Can't find your device? Click <strong>"Detect My Device"</strong> – we'll read your browser info and find the closest match.</p>
+                            <button class="btn-detect" id="detectBtn" onclick="detectDevice()">
+                                <span class="pulse"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><rect width="7" height="5" x="7" y="7" rx="1"/><rect width="7" height="5" x="10" y="12" rx="1"/></svg> DETECT MY DEVICE
+                            </button>
+                            <div class="loader" id="loader"><div class="ring"></div><div class="loader-label">SCANNING DEVICE...</div></div>
+                            <div class="detected-panel" id="detectedPanel">
+                                <div><div class="dp-name" id="dpName">—</div><div class="dp-specs" id="dpSpecs">—</div></div>
+                                <div class="dp-check">✅</div>
+                            </div>
+                            <div class="age-section" id="autoAgeSection">
+                                <p class="age-section-title">📅 How old is your device?</p>
+                                <div class="age-grid" id="autoAgeGrid"></div>
+                                <div class="age-note" id="autoAgeNote">Enter age to boost sensitivity for older devices.</div>
+                                <button class="btn-generate" id="autoGenerateBtn" onclick="generateFromAuto()"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> GENERATE SENSITIVITY</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RESULTS -->
+                    <div class="results" id="results">
+                        <div class="sens-card">
+                            <div class="card-top-line"></div>
+                            <div class="card-head">
+                                <div class="card-ico"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg></div>
+                                <div><div class="card-title">Device Profile</div><div class="card-sub" id="osLine">—</div></div>
+                            </div>
+                            <div class="device-banner">
+                                <div><div class="device-name" id="devName">—</div><div class="device-meta"><span class="match-pill" id="matchPill">PRESET</span><span class="age-pill" id="agePill">—</span></div></div>
+                            </div>
+                            <div class="specs">
+                                <div class="spec-box"><div class="spec-lbl">RAM</div><div class="spec-val cya" id="sRam">—</div></div>
+                                <div class="spec-box"><div class="spec-lbl">CPU Cores</div><div class="spec-val cya" id="sCpu">—</div></div>
+                                <div class="spec-box"><div class="spec-lbl">Resolution</div><div class="spec-val cya" id="sRes">—</div></div>
+                                <div class="spec-box"><div class="spec-lbl">Pixel Ratio</div><div class="spec-val cya" id="sDPR">—</div></div>
+                            </div>
+                            <div class="perf-wrap"><div class="perf-lbl"><span>HARDWARE SCORE</span><span id="perfPct" style="color:#ff9f43;">0</span></div><div class="perf-track"><div class="perf-fill" id="perfFill"></div></div></div>
+                            <div class="age-impact"><div class="ai-lbl"><span>AGE BOOST FACTOR</span><span id="agePct" style="color:#ffd93d;">0%</span></div><div class="ai-track"><div class="ai-fill" id="ageFill"></div></div></div>
+                        </div>
+
+                        <div class="sens-card">
+                            <div class="card-top-line"></div>
+                            <div class="card-head">
+                                <div class="card-ico"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3z"/></svg></div>
+                                <div><div class="card-title">Sensitivity Settings</div><div class="card-sub">Apply in FF → Settings → Sensitivity (max 200)</div></div>
+                            </div>
+                            <div class="sensi-list" id="sensiList"></div>
+                            <div class="disclaimer"><strong>⚠️ Note:</strong> These are <strong>starting-point estimates</strong> – adjust in Training Mode.</div>
+                            <div class="actions">
+                                <button class="btn-action btn-copy" id="copyBtn" onclick="copySettings()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> COPY SETTINGS</button>
+                                <button class="btn-action btn-reset" onclick="resetGenerator()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg> RESET</button>
+                            </div>
+                            <div class="copy-ok" id="copyOk">✅ COPIED TO CLIPBOARD!</div>
+                        </div>
+
+                        <div class="sens-card">
+                            <div class="card-top-line"></div>
+                            <div class="card-head">
+                                <div class="card-ico"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></div>
+                                <div><div class="card-title">How To Use These</div><div class="card-sub">Make them actually work for you</div></div>
+                            </div>
+                            <div class="tip-list">
+                                <div class="tip"><div class="tip-n">1</div><div class="tip-t"><strong>Apply in-game:</strong> Free Fire → Settings → Sensitivity and enter these values exactly.</div></div>
+                                <div class="tip"><div class="tip-n">2</div><div class="tip-t"><strong>Test in Training Mode</strong> for 15+ minutes before ranked — your muscle memory needs to adjust.</div></div>
+                                <div class="tip"><div class="tip-n">3</div><div class="tip-t"><strong>Older devices get higher sensitivity</strong> – this compensates for slower response over time.</div></div>
+                                <div class="tip"><div class="tip-n">4</div><div class="tip-t"><strong>Tweak ±5 at a time.</strong> Too slow? Raise General by 5. Too shaky? Lower it by 5.</div></div>
+                                <div class="tip"><div class="tip-n">5</div><div class="tip-t"><strong>These are not magic numbers.</strong> Pro players on the same phone use very different values — find what works for you.</div></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="name-list-container" id="nameListContainer">
-                    <div class="name-list" id="nameList"></div>
-                    <button class="generate-more-btn" id="generateMoreBtn" onclick="loadMoreNames()">↻ Generate More</button>
-                    <div class="no-more-names" id="noMoreNames" style="display:none;">✨ All names have been shown</div>
-                </div>
+
             </div>
 
-            <div class="input-area">
-                <label for="userName">INPUT YOUR REQUIRED NAME HERE</label>
-                <input type="text" id="userName" placeholder="e.g. Shadow" oninput="updatePreview()" autofocus />
-            </div>
-
-            <button class="btn" id="doneBtn">D O N E ?</button>
-
-            <a href="https://pdf-tool-by-fr4nx.onrender.com/" target="_blank" class="buy-btn">🛒 Buy Free Fire Likes</a>
-
-            <!-- ===== SENSITIVITY GENERATOR ===== -->
-            <div class="sensitivity-section">
-                <h2>⚙️ Free Fire Sensitivity Generator</h2>
-                <p class="sub-desc">Optimized for your device – now with 200 max sensitivity.</p>
-
-                <div class="tab-switcher">
-                    <button class="tab-btn active" id="tabSearch" onclick="switchTab('search')">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> Search Device
-                    </button>
-                    <button class="tab-btn" id="tabAuto" onclick="switchTab('auto')">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M12 2a10 10 0 0 1 7.07 17.07"/><path d="M12 6a6 6 0 0 1 4.24 10.24"/><path d="M12 10a2 2 0 0 1 1.41 3.41"/></svg> Auto Detect
-                    </button>
+            <!-- =========================================================
+            SOUL SYNC FOOTER (below tabs)
+            ========================================================= -->
+            <div class="soul-sync-footer" id="soulSync">
+                <div class="soul-item">
+                    <span class="soul-icon">📱</span>
+                    <span class="soul-value" id="ssDevice">—</span>
                 </div>
-
-                <div class="panel active" id="panelSearch">
-                    <div class="sens-card">
-                        <div class="card-top-line"></div>
-                        <div class="card-head">
-                            <div class="card-ico"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
-                            <div><div class="card-title">Search Your Device</div><div class="card-sub">Type brand or model — e.g. "iPhone", "Samsung A", "Redmi"</div></div>
-                        </div>
-                        <div class="search-wrap">
-                            <span class="search-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
-                            <input class="search-input" id="searchInput" type="text" placeholder="Type device name..." oninput="filterDevices(this.value)" autocomplete="off" />
-                            <button class="search-clear" id="searchClear" onclick="clearSearch()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-                            <div class="dropdown" id="dropdown"></div>
-                        </div>
-                        <div class="selected-device" id="selectedDevice">
-                            <span style="font-size:20px">📱</span>
-                            <span class="sd-name" id="sdName">—</span>
-                            <button class="sd-clear" onclick="clearSelection()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-                        </div>
-                        <div class="age-section" id="searchAgeSection">
-                            <p class="age-section-title">📅 How old is your device?</p>
-                            <div class="age-grid" id="searchAgeGrid"></div>
-                            <div class="age-note" id="searchAgeNote">Enter age to boost sensitivity for older devices.</div>
-                            <button class="btn-generate" id="searchGenerateBtn" onclick="generateFromSearch()"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> GENERATE SENSITIVITY</button>
-                        </div>
-                    </div>
+                <div class="soul-item">
+                    <span class="soul-icon">⚡</span>
+                    <span class="soul-value" id="ssCpu">—</span>
                 </div>
-
-                <div class="panel" id="panelAuto">
-                    <div class="sens-card">
-                        <div class="card-top-line"></div>
-                        <div class="card-head">
-                            <div class="card-ico"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M12 2a10 10 0 0 1 7.07 17.07"/><path d="M12 6a6 6 0 0 1 4.24 10.24"/><path d="M12 10a2 2 0 0 1 1.41 3.41"/></svg></div>
-                            <div><div class="card-title">Auto Device Scanner</div><div class="card-sub">Reads RAM, CPU cores &amp; screen specs from your browser</div></div>
-                        </div>
-                        <p style="color:#b396d9; font-size:0.85rem; margin-bottom:15px; text-align:center; line-height:1.5;">🔍 Can't find your device? Click <strong>"Detect My Device"</strong> – we'll read your browser info and find the closest match.</p>
-                        <button class="btn-detect" id="detectBtn" onclick="detectDevice()">
-                            <span class="pulse"></span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><rect width="7" height="5" x="7" y="7" rx="1"/><rect width="7" height="5" x="10" y="12" rx="1"/></svg> DETECT MY DEVICE
-                        </button>
-                        <div class="loader" id="loader"><div class="ring"></div><div class="loader-label">SCANNING DEVICE...</div></div>
-                        <div class="detected-panel" id="detectedPanel">
-                            <div><div class="dp-name" id="dpName">—</div><div class="dp-specs" id="dpSpecs">—</div></div>
-                            <div class="dp-check">✅</div>
-                        </div>
-                        <div class="age-section" id="autoAgeSection">
-                            <p class="age-section-title">📅 How old is your device?</p>
-                            <div class="age-grid" id="autoAgeGrid"></div>
-                            <div class="age-note" id="autoAgeNote">Enter age to boost sensitivity for older devices.</div>
-                            <button class="btn-generate" id="autoGenerateBtn" onclick="generateFromAuto()"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> GENERATE SENSITIVITY</button>
-                        </div>
-                    </div>
+                <div class="soul-item">
+                    <span class="soul-icon">🧠</span>
+                    <span class="soul-value" id="ssRam">—</span>
                 </div>
-
-                <div class="results" id="results">
-                    <div class="sens-card">
-                        <div class="card-top-line"></div>
-                        <div class="card-head">
-                            <div class="card-ico"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg></div>
-                            <div><div class="card-title">Device Profile</div><div class="card-sub" id="osLine">—</div></div>
-                        </div>
-                        <div class="device-banner">
-                            <div><div class="device-name" id="devName">—</div><div class="device-meta"><span class="match-pill" id="matchPill">PRESET</span><span class="age-pill" id="agePill">—</span></div></div>
-                        </div>
-                        <div class="specs">
-                            <div class="spec-box"><div class="spec-lbl">RAM</div><div class="spec-val cya" id="sRam">—</div></div>
-                            <div class="spec-box"><div class="spec-lbl">CPU Cores</div><div class="spec-val cya" id="sCpu">—</div></div>
-                            <div class="spec-box"><div class="spec-lbl">Resolution</div><div class="spec-val cya" id="sRes">—</div></div>
-                            <div class="spec-box"><div class="spec-lbl">Pixel Ratio</div><div class="spec-val cya" id="sDPR">—</div></div>
-                        </div>
-                        <div class="perf-wrap"><div class="perf-lbl"><span>HARDWARE SCORE</span><span id="perfPct" style="color:#ff9f43;">0</span></div><div class="perf-track"><div class="perf-fill" id="perfFill"></div></div></div>
-                        <div class="age-impact"><div class="ai-lbl"><span>AGE BOOST FACTOR</span><span id="agePct" style="color:#ffd93d;">0%</span></div><div class="ai-track"><div class="ai-fill" id="ageFill"></div></div></div>
+                <div class="soul-item">
+                    <span class="soul-icon">🏆</span>
+                    <span class="soul-value" id="ssPerf">—</span>
+                </div>
+                <div class="soul-item">
+                    <span class="soul-icon">📶</span>
+                    <span class="soul-value" id="ssNetwork">—</span>
+                </div>
+                <div class="soul-item">
+                    <span class="soul-icon">🔋</span>
+                    <span class="soul-value" id="ssBattery">—</span>
+                </div>
+                <div class="soul-battery-wrap">
+                    <span class="battery-label">Charge</span>
+                    <div class="battery-track">
+                        <div class="battery-fill" id="ssBatteryFill"></div>
                     </div>
-
-                    <div class="sens-card">
-                        <div class="card-top-line"></div>
-                        <div class="card-head">
-                            <div class="card-ico"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3z"/></svg></div>
-                            <div><div class="card-title">Sensitivity Settings</div><div class="card-sub">Apply in FF → Settings → Sensitivity (max 200)</div></div>
-                        </div>
-                        <div class="sensi-list" id="sensiList"></div>
-                        <div class="disclaimer"><strong>⚠️ Note:</strong> These are <strong>starting-point estimates</strong> – adjust in Training Mode.</div>
-                        <div class="actions">
-                            <button class="btn-action btn-copy" id="copyBtn" onclick="copySettings()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> COPY SETTINGS</button>
-                            <button class="btn-action btn-reset" onclick="resetGenerator()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg> RESET</button>
-                        </div>
-                        <div class="copy-ok" id="copyOk">✅ COPIED TO CLIPBOARD!</div>
-                    </div>
-
-                    <div class="sens-card">
-                        <div class="card-top-line"></div>
-                        <div class="card-head">
-                            <div class="card-ico"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></div>
-                            <div><div class="card-title">How To Use These</div><div class="card-sub">Make them actually work for you</div></div>
-                        </div>
-                        <div class="tip-list">
-                            <div class="tip"><div class="tip-n">1</div><div class="tip-t"><strong>Apply in-game:</strong> Free Fire → Settings → Sensitivity and enter these values exactly.</div></div>
-                            <div class="tip"><div class="tip-n">2</div><div class="tip-t"><strong>Test in Training Mode</strong> for 15+ minutes before ranked — your muscle memory needs to adjust.</div></div>
-                            <div class="tip"><div class="tip-n">3</div><div class="tip-t"><strong>Older devices get higher sensitivity</strong> – this compensates for slower response over time.</div></div>
-                            <div class="tip"><div class="tip-n">4</div><div class="tip-t"><strong>Tweak ±5 at a time.</strong> Too slow? Raise General by 5. Too shaky? Lower it by 5.</div></div>
-                            <div class="tip"><div class="tip-n">5</div><div class="tip-t"><strong>These are not magic numbers.</strong> Pro players on the same phone use very different values — find what works for you.</div></div>
-                        </div>
-                    </div>
+                    <span class="battery-pct" id="ssBatteryPct">—</span>
+                </div>
+                <div class="soul-live">
+                    <span class="dot"></span> LIVE
                 </div>
             </div>
 
@@ -1526,6 +1817,12 @@
         <source src="/SYMBOL-GUILD-NAME-GENERATOR/music.mp3" type="audio/mpeg" />
         <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg" />
     </audio>
+
+    <!-- ====== SCROLL INDICATOR (mobile) ====== -->
+    <div class="scroll-hint" id="scrollHint">
+        <span>⬇</span>
+        <span>scroll for more</span>
+    </div>
 
     <script>
         // =========================================================
@@ -1726,6 +2023,211 @@
             });
 
             console.log('🔴 Breach Terminal v3.0 – Engine ready.');
+        })();
+
+        // =========================================================
+        // MAIN TAB SYSTEM
+        // =========================================================
+        function switchTab(tabId) {
+            // Hide all panels
+            document.querySelectorAll('.tab-panel').forEach(function(el) {
+                el.classList.remove('active');
+            });
+            // Show selected
+            document.getElementById(tabId).classList.add('active');
+            // Update buttons
+            document.querySelectorAll('.tab-btn').forEach(function(el) {
+                el.classList.remove('active');
+                if (el.getAttribute('data-tab') === tabId) {
+                    el.classList.add('active');
+                }
+            });
+        }
+
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                switchTab(this.getAttribute('data-tab'));
+            });
+        });
+
+        // Sensitivity sub-tabs
+        function switchSensTab(tab) {
+            document.querySelectorAll('.sens-tab-btn').forEach(function(el) {
+                el.classList.remove('active');
+                if (el.getAttribute('onclick') === "switchSensTab('" + tab + "')") {
+                    el.classList.add('active');
+                }
+            });
+            document.querySelectorAll('.sens-panel').forEach(function(el) {
+                el.classList.remove('active');
+            });
+            document.getElementById('sensPanel' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+        }
+
+        // =========================================================
+        // SOUL SYNC ENGINE (embedded)
+        // =========================================================
+        (function soulSync() {
+            var ssDevice = document.getElementById('ssDevice');
+            var ssCpu = document.getElementById('ssCpu');
+            var ssRam = document.getElementById('ssRam');
+            var ssPerf = document.getElementById('ssPerf');
+            var ssNetwork = document.getElementById('ssNetwork');
+            var ssBattery = document.getElementById('ssBattery');
+            var ssBatteryFill = document.getElementById('ssBatteryFill');
+            var ssBatteryPct = document.getElementById('ssBatteryPct');
+
+            function getDeviceName() {
+                var ua = navigator.userAgent;
+                if (/iPhone/.test(ua)) return 'iPhone';
+                if (/iPad/.test(ua)) return 'iPad';
+                if (/Android/.test(ua)) {
+                    var m = ua.match(/Android\s([\d.]+)/);
+                    return 'Android ' + (m ? m[1] : '');
+                }
+                if (/Windows/.test(ua)) return 'Windows PC';
+                if (/Mac OS/.test(ua)) return 'macOS';
+                if (/Linux/.test(ua)) return 'Linux';
+                return 'Unknown';
+            }
+
+            function getCPU() {
+                return navigator.hardwareConcurrency || 'N/A';
+            }
+
+            function getRAMInfo() {
+                var ram = navigator.deviceMemory;
+                if (ram) {
+                    return { display: ram.toFixed(1) + ' GB', value: ram };
+                }
+                var cpu = navigator.hardwareConcurrency || 2;
+                var isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
+                var estimated;
+                if (isMobile) {
+                    if (cpu >= 8) estimated = 6;
+                    else if (cpu >= 4) estimated = 4;
+                    else if (cpu >= 2) estimated = 2;
+                    else estimated = 1;
+                } else {
+                    if (cpu >= 12) estimated = 16;
+                    else if (cpu >= 8) estimated = 12;
+                    else if (cpu >= 4) estimated = 8;
+                    else if (cpu >= 2) estimated = 4;
+                    else estimated = 2;
+                }
+                return { display: estimated + ' GB', value: estimated };
+            }
+
+            function getNetwork() {
+                var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+                if (conn) {
+                    var type = conn.effectiveType || 'unknown';
+                    var map = { 'slow-2g': '2G', '2g': '2G', '3g': '3G', '4g': '4G', '5g': '5G', 'wifi': 'WiFi',
+                        'ethernet': 'Ethernet', 'none': 'Offline', 'unknown': 'Online' };
+                    return map[type] || type.toUpperCase();
+                }
+                return navigator.onLine ? 'Online' : 'Offline';
+            }
+
+            function getPerformance(cpu, ram) {
+                if (cpu === 'N/A') return { label: 'N/A', cls: 'na' };
+                var score = 0;
+                if (cpu >= 8) score += 50;
+                else if (cpu >= 4) score += 30;
+                else if (cpu >= 2) score += 15;
+                else score += 5;
+
+                if (ram >= 8) score += 50;
+                else if (ram >= 4) score += 30;
+                else if (ram >= 2) score += 15;
+                else if (ram > 0) score += 5;
+
+                if (score >= 80) return { label: 'Good', cls: 'good' };
+                if (score >= 45) return { label: 'Fair', cls: 'fair' };
+                return { label: 'Poor', cls: 'poor' };
+            }
+
+            function updateBattery() {
+                if (!navigator.getBattery) {
+                    ssBattery.textContent = 'N/A';
+                    ssBatteryFill.style.width = '0%';
+                    ssBatteryPct.textContent = 'N/A';
+                    return;
+                }
+                navigator.getBattery().then(function(b) {
+                    var pct = Math.round(b.level * 100);
+                    ssBattery.textContent = pct + '%';
+                    ssBatteryFill.style.width = pct + '%';
+                    ssBatteryPct.textContent = pct + '%';
+
+                    if (pct > 60) ssBatteryFill.style.background = 'linear-gradient(90deg, #66ffdd, #00ccbb)';
+                    else if (pct > 25) ssBatteryFill.style.background = 'linear-gradient(90deg, #ffd93d, #ff9f43)';
+                    else ssBatteryFill.style.background = 'linear-gradient(90deg, #ff6b6b, #ee5a24)';
+
+                    b.addEventListener('levelchange', function() {
+                        var np = Math.round(b.level * 100);
+                        ssBattery.textContent = np + '%';
+                        ssBatteryFill.style.width = np + '%';
+                        ssBatteryPct.textContent = np + '%';
+                    });
+                }).catch(function() {
+                    ssBattery.textContent = 'N/A';
+                    ssBatteryFill.style.width = '0%';
+                    ssBatteryPct.textContent = 'N/A';
+                });
+            }
+
+            function updateAll() {
+                var cpu = getCPU();
+                var ramInfo = getRAMInfo();
+                var cpuVal = (cpu === 'N/A') ? 2 : cpu;
+                var perf = getPerformance(cpuVal, ramInfo.value);
+
+                ssDevice.textContent = getDeviceName();
+                ssCpu.textContent = cpu + ' cores';
+                ssRam.textContent = ramInfo.display;
+                ssPerf.textContent = perf.label;
+                ssPerf.className = 'soul-value ' + perf.cls;
+                ssNetwork.textContent = getNetwork();
+                updateBattery();
+            }
+
+            updateAll();
+
+            var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            if (conn) conn.addEventListener('change', function() { ssNetwork.textContent = getNetwork(); });
+            else {
+                window.addEventListener('online', function() { ssNetwork.textContent = 'Online'; });
+                window.addEventListener('offline', function() { ssNetwork.textContent = 'Offline'; });
+            }
+
+            setInterval(function() {
+                if (navigator.getBattery) {
+                    navigator.getBattery().then(function(b) {
+                        var pct = Math.round(b.level * 100);
+                        ssBattery.textContent = pct + '%';
+                        ssBatteryFill.style.width = pct + '%';
+                        ssBatteryPct.textContent = pct + '%';
+                    }).catch(function() {});
+                }
+            }, 30000);
+
+            console.log('🔮 Soul Sync embedded – live.');
+        })();
+
+        // =========================================================
+        // SCROLL HINT (hide after scroll)
+        // =========================================================
+        (function scrollHint() {
+            var hint = document.getElementById('scrollHint');
+            if (!hint) return;
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    hint.style.transition = 'opacity 0.8s ease';
+                    hint.style.opacity = '0';
+                    setTimeout(function() { hint.style.display = 'none'; }, 800);
+                }
+            });
         })();
 
         // =========================================================
@@ -1942,13 +2444,6 @@
         var currentPreset = null;
         var currentModel = null;
         var isAutoDetect = false;
-
-        function switchTab(tab) {
-            document.getElementById('tabSearch').className = 'tab-btn' + (tab === 'search' ? ' active' : '');
-            document.getElementById('tabAuto').className = 'tab-btn' + (tab === 'auto' ? ' active' : '');
-            document.getElementById('panelSearch').style.display = tab === 'search' ? 'block' : 'none';
-            document.getElementById('panelAuto').style.display = tab === 'auto' ? 'block' : 'none';
-        }
 
         function buildAgeGrid(containerId, noteId, onSelect) {
             var grid = document.getElementById(containerId);
@@ -2996,6 +3491,7 @@
         // 15. GLOBAL EXPOSURE
         // =========================================================
         window.switchTab = switchTab;
+        window.switchSensTab = switchSensTab;
         window.detectDevice = detectDevice;
         window.generateFromAuto = generateFromAuto;
         window.generateFromSearch = generateFromSearch;
@@ -3010,7 +3506,7 @@
         window.updatePreview = updatePreview;
         window.copyResult = copyResult;
 
-        console.log('🔥 Phantom Guild – Ultra-smooth & secure.');
+        console.log('🔥 Phantom Guild – Ultra-smooth with tab system & Soul Sync.');
     </script>
 </body>
 </html>
