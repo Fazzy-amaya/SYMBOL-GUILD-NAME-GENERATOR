@@ -493,58 +493,81 @@
         }
 
         /* =========================================================
-           TAB SYSTEM – CLEAN & MOBILE-FRIENDLY
+           TAB SYSTEM – HIGHLY VISIBLE (FIXED)
            ========================================================= */
         .tab-switcher {
             display: flex;
             gap: 8px;
             justify-content: center;
             margin-bottom: 25px;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px;
             border-radius: 60px;
-            border: 1px solid rgba(150, 100, 220, 0.1);
+            border: 1px solid rgba(150, 100, 220, 0.15);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
+            box-shadow: 0 0 30px rgba(100, 40, 180, 0.05);
+            position: relative;
         }
         .tab-switcher .tab-btn {
             flex: 1;
-            padding: 12px 18px;
+            padding: 14px 22px;
             border: none;
             border-radius: 50px;
             background: transparent;
-            color: #6a4a8a;
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 2px;
+            color: #8a7aaa;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 3px;
             text-transform: uppercase;
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: 'Segoe UI', sans-serif;
             white-space: nowrap;
+            position: relative;
+            text-shadow: 0 0 10px rgba(100, 40, 180, 0.1);
         }
         .tab-switcher .tab-btn:hover {
-            color: #b396d9;
+            color: #c4a8f0;
         }
         .tab-switcher .tab-btn.active {
-            background: rgba(100, 40, 180, 0.3);
-            color: #f2e9ff;
-            box-shadow: 0 0 20px rgba(100, 40, 200, 0.15);
+            background: linear-gradient(135deg, #6c2bb3, #3b1470);
+            color: #fff;
+            box-shadow: 0 0 30px rgba(100, 40, 200, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.05);
+            transform: scale(1.02);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+        .tab-switcher .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background: #9b6dff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #9b6dff;
+            animation: tabUnderline 0.4s ease;
+        }
+        @keyframes tabUnderline {
+            0% { width: 0; opacity: 0; }
+            100% { width: 30px; opacity: 1; }
         }
         .tab-switcher .tab-btn .tab-icon {
-            margin-right: 6px;
+            margin-right: 8px;
         }
 
-        .tab-panel {
-            display: none;
-            animation: fadeInTab 0.4s ease;
-        }
-        .tab-panel.active {
-            display: block;
-        }
-        @keyframes fadeInTab {
-            0% { opacity: 0; transform: translateY(10px); }
-            100% { opacity: 1; transform: translateY(0); }
+        /* Mobile adjustments */
+        @media (max-width: 480px) {
+            .tab-switcher { padding: 6px; gap: 4px; }
+            .tab-switcher .tab-btn { padding: 12px 14px; font-size: 0.75rem; letter-spacing: 1.5px; }
+            .tab-switcher .tab-btn .tab-icon { margin-right: 4px; }
+            .tab-switcher .tab-btn.active::after { width: 20px; }
+            @keyframes tabUnderline {
+                0% { width: 0; opacity: 0; }
+                100% { width: 20px; opacity: 1; }
+            }
         }
 
         /* =========================================================
@@ -1471,9 +1494,6 @@
            ========================================================= */
         @media (max-width: 480px) {
             .container { padding: 25px 18px; }
-            .tab-switcher { padding: 4px; gap: 4px; }
-            .tab-switcher .tab-btn { padding: 10px 12px; font-size: 0.7rem; letter-spacing: 1px; }
-            .tab-switcher .tab-btn .tab-icon { margin-right: 3px; }
             .btn { padding: 14px 30px; font-size: 1rem; letter-spacing: 4px; }
             .result-wrapper { padding: 15px 10px; }
             .copy-btn { padding: 8px 20px; font-size: 0.9rem; }
@@ -1591,7 +1611,7 @@
             <div class="sub-title">Name Generator</div>
 
             <!-- =========================================================
-            TAB SYSTEM
+            TAB SYSTEM (HIGHLY VISIBLE)
             ========================================================= -->
             <div class="tab-switcher">
                 <button class="tab-btn active" data-tab="tabName">
@@ -2029,13 +2049,10 @@
         // MAIN TAB SYSTEM
         // =========================================================
         function switchTab(tabId) {
-            // Hide all panels
             document.querySelectorAll('.tab-panel').forEach(function(el) {
                 el.classList.remove('active');
             });
-            // Show selected
             document.getElementById(tabId).classList.add('active');
-            // Update buttons
             document.querySelectorAll('.tab-btn').forEach(function(el) {
                 el.classList.remove('active');
                 if (el.getAttribute('data-tab') === tabId) {
@@ -3208,10 +3225,12 @@
         document.addEventListener('touchstart', resumeAudioContext);
         document.addEventListener('keydown', resumeAudioContext);
 
+        // ===== UPDATED INTRO LINES =====
         var introLines = [
-            "Welcome to Phantom ・〆 Guild name generator.",
-            "Here, you get your official Phantom name signature and text style.",
-            "Just type your name below and see it transform.",
+            "Welcome to the Phantom Guild website.",
+            "Create your official Phantom name signature.",
+            "Or fine‑tune your Free Fire sensitivity with our device scanner.",
+            "Switch between Name and Sensitivity tabs above.",
             "Tap the result to copy it."
         ];
         var introContainer = document.getElementById('intro-text');
@@ -3506,7 +3525,7 @@
         window.updatePreview = updatePreview;
         window.copyResult = copyResult;
 
-        console.log('🔥 Phantom Guild – Ultra-smooth with tab system & Soul Sync.');
+        console.log('🔥 Phantom Guild – Ultra-smooth with tabs, Soul Sync & updated intro.');
     </script>
 </body>
 </html>
